@@ -21,20 +21,23 @@ class IndexView(ListView):
 
 class UploadView(CreateView):
     model = Art
-    fields = ["text"]
+    fields = ["title", "text"]
     template_name = "upload.html"
 
     def post(self, req):
         try:
+            title = req.POST["title"]
             text = req.POST["text"]
-        except KeyError:
+        except KeyError as e:
+            key = e.args[0]
+
             return render(
                 req,
                 "upload.html",
-                {"err": "No text was uploaded :o"},
+                {"err": f"No {key} was given :o"},
             )
 
-        art = Art(text=text, timestamp=timezone.now())
+        art = Art(title=title, text=text, timestamp=timezone.now())
         art.save()
 
         return HttpResponseRedirect(reverse("foo:index"))

@@ -1,7 +1,8 @@
 {% if arts %}
-<ul>
+<div>
     {% for art in arts %}
-    <li><pre>{{ art.text }}</pre></li>
+    <h2>{{ art.title }}</h2>
+    <pre>{{ art.text }}</pre>
     {% endfor %}
-</ul>
+</div>
 {% endif %}
