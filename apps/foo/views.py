@@ -1,9 +1,11 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, reverse
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView
 from django.utils import timezone
 
 from .models import Art
+from .forms import ArtForm
 
 __all__ = ["IndexView", "UploadView"]
 
@@ -20,24 +22,6 @@ class IndexView(ListView):
 
 
 class UploadView(CreateView):
-    model = Art
-    fields = ["title", "text"]
     template_name = "upload.html"
-
-    def post(self, req):
-        try:
-            title = req.POST["title"]
-            text = req.POST["text"]
-        except KeyError as e:
-            key = e.args[0]
-
-            return render(
-                req,
-                "upload.html",
-                {"err": f"No {key} was given :o"},
-            )
-
-        art = Art(title=title, text=text, timestamp=timezone.now())
-        art.save()
-
-        return HttpResponseRedirect(reverse("foo:index"))
+    form_class = ArtForm
+    success_url = reverse_lazy("foo:index")
