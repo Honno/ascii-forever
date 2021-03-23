@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'foo/reset.css' %}" />
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+        <div id="header">
+            <h1>{% block h1 %}{% endblock %}</h1>
+        </div>
+        <div id="content">{% block content %}{% endblock %}</div>
+        <div id="footer">
+            Made with <3 by <a href="http://matthewbarber.io/">Honno</a>.
+        </div>
+    </body>
+</html>
