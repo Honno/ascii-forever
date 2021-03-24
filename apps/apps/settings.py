@@ -75,7 +75,7 @@ validators = [
     "django.contrib.auth.password_validation.CommonPasswordValidator",
     "django.contrib.auth.password_validation.NumericPasswordValidator",
 ]
-AUTH_PASSWORD_VALIDATORS = {"NAME": validator for validator in validators}
+AUTH_PASSWORD_VALIDATORS = [{"NAME": validator} for validator in validators]
 
 
 # Internationalization
