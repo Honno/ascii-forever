@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "sass_processor",
 ]
 
 MIDDLEWARE = [
@@ -68,38 +69,36 @@ DATABASES = {
 
 # Password validation
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+validators = [
+    "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    "django.contrib.auth.password_validation.MinimumLengthValidator",
+    "django.contrib.auth.password_validation.CommonPasswordValidator",
+    "django.contrib.auth.password_validation.NumericPasswordValidator",
 ]
+AUTH_PASSWORD_VALIDATORS = {"NAME": validator for validator in validators}
 
 
 # Internationalization
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = "/static/"
+
+STATIC_ROOT = "/var/www/ascii.world/"
+SASS_PROCESSOR_ROOT = STATIC_ROOT
+
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
+]
 
 
 # Auth

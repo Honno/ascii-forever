@@ -1,8 +1,10 @@
 {% load static %}
+{% load sass_tags %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <link rel="stylesheet" type="text/css" href="{% static 'foo/reset.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% sass_src 'foo/style.scss' %}" />
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>

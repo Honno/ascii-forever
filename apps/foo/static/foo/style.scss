@@ -1,0 +1,17 @@
+$white: #ffffff;
+$primary: #212121;
+$blue: #0000ff;
+$purple: #8000ff;
+
+body {
+    background-color: $white;
+    color: $primary;
+}
+
+a, a:active, a:hover, a:visited {
+    color: $blue;
+}
+
+a:active, a:hover {
+    color: $purple;
+}

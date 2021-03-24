@@ -8,10 +8,13 @@ authors = ["Matthew Barber <quitesimplymatt@gmail.com>"]
 python = "^3.8"
 Django = "^3.1.7"
 python-dotenv = "^0.15.0"
+django-sass-processor = "^0.8.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"
 pytest-django = "^4.1.0"
+libsass = "^0.20.1"
+django-compressor = "^2.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
