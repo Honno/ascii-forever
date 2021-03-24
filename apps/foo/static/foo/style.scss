@@ -1,12 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap");
+
 $white: #ffffff;
 $primary: #212121;
 $blue: #0000ff;
 $purple: #8000ff;
 
+
 body {
+    font-family: "Roboto", "Verdana", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.125;
+
     background-color: $white;
     color: $primary;
 }
+
+pre {
+    font-family: "Roboto Mono", "Courier New", monospace;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.125;
+}
+
 
 a, a:active, a:hover, a:visited {
     color: $blue;
