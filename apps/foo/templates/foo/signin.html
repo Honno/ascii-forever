@@ -1,6 +1,8 @@
 {% extends "foo/base.html" %}
-{% block title %}/home/signin{% endblock %}
-{% block h1 %}Sign in{% endblock %}
+{% block title %}home/signin{% endblock %}
+{% block path %}
+<a href="{% url 'foo:index' %}" >home</a> / signin
+{% endblock %}
 {% block content %}
 <form method="post">
     {% csrf_token %}

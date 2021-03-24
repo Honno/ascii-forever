@@ -1,6 +1,8 @@
 {% extends "foo/base.html" %}
-{% block title %}/home/upload{% endblock %}
-{% block h1 %}Upload{% endblock %}
+{% block title %}home/upload{% endblock %}
+{% block path %}
+<a href="{% url 'foo:index' %}" >home</a> / upload
+{% endblock %}
 {% block content %}
 <form method="post">
     {% csrf_token %}

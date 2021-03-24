@@ -1,6 +1,8 @@
 {% extends "foo/base.html" %}
-{% block title %}/home/{% endblock %}
-{% block h1 %}Home{% endblock %}
+{% block title %}home/{% endblock %}
+{% block path %}
+<a href="{% url 'foo:index' %}" >home</a> /
+{% endblock %}
 {% block content %}
 <p><a href="{% url 'foo:signin' %}">Sign in</a></p>
 <p><a href="{% url 'foo:join' %}">Join</a></p>

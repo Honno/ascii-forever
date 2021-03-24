@@ -23,6 +23,13 @@ pre {
     line-height: 1.125;
 }
 
+p {
+    margin-bottom: 1em;
+}
+
+nav {
+    padding: 1em;
+}
 
 a, a:active, a:hover, a:visited {
     color: $blue;

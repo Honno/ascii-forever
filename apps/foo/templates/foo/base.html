@@ -8,12 +8,12 @@
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
-        <div id="header">
-            <h1>{% block h1 %}{% endblock %}</h1>
-        </div>
-        <div id="content">{% block content %}{% endblock %}</div>
-        <div id="footer">
+        <nav>
+            {% block path %}{% endblock %}
+        </nav>
+        <section>{% block content %}{% endblock %}</section>
+        <footer>
             Made with <3 by <a href="http://matthewbarber.io/">Honno</a>.
-        </div>
+        <footer>
     </body>
 </html>
