@@ -15,3 +15,7 @@ tests/report/
 
 secrets.env
 apps/*.sqlite3
+
+**/.sass-cache/
+*.css.map
+*.css

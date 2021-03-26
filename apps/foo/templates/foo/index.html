@@ -4,10 +4,6 @@
 <a href="{% url 'foo:index' %}" >home</a> /
 {% endblock %}
 {% block content %}
-<p><a href="{% url 'foo:signin' %}">Sign in</a></p>
-<p><a href="{% url 'foo:join' %}">Join</a></p>
-<p><a href="{% url 'foo:upload' %}">Upload</a></p>
-
 {% if arts %}
 <div>
     {% for art in arts %}

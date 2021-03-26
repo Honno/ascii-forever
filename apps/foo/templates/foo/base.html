@@ -1,19 +1,26 @@
 {% load static %}
-{% load sass_tags %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <link rel="stylesheet" type="text/css" href="{% static 'foo/reset.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% sass_src 'foo/style.scss' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'foo/style.css' %}" />
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
-        <nav>
-            {% block path %}{% endblock %}
-        </nav>
-        <section>{% block content %}{% endblock %}</section>
-        <footer>
-            Made with <3 by <a href="http://matthewbarber.io/">Honno</a>.
-        <footer>
+        <main>
+            <header>
+                <nav>
+                    {% block path %}{% endblock %}
+                </nav>
+                <ul>
+                    <li><a href="{% url 'foo:signin' %}">Sign in</a></li>
+                    <li><a href="{% url 'foo:join' %}">Join</a></li>
+                </ul>
+            </header>
+            <section>{% block content %}{% endblock %}</section>
+            <footer>
+                Made with <3 by <a href="http://matthewbarber.io/">Honno</a>.
+            </footer>
+        </main>
     </body>
 </html>

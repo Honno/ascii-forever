@@ -1,10 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap");
 
+@import "include-media";
+
 $white: #ffffff;
 $primary: #212121;
 $blue: #0000ff;
 $purple: #8000ff;
-
 
 body {
     font-family: "Roboto", "Verdana", sans-serif;
@@ -14,6 +15,16 @@ body {
 
     background-color: $white;
     color: $primary;
+}
+
+main {
+    @include media(">=tablet") {
+        width: 100%;
+    }
+
+    @include media(">=tablet") {
+        width: 80ex;
+    }
 }
 
 pre {
@@ -27,8 +38,18 @@ p {
     margin-bottom: 1em;
 }
 
-nav {
+header, footer {
     padding: 1em;
+}
+
+section {
+    padding: 0 1em;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 a, a:active, a:hover, a:visited {
@@ -38,3 +59,23 @@ a, a:active, a:hover, a:visited {
 a:active, a:hover {
     color: $purple;
 }
+
+header {
+    @include media(">=tablet") {
+        display: flex;
+        justify-content: space-between;
+
+        ul {
+            text-align: center;
+        }
+
+        li {
+            display: inline-block;
+
+            &:before { content: " | " }
+            &:first-child:before { content: "" }
+        }
+    }
+}
+
+

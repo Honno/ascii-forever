@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "sass_processor",
 ]
 
 MIDDLEWARE = [
@@ -90,15 +89,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = "/static/"
-
-STATIC_ROOT = "/var/www/ascii.world/"
-SASS_PROCESSOR_ROOT = STATIC_ROOT
-
-STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "sass_processor.finders.CssFinder",
-]
 
 
 # Auth
