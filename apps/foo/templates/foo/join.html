@@ -1,7 +1,8 @@
 {% extends "foo/base.html" %}
-{% block title %}home/join{% endblock %}
+{% block title %}Join{% endblock %}
 {% block path %}
-<a href="{% url 'foo:index' %}" >home</a> / join
+<li><a href="{% url 'foo:index' %}" >home</a></li>
+<li>join</li>
 {% endblock %}
 {% block content %}
 <form method="post">

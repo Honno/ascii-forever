@@ -10,9 +10,9 @@
         <main>
             <header>
                 <nav>
-                    {% block path %}{% endblock %}
+                    <ul id="nav">{% block path %}{% endblock %}</ul>
                 </nav>
-                <ul>
+                <ul id="account" >
                     <li><a href="{% url 'foo:signin' %}">Sign in</a></li>
                     <li><a href="{% url 'foo:join' %}">Join</a></li>
                 </ul>

@@ -60,15 +60,28 @@ a:active, a:hover {
     color: $purple;
 }
 
+/* header styles */
+
 header {
     @include media(">=tablet") {
         display: flex;
         justify-content: space-between;
+    }
+}
 
-        ul {
-            text-align: center;
-        }
 
+ul#nav {
+    li {
+        display: inline-block;
+
+        &:before { content: " / " }
+        &:first-child:before { content: "" }
+    }
+
+}
+
+ul#account {
+    @include media(">=tablet") {
         li {
             display: inline-block;
 
@@ -77,5 +90,3 @@ header {
         }
     }
 }
-
-

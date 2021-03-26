@@ -1,7 +1,8 @@
 {% extends "foo/base.html" %}
-{% block title %}home/upload{% endblock %}
+{% block title %}Upload{% endblock %}
 {% block path %}
-<a href="{% url 'foo:index' %}" >home</a> / upload
+<li><a href="{% url 'foo:index' %}" >home</a></li>
+<li>upload</li>
 {% endblock %}
 {% block content %}
 <form method="post">
