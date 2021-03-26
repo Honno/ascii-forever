@@ -1,0 +1,9 @@
+{% extends "foo/base.html" %}
+{% block title %}Sign out{% endblock %}
+{% block path %}
+<li><a href="{% url 'foo:index' %}" >home</a></li>
+<li>sign_out</li>
+{% endblock %}
+{% block content %}
+<p>See ya soon!</p>
+{% endblock %}

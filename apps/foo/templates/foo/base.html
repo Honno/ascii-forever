@@ -13,13 +13,19 @@
                     <ul id="nav">{% block path %}{% endblock %}</ul>
                 </nav>
                 <ul id="account" >
-                    <li><a href="{% url 'foo:signin' %}">Sign in</a></li>
+                {% if request.user.is_authenticated %}
+                    <li>Hello <a class="nostyle" href="{% url 'foo:user' request.user.username %}">{{ request.user.username }}</a>!</li>
+                    <li><a href="{% url 'foo:sign_out' %}">Sign out</a></li>
+                    <li><a href="{% url 'foo:upload' %}">Upload</a></li>
+                {% else %}
+                    <li><a href="{% url 'foo:sign_in' %}">Sign in</a></li>
                     <li><a href="{% url 'foo:join' %}">Join</a></li>
+                {% endif %}
                 </ul>
             </header>
             <section>{% block content %}{% endblock %}</section>
             <footer>
-                Made with <3 by <a href="http://matthewbarber.io/">Honno</a>.
+                Made with <span id="heart">♥</span> by <a href="http://matthewbarber.io/">Honno</a>.
             </footer>
         </main>
     </body>

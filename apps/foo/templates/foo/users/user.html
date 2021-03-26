@@ -1,0 +1,10 @@
+{% extends "foo/base.html" %}
+{% block title %}Home{% endblock %}
+{% block path %}
+<li><a href="{% url 'foo:index' %}" >home</a></li>
+<li>users</li> <!-- TODO -->
+<li>{{ user.username }}</li>
+{% endblock %}
+{% block content %}
+<p>{{ user.username }}</p>
+{% endblock %}

@@ -6,7 +6,9 @@ from .views import *
 app_name = "foo"
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
-    path("join/", JoinView.as_view(), name="join"),
-    path("signin/", SignInView.as_view(), name="signin"),
-    path("upload/", UploadView.as_view(), name="upload"),
+    path("join", JoinView.as_view(), name="join"),
+    path("sign_in", SignInView.as_view(), name="sign_in"),
+    path("sign_out", SignOutView.as_view(), name="sign_out"),
+    path("users/<slug:username>", UserView.as_view(), name="user"),
+    path("upload", UploadView.as_view(), name="upload"),
 ]
