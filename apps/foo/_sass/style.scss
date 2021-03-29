@@ -8,8 +8,11 @@ $blue: #0000ff;
 $purple: #8000ff;
 $red: #ff0000;
 
+$body-font-family: "Roboto", "Verdana", sans-serif;
+$art-font-family: "Roboto Mono", "Courier New", monospace;
+
 body {
-    font-family: "Roboto", "Verdana", sans-serif;
+    font-family: $body-font-family;
     font-size: 12px;
     font-weight: 400;
     line-height: 1.5;
@@ -29,7 +32,8 @@ main {
 }
 
 pre {
-    font-family: "Roboto Mono", "Courier New", monospace;
+    font-family: $art-font-family;
+    white-space: pre;
     font-size: 12px;
     font-weight: 400;
     line-height: 1.125;
