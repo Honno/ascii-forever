@@ -2,13 +2,13 @@
 {% block title %}Upload{% endblock %}
 {% block path %}
 <li><a href="{% url 'foo:index' %}" >home</a></li>
-<li>upload</li>
+<li>add</li>
 {% endblock %}
 {% block content %}
 <form class="preserve-whitespace" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Upload" />
+    <input type="submit" value="Submit" />
 </form>
 {{ form.media }}
 {% endblock %}

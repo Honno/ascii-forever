@@ -16,7 +16,7 @@
                 {% if request.user.is_authenticated %}
                     <li>Hello <a class="nostyle" href="{% url 'foo:user' request.user.username %}">{{ request.user.username }}</a>!</li>
                     <li><a href="{% url 'foo:sign_out' %}">Sign out</a></li>
-                    <li><a href="{% url 'foo:upload' %}">Upload</a></li>
+                    <li><a href="{% url 'foo:add' %}">Add art</a></li>
                 {% else %}
                     <li><a href="{% url 'foo:sign_in' %}">Sign in</a></li>
                     <li><a href="{% url 'foo:join' %}">Join</a></li>

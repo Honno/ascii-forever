@@ -17,7 +17,7 @@ __all__ = [
     "JoinView",
     "SignInView",
     "SignOutView",
-    "UploadView",
+    "AddArtView",
     "UserView",
 ]
 
@@ -47,8 +47,8 @@ class SignOutView(LogoutView):
     template_name = "foo/sign_out.html"
 
 
-class UploadView(LoginRequiredMixin, CreateView):
-    template_name = "foo/upload.html"
+class AddArtView(LoginRequiredMixin, CreateView):
+    template_name = "foo/add.html"
     form_class = ArtForm
     success_url = reverse_lazy("foo:index")
 
