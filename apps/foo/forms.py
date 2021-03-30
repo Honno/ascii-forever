@@ -1,8 +1,14 @@
+import re
+
 from django.forms import *
 
 from .models import Art
 
 __all__ = ["ArtForm"]
+
+
+r_nothing = re.compile("^\s+$")
+r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
 
 
 class ArtTextarea(Widget):
@@ -24,7 +30,7 @@ class ArtCharField(CharField):
             # 1. dot purposely added as the first char
             # 2. script to prepend dot didn't work
             # 3. ???
-            # 3. GOODBYE DOT
+            # 4. GOODBYE DOT
             if value[0] == ".":
                 value = value[1:]
         except IndexError:
@@ -32,6 +38,15 @@ class ArtCharField(CharField):
 
         if not value:
             raise ValidationError("no text was submitted")
+
+        if r_nothing.match(value):
+            raise ValidationError("only whitespace was submitted")
+
+        if r_nothing.match(value):
+            raise ValidationError("only whitespace was submitted")
+
+        if r_emoji.search(value):
+            raise ValidationError("no one is allowed to use emojis except me 😈")
 
         return value
 
