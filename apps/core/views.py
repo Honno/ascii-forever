@@ -23,7 +23,7 @@ __all__ = [
 
 
 class IndexView(ListView):
-    template_name = "foo/index.html"
+    template_name = "core/index.html"
     context_object_name = "arts"
 
     def get_queryset(self):
@@ -34,23 +34,23 @@ class IndexView(ListView):
 
 
 class JoinView(CreateView):
-    template_name = "foo/join.html"
+    template_name = "core/join.html"
     form_class = UserCreationForm
-    success_url = reverse_lazy("foo:index")
+    success_url = reverse_lazy("core:index")
 
 
 class SignInView(LoginView):
-    template_name = "foo/sign_in.html"
+    template_name = "core/sign_in.html"
 
 
 class SignOutView(LogoutView):
-    template_name = "foo/sign_out.html"
+    template_name = "core/sign_out.html"
 
 
 class AddArtView(LoginRequiredMixin, CreateView):
-    template_name = "foo/add.html"
+    template_name = "core/add.html"
     form_class = ArtForm
-    success_url = reverse_lazy("foo:index")
+    success_url = reverse_lazy("core:index")
 
     def form_valid(self, form):
         form.instance.artist = self.request.user
@@ -59,7 +59,7 @@ class AddArtView(LoginRequiredMixin, CreateView):
 
 
 class UserView(DetailView):
-    template_name = "foo/users/user.html"
+    template_name = "core/users/user.html"
     context_object_name = "user"
 
     def get_object(self):

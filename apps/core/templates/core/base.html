@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'foo/reset.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'foo/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'core/reset.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'core/style.css' %}" />
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
@@ -14,12 +14,12 @@
                 </nav>
                 <ul id="account" >
                 {% if request.user.is_authenticated %}
-                    <li>Hello <a class="nostyle" href="{% url 'foo:user' request.user.username %}">{{ request.user.username }}</a>!</li>
-                    <li><a href="{% url 'foo:sign_out' %}">Sign out</a></li>
-                    <li><a href="{% url 'foo:add' %}">Add art</a></li>
+                    <li>Hello <a class="nostyle" href="{% url 'core:user' request.user.username %}">{{ request.user.username }}</a>!</li>
+                    <li><a href="{% url 'core:sign_out' %}">Sign out</a></li>
+                    <li><a href="{% url 'core:add' %}">Add art</a></li>
                 {% else %}
-                    <li><a href="{% url 'foo:sign_in' %}">Sign in</a></li>
-                    <li><a href="{% url 'foo:join' %}">Join</a></li>
+                    <li><a href="{% url 'core:sign_in' %}">Sign in</a></li>
+                    <li><a href="{% url 'core:join' %}">Join</a></li>
                 {% endif %}
                 </ul>
             </header>

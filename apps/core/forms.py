@@ -12,7 +12,7 @@ r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
 
 
 class ArtTextarea(Widget):
-    template_name = "foo/widgets/art_textarea.html"
+    template_name = "core/widgets/art_textarea.html"
 
     def __init__(self, attrs=None):
         default_attrs = {"cols": "80", "rows": "24"}
@@ -59,4 +59,4 @@ class ArtForm(ModelForm):
         fields = ["title", "text"]
 
     class Media:
-        js = ("foo/preserve_whitespace.js",)
+        js = ("core/preserve_whitespace.js",)
