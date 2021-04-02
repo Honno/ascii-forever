@@ -1,5 +1,5 @@
 var form = document.querySelector("form.preserve-whitespace");
-var textarea = form.querySelector("textarea");
+var textarea = form.querySelector("textarea[name='text']");
 
 // if a server-side error occurs, the page is POST'd to
 // browsers may carry over the dot that was prepended previously
@@ -16,3 +16,6 @@ form.addEventListener("submit", function(event) {
     textarea.value = "." + textarea.value;
     form.submit();
 });
+
+var checkbox = form.querySelector("input[name='js_enabled']");
+checkbox.value = "True";
