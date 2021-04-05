@@ -6,10 +6,9 @@ from .models import *
 
 class ArtAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("Metadata", {"fields": ["title", "timestamp"]}),
-        ("Art", {"fields": ["text"]}),
+        ("Metadata", {"fields": ["artist", "title", "timestamp"]}),
     ]
-    list_display = ("title", "timestamp")
+    list_display = ("title", "artist", "timestamp")
     list_filter = ["timestamp"]
     search_fields = ["title"]
 
