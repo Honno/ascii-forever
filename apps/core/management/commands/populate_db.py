@@ -4,12 +4,11 @@ from pathlib import Path
 from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import get_current_timezone
 
-from core.models import Art
+from core.models import *
 
 
 rng = Random()
@@ -24,7 +23,6 @@ with open(data_dir / "last_names.txt") as f:
 
 
 def create_usernames(n=100):
-
     first_names = rng.sample(names["first"], n)
 
     nlast = rng.randint(0, n)
@@ -98,6 +96,9 @@ class Command(BaseCommand):
 
                 art = Art(artist=user, title=fname, text=art, timestamp=dt)
                 arts.append(art)
+
+                art_admin = Art(artist=admin, title=fname, text=art, timestamp=dt)
+                arts.append(art_admin)
 
         except FileNotFoundError as e:
             raise CommandError("art folder required")

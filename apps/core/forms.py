@@ -1,10 +1,24 @@
 import re
 
 from django.forms import *
+from django.contrib.auth.forms import UserCreationForm
 
-from .models import Art
+from .models import *
 
-__all__ = ["ArtForm"]
+__all__ = ["JoinForm", "ArtForm"]
+
+
+# ------------------------------------------------------------------------------
+# UserCreationForm
+
+
+class JoinForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+
+
+# ------------------------------------------------------------------------------
+# ArtForm
 
 
 r_nothing = re.compile("^\s+$")

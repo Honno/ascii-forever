@@ -13,14 +13,14 @@
                     <ul id="nav">{% block path %}{% endblock %}</ul>
                 </nav>
                 <ul id="account" >
-                {% if request.user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
                     <li>Hello <a class="nostyle" href="{% url 'core:user' request.user.username %}">{{ request.user.username }}</a>!</li>
                     <li><a href="{% url 'core:sign_out' %}">Sign out</a></li>
                     <li><a href="{% url 'core:add' %}">Add art</a></li>
-                {% else %}
+                    {% else %}
                     <li><a href="{% url 'core:sign_in' %}">Sign in</a></li>
                     <li><a href="{% url 'core:join' %}">Join</a></li>
-                {% endif %}
+                    {% endif %}
                 </ul>
             </header>
             <section>{% block content %}{% endblock %}</section>

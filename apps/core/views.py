@@ -5,12 +5,11 @@ from django.views.generic import ListView, CreateView, DetailView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
-from .models import Art
-from .forms import ArtForm
+from .models import *
+from .forms import *
 
 __all__ = [
     "IndexView",
@@ -35,7 +34,7 @@ class IndexView(ListView):
 
 class JoinView(CreateView):
     template_name = "core/join.html"
-    form_class = UserCreationForm
+    form_class = JoinForm
     success_url = reverse_lazy("core:index")
 
 
