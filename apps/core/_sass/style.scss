@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
 
 @import "include-media";
+@import "reset";
 
 $white: #ffffff;
 $primary: #212121;
@@ -42,6 +43,7 @@ pre {
 
 p {
     margin-bottom: 1em;
+    &:last-child { margin-bottom: 0 }
 }
 
 header, footer {
@@ -67,10 +69,13 @@ a:active, a:hover {
 }
 
 a.nostyle {
-    &, &:active, &:hover, &:visited, &:active, &:hover {
-        color: inherit;
-        text-decoration: none;
-    }
+    color: inherit;
+    text-decoration: none;
+}
+
+@mixin inbetween-content($content) {
+    &:before { content: $content }
+    &:first-child:before { content: "" }
 }
 
 /* header styles */
@@ -87,10 +92,9 @@ ul#nav {
     li {
         display: inline-block;
 
-        &:before { content: " / " }
-        &:first-child:before { content: "" }
+        @include inbetween-content(" / ");
+        &.final-dir:after { content: " / " }
     }
-
 }
 
 ul#account {
@@ -98,15 +102,35 @@ ul#account {
         li {
             display: inline-block;
 
-            &:before { content: " | " }
-            &:first-child:before { content: "" }
+            @include inbetween-content(" | ");
         }
     }
 }
-
 
 /* footer styles */
 
 #heart {
     color: $red;
 }
+
+/* componenents */
+
+ul.pagination {
+    @include media(">=tablet") {
+        width: 100%;
+        text-align: center;
+
+        li {
+            display: inline-block;
+
+            @include inbetween-content("\00a0\00a0");
+        }
+    }
+
+    li {
+        a {
+            text-decoration: none;
+        }
+    }
+}
+

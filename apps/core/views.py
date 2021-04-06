@@ -18,6 +18,7 @@ __all__ = [
     "SignOutView",
     "AddArtView",
     "UserView",
+    "ArtGalleryView",
 ]
 
 
@@ -58,8 +59,20 @@ class AddArtView(LoginRequiredMixin, CreateView):
 
 
 class UserView(DetailView):
-    template_name = "core/users/user.html"
+    template_name = "core/user.html"
     context_object_name = "user"
 
     def get_object(self):
         return get_object_or_404(User, username=self.kwargs["username"])
+
+
+class ArtGalleryView(ListView):
+    template_name = "core/arts.html"
+    context_object_name = "arts"
+    paginate_by = 25
+
+    def get_queryset(self):
+        return (
+            Art.objects
+            .order_by("-timestamp")
+        )
