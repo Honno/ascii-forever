@@ -1,15 +1,20 @@
 {% extends "core/base.html" %}
+
 {% block title %}Upload{% endblock %}
+
 {% block path %}
 <li><a href="{% url 'core:index' %}" >home</a></li>
 <li>add</li>
 {% endblock %}
+
 {% block content %}
 <form class="preserve-whitespace" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
 </form>
-{{ form.media }}
 {% endblock %}
 
+{% block js %}
+{{ form.media }}
+{% endblock %}

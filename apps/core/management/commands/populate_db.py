@@ -43,6 +43,11 @@ def create_usernames(n=100):
         if not username in usernames:
             usernames.append(username)
 
+    if "bob" not in usernames:
+        usernames.append("bob")
+    if "alice" not in usernames:
+        usernames.append("alice")
+
     return usernames
 
 
@@ -82,6 +87,12 @@ class Command(BaseCommand):
 
         User.objects.bulk_create(users)
 
+        bob = User.objects.get(username="bob")
+        alice = User.objects.get(username="alice")
+
+        admin.following.add(bob)
+        admin.following.add(alice)
+
         dt_start = datetime(1970, 1, 1)
         dt_end = datetime.now()
         dt_diff = dt_end - dt_start
@@ -94,11 +105,17 @@ class Command(BaseCommand):
                 naive_dt = dt_start + rng.random() * dt_diff
                 dt = tz.localize(naive_dt)
 
-                art = Art(artist=user, title=fname, text=art, timestamp=dt)
-                arts.append(art)
+                art_rand = Art(artist=user, title=fname, text=art, timestamp=dt)
+                arts.append(art_rand)
 
                 art_admin = Art(artist=admin, title=fname, text=art, timestamp=dt)
                 arts.append(art_admin)
+
+                art_bob = Art(artist=bob, title=fname, text=art, timestamp=dt)
+                arts.append(art_bob)
+
+                art_alice = Art(artist=alice, title=fname, text=art, timestamp=dt)
+                arts.append(art_alice)
 
         except FileNotFoundError as e:
             raise CommandError("art folder required")

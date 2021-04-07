@@ -1,10 +1,73 @@
 {% extends "core/base.html" %}
+
 {% block title %}{{ user.username }}{% endblock %}
+
 {% block path %}
-<li><a href="{% url 'core:index' %}" >home</a></li>
+<li><a href="{% url "core:index" %}" >home</a></li>
 <li>users</li> <!-- TODO -->
 <li>{{ user.username }}</li>
 {% endblock %}
+
 {% block content %}
 <p>{{ user.username }}</p>
+{% if request.user.is_authenticated and request.user != user %}
+{% if user not in request.user.following.all %}
+<span id="follow-button" class="follow">Follow</span>
+{% else %}
+<span id="follow-button" class="unfollow">Unfollow</span>
+{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block js %}
+{% if request.user.is_authenticated and request.user != user %}
+<script>
+ function get_cookie(name) {
+     let cookie_value = null;
+     if (document.cookie && document.cookie !== "") {
+         const cookies = document.cookie.split(";");
+         for (let i = 0; i < cookies.length; i++) {
+             const cookie = cookies[i].trim();
+             // does this cookie string begin with the name we want?
+             if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                 cookie_value = decodeURIComponent(cookie.substring(name.length + 1));
+                 break;
+             }
+         }
+     }
+     return cookie_value;
+ }
+
+ var follow_button = document.querySelector("#follow-button");
+
+ follow_button.addEventListener("click", (event) => {
+     var follow_user = follow_button.className == "follow";
+
+     fetch("{{ request.path }}", {
+         method: "POST",
+         credentials: "same-origin",
+         headers: {
+             "Accept": "application/json",
+             "X-Requested-With": "XMLHttpRequest",
+             "X-CSRFToken": get_cookie("csrftoken"),
+         },
+         body: JSON.stringify({"follow_user": follow_user}),
+     })
+         .then((response) => {
+             response.json().then((data) => {
+                 if (data.user_followed) {
+                     follow_button.className = "unfollow";
+                     follow_button.innerHTML = "Unfollow";
+                 } else {
+                     follow_button.className = "follow";
+                     follow_button.innerHTML = "Follow";
+                 }
+             });
+         })
+         .catch((error) => {
+             console.error(error);
+         });
+ });
+</script>
+{% endif %}
 {% endblock %}

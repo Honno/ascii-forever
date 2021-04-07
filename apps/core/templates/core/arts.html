@@ -1,9 +1,11 @@
 {% extends "core/base.html" %}
 {% block title %}Art Gallery{% endblock %}
+
 {% block path %}
 <li><a href="{% url 'core:index' %}" >home</a></li>
 <li class="final-dir">art</li>
 {% endblock %}
+
 {% block content %}
 {% if arts %}
 <div>
@@ -13,5 +15,6 @@
     {% endfor %}
 </div>
 {% endif %}
+
 {% include "core/components/pagination.html" %}
 {% endblock %}

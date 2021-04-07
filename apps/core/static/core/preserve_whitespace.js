@@ -11,7 +11,7 @@ if (textarea.value.length > 0) {
     }
 }
 
-form.addEventListener("submit", function(event) {
+form.addEventListener("submit", (event) => {
     event.preventDefault();
     textarea.value = "." + textarea.value;
     form.submit();

@@ -9,6 +9,10 @@ from django.contrib.auth.models import AbstractUser, UserManager
 __all__ = ["User", "Art"]
 
 
+# ------------------------------------------------------------------------------
+# User
+
+
 r_alpha = re.compile("[a-zA-Z]", re.ASCII)
 r_slug = re.compile("[a-zA-Z0-9_]+", re.ASCII)
 r_alphanumeric = re.compile("[a-zA-Z0-9]", re.ASCII)
@@ -34,13 +38,21 @@ def validate_username(username):
 
 class User(AbstractUser):
     objects = CIUserManager()
-
     username_validator = validate_username
+
     username = CharField(
         max_length=20,
         unique=True,
         validators=[validate_username],
     )
+    following = ManyToManyField("self", related_name="following")
+
+    def __str__(self):
+        return self.username
+
+
+# ------------------------------------------------------------------------------
+# Art
 
 
 class Art(Model):

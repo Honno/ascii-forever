@@ -1,4 +1,6 @@
-from django.http import HttpResponseRedirect
+import json
+
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView
@@ -25,12 +27,22 @@ __all__ = [
 class IndexView(ListView):
     template_name = "core/index.html"
     context_object_name = "arts"
+    paginate_by = 25
 
     def get_queryset(self):
-        return (
-            Art.objects
-            .order_by("-timestamp")[:10]
-        )
+        user = self.request.user
+
+        if user.is_authenticated:
+          following = user.following.all()
+
+          return (
+              Art.objects
+              .filter(artist__in=following)
+              .order_by("-timestamp")
+          )
+
+        else:
+            return []
 
 
 class JoinView(CreateView):
@@ -44,7 +56,7 @@ class SignInView(LoginView):
 
 
 class SignOutView(LogoutView):
-    template_name = "core/sign_out.html"
+    pass
 
 
 class AddArtView(LoginRequiredMixin, CreateView):
@@ -65,6 +77,23 @@ class UserView(DetailView):
     def get_object(self):
         return get_object_or_404(User, username=self.kwargs["username"])
 
+    def post(self, request, username):
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            follow_user = json.load(request)["follow_user"]
+
+            follower = request.user
+            target = self.get_object()
+            if follow_user:
+                follower.following.add(target)
+            else:
+                follower.following.remove(target)
+
+            user_followed = target in follower.following.all()
+
+            return JsonResponse({"user_followed": user_followed})
+
+        else:
+            return super().post(request, username)
 
 class ArtGalleryView(ListView):
     template_name = "core/arts.html"

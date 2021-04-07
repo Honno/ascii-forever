@@ -1,9 +1,13 @@
 {% extends "core/base.html" %}
+
 {% block title %}Home{% endblock %}
+
 {% block path %}
 <li><a href="{% url 'core:index' %}" >home</a></li>
 {% endblock %}
+
 {% block content %}
+{% if request.user.is_authenticated %}
 {% if arts %}
 <div>
     {% for art in arts %}
@@ -11,5 +15,16 @@
     <pre>{{ art.text }}</pre>
     {% endfor %}
 </div>
+
+{% include "core/components/pagination.html" %}
+{% else %}
+{% if request.user.following.count > 0 %}
+<p>Start following artists to see their latest work on your timeline!</p>
+{% else %}
+<p>Follow more artists and see their latest work on your timeline!</p>
+{% endif %}
+{% endif %}
+{% else %}
+<p>Welcome to ASCII World!</p>
 {% endif %}
 {% endblock %}
