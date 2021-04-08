@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ art.title }} by {{ art.artist.username }}{% endblock %}
+
+{% block path %}
+<li><a href="{% url 'core:index' %}" >home</a></li>
+<li><a href="{% url 'core:arts' %}" >art</a></li>
+<li>{{ art.pk }}</li>
+{% endblock %}
+
+{% block content %}
+<h2>{{ art.title }}</h2>
+<pre>{{ art.text }}</pre>
+{% endblock %}

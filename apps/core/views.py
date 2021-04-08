@@ -22,6 +22,7 @@ __all__ = [
     "UserListView",
     "UserView",
     "ArtGalleryView",
+    "ArtView",
 ]
 
 
@@ -108,6 +109,7 @@ class UserView(DetailView):
         else:
             return super().post(request, username)
 
+
 class ArtGalleryView(ListView):
     template_name = "core/arts.html"
     context_object_name = "arts"
@@ -118,3 +120,11 @@ class ArtGalleryView(ListView):
             Art.objects
             .order_by("-timestamp")
         )
+
+
+class ArtView(DetailView):
+    template_name = "core/art.html"
+    context_object_name = "art"
+
+    def get_object(self):
+        return get_object_or_404(Art, pk=self.kwargs["pk"])

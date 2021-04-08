@@ -13,4 +13,5 @@ urlpatterns = [
     path("users/<slug:username>", UserView.as_view(), name="user"),
     path("add", AddArtView.as_view(), name="add"),
     path("art/", ArtGalleryView.as_view(), name="arts"),
+    path("art/<int:pk>", ArtView.as_view(), name="art"),
 ]
