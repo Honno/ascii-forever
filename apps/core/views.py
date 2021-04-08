@@ -19,6 +19,7 @@ __all__ = [
     "SignInView",
     "SignOutView",
     "AddArtView",
+    "UserListView",
     "UserView",
     "ArtGalleryView",
 ]
@@ -68,6 +69,18 @@ class AddArtView(LoginRequiredMixin, CreateView):
         form.instance.artist = self.request.user
 
         return super().form_valid(form)
+
+
+class UserListView(ListView):
+    template_name = "core/users.html"
+    context_object_name = "users"
+    paginate_by = 100
+
+    def get_queryset(self):
+        return (
+              User.objects
+              .order_by("username")
+        )
 
 
 class UserView(DetailView):
