@@ -55,13 +55,26 @@ class User(AbstractUser):
 # Art
 
 
+r_nothing = re.compile("^\s+$")
+r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
+
+
+def validate_text(text):
+    if len(text) == 0:
+        raise ValidationError("no text was submitted")
+
+    if r_nothing.match(text):
+        raise ValidationError("only whitespace was submitted")
+
+    if r_emoji.search(text):
+        raise ValidationError("no one is allowed to use emojis except me 😈")
+
+
 class Art(Model):
     artist = ForeignKey(User, on_delete=CASCADE)
-    title = CharField(max_length=80)
-    text = TextField()
+    title = CharField(max_length=80, validators=[validate_text])
+    text = TextField(validators=[validate_text])
     timestamp = DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
-
-

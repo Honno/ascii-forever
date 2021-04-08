@@ -1,5 +1,3 @@
-import re
-
 from django.forms import *
 from django.contrib.auth.forms import UserCreationForm
 
@@ -19,10 +17,6 @@ class JoinForm(UserCreationForm):
 
 # ------------------------------------------------------------------------------
 # ArtForm
-
-
-r_nothing = re.compile("^\s+$")
-r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
 
 
 class ArtTextarea(Widget):
@@ -61,17 +55,5 @@ class ArtForm(ModelForm):
             # 4. GOODBYE DOT
             if data["text"][0] == ".":
                 data["text"] = data["text"][1:]
-
-            if not data["text"]:
-                raise ValidationError("no text was submitted")
-
-        if r_nothing.match(data["text"]):
-            raise ValidationError("only whitespace was submitted")
-
-        if r_nothing.match(data["text"]):
-            raise ValidationError("only whitespace was submitted")
-
-        if r_emoji.search(data["text"]):
-            raise ValidationError("no one is allowed to use emojis except me 😈")
 
         return data
