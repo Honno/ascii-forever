@@ -8,13 +8,10 @@
 
 {% block content %}
 {% if arts %}
-<div>
-    {% for art in arts %}
-    <h2>{{ art.title }}</h2>
-    <pre>{{ art.text }}</pre>
-    {% endfor %}
-</div>
-{% endif %}
+{% for art in arts %}
+{% include "core/components/art_thumb.html" with art=art %}
+{% endfor %}
 
 {% include "core/components/pagination.html" %}
+{% endif %}
 {% endblock %}

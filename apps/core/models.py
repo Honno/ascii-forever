@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db.models import *
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 __all__ = ["User", "Art"]
 
@@ -70,11 +71,51 @@ def validate_text(text):
         raise ValidationError("no one is allowed to use emojis except me 😈")
 
 
+MAX_THUMB_W = 80
+MAX_THUMB_H = 19
+
+
 class Art(Model):
     artist = ForeignKey(User, on_delete=CASCADE)
     title = CharField(max_length=80, validators=[validate_text])
     text = TextField(validators=[validate_text])
     timestamp = DateTimeField(default=timezone.now)
+
+    thumb_x_offset = IntegerField(default=0, validators=[MinValueValidator(0)])
+    thumb_y_offset = IntegerField(default=0, validators=[MinValueValidator(0)])
+
+    @property
+    def size(self):
+        text_lines = self.text.splitlines()
+
+        widths = [len(line) for line in text_lines]
+        width = max(widths)
+
+        height = len(text_lines)
+
+        return width, height
+
+    @property
+    def thumb_size(self):
+        w, h = self.size
+
+        thumb_width = min(w, MAX_THUMB_W)
+        thumb_height  = min(h, MAX_THUMB_H)
+
+        return thumb_width, thumb_height
+
+    @property
+    def thumb(self):
+        thumb_w, thumb_h = self.thumb_size
+
+        text_lines = self.text.splitlines()
+        thumb_lines = []
+
+        for y in range(self.thumb_y_offset, self.thumb_y_offset + thumb_h):
+            line = text_lines[y][self.thumb_x_offset:self.thumb_x_offset + thumb_w]
+            thumb_lines.append(line)
+
+        return "\n".join(thumb_lines)
 
     def __str__(self):
         return self.title

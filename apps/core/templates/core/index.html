@@ -9,12 +9,9 @@
 {% block content %}
 {% if request.user.is_authenticated %}
 {% if arts %}
-<div>
-    {% for art in arts %}
-    <h2>{{ art.title }}</h2>
-    <pre>{{ art.text }}</pre>
-    {% endfor %}
-</div>
+{% for art in arts %}
+{% include "core/components/art_thumb.html" with art=art %}
+{% endfor %}
 
 {% include "core/components/pagination.html" %}
 {% else %}
