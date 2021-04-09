@@ -39,7 +39,7 @@ class ArtForm(ModelForm):
 
     class Meta:
         model = Art
-        fields = ["title", "text"]
+        fields = ["title", "text", "thumb_x_offset", "thumb_y_offset"]
 
     class Media:
         js = ("core/preserve_whitespace.js",)

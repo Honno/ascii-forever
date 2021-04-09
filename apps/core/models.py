@@ -1,5 +1,6 @@
 import re
 
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db.models import *
@@ -47,6 +48,9 @@ class User(AbstractUser):
         validators=[validate_username],
     )
     following = ManyToManyField("self", related_name="following")
+
+    def get_absolute_url(self):
+        return reverse("core:user", args=[str(self.pk)])
 
     def __str__(self):
         return self.username
@@ -116,6 +120,9 @@ class Art(Model):
             thumb_lines.append(line)
 
         return "\n".join(thumb_lines)
+
+    def get_absolute_url(self):
+        return reverse("core:art", args=[str(self.pk)])
 
     def __str__(self):
         return self.title

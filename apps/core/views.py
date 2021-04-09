@@ -3,11 +3,11 @@ import json
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
 from .models import *
@@ -23,6 +23,7 @@ __all__ = [
     "UserView",
     "ArtGalleryView",
     "ArtView",
+    "ArtEditView",
 ]
 
 
@@ -64,7 +65,6 @@ class SignOutView(LogoutView):
 class AddArtView(LoginRequiredMixin, CreateView):
     template_name = "core/add.html"
     form_class = ArtForm
-    success_url = reverse_lazy("core:index")
 
     def form_valid(self, form):
         form.instance.artist = self.request.user
@@ -125,6 +125,21 @@ class ArtGalleryView(ListView):
 class ArtView(DetailView):
     template_name = "core/art.html"
     context_object_name = "art"
+
+    def get_object(self):
+        return get_object_or_404(Art, pk=self.kwargs["pk"])
+
+
+class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    template_name = "core/edit.html"
+    form_class = ArtForm
+    context_object_name = "art"
+
+    def test_func(self):
+        art = self.get_object()
+        user_is_artist = art.artist == self.request.user
+
+        return user_is_artist
 
     def get_object(self):
         return get_object_or_404(Art, pk=self.kwargs["pk"])

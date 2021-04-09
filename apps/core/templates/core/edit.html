@@ -1,17 +1,19 @@
 {% extends "core/base.html" %}
 
-{% block title %}Add art{% endblock %}
+{% block title %}Edit art{% endblock %}
 
 {% block path %}
 <li><a href="{% url 'core:index' %}" >home</a></li>
-<li>add</li>
+<li><a href="{% url 'core:arts' %}" >art</a></li>
+<li><a href="{% url 'core:art' art.pk %}" >{{ art.pk }}</a></li>
+<li>edit</li>
 {% endblock %}
 
 {% block content %}
 <form class="preserve-whitespace" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Save changes" />
 </form>
 {% endblock %}
 

@@ -10,7 +10,7 @@
 
 {% block content %}
 <p>{{ user.username }}</p>
-{% if request.user.is_authenticated and request.user != user %}
+{% if request.user != user %}
 {% if user not in request.user.following.all %}
 <span id="follow-button" class="follow">Follow</span>
 {% else %}
