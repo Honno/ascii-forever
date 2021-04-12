@@ -75,8 +75,8 @@ def validate_text(text):
         raise ValidationError("no one is allowed to use emojis except me 😈")
 
 
-MAX_THUMB_W = 80
-MAX_THUMB_H = 19
+THUMB_W = 80
+THUMB_H = 19
 
 
 class Art(Model):
@@ -100,26 +100,52 @@ class Art(Model):
         return width, height
 
     @property
-    def thumb_size(self):
-        w, h = self.size
+    def w(self):
+        w, _ = self.size
 
-        thumb_width = min(w, MAX_THUMB_W)
-        thumb_height  = min(h, MAX_THUMB_H)
-
-        return thumb_width, thumb_height
+        return w
 
     @property
-    def thumb(self):
-        thumb_w, thumb_h = self.thumb_size
+    def h(self):
+        _, h = self.size
 
+        return h
+
+    @property
+    def renderable_thumb(self):
         text_lines = self.text.splitlines()
         thumb_lines = []
 
-        for y in range(self.thumb_y_offset, self.thumb_y_offset + thumb_h):
-            line = text_lines[y][self.thumb_x_offset:self.thumb_x_offset + thumb_w]
+        for y in range(self.thumb_y_offset, self.thumb_y_offset + THUMB_H):
+            line = ""
+            for x in range(self.thumb_x_offset, self.thumb_x_offset + THUMB_W):
+                try:
+                    line += text_lines[y][x]
+                except IndexError:
+                    line += " "
+
             thumb_lines.append(line)
 
-        return "\n".join(thumb_lines)
+        thumb = "\n".join(thumb_lines)
+
+        return thumb
+
+    @property
+    def native_thumb(self):
+        if self.w < THUMB_W and self.h < THUMB_H:
+            return self.text
+        else:
+            return self.renderable_thumb
+
+    def clean(self):
+        if (
+                not - THUMB_W < self.thumb_x_offset < self.w or
+                not - THUMB_H < self.thumb_x_offset < self.h
+        ):
+            raise ValidationError("thumbnail is out-of-bounds")
+
+        if r_nothing.match(self.renderable_thumb):
+            raise ValidationError("thumbnail contains only whitespace")
 
     def get_absolute_url(self):
         return reverse("core:art", args=[str(self.pk)])
