@@ -1,6 +1,6 @@
 var form = document.querySelector("form.preserve-whitespace");
 
-/* JS status */
+/* js status */
 
 var element = form.querySelector(".no-js-warn");
 element.style.display = "none";
@@ -8,7 +8,7 @@ element.style.display = "none";
 var checkbox = form.querySelector("input[name='js_enabled']");
 checkbox.value = "True";
 
-/* Whitespace preservation */
+/* whitespace preservation */
 
 var textarea = form.querySelector("textarea[name='text']");
 
@@ -28,7 +28,7 @@ form.addEventListener("submit", (event) => {
     form.submit();
 });
 
-/* Thumbnail preview */
+/* thumbnail preview */
 
 var preview = document.querySelector("pre.thumb-preview");
 
@@ -36,8 +36,30 @@ var x_offset_input = form.querySelector("input[name='thumb_x_offset']");
 var y_offset_input = form.querySelector("input[name='thumb_y_offset']");
 
 var text = textarea.value;
-var x_offset = parseInt(x_offset_input.value);
-var y_offset = parseInt(y_offset_input.value);
+
+function parse_int(value) {
+    if (isNaN(value))
+        return null;
+
+    if (value == "")
+        return null;
+
+    let n = parseInt(value);
+
+    if (!isFinite(n))
+        return null;
+
+    return n;
+}
+
+var x_offset = parse_int(x_offset_input.value);
+var y_offset = parse_int(y_offset_input.value);
+
+// on page reloads these values could be non-integers
+if (x_offset == null)
+    x_offset = 0;
+if (y_offset == null)
+    y_offset = 0;
 
 function render_thumb() {
     let lines = text.split(/\r?\n/);
@@ -69,12 +91,18 @@ textarea.addEventListener("input", (e) => {
 });
 
 x_offset_input.addEventListener("input", (e) => {
-    x_offset = parseInt(e.target.value);
-    render_thumb();
+    let n = parse_int(e.target.value);
+    if (n != null) {
+        x_offset = parseInt(e.target.value);
+        render_thumb();
+    }
 });
 
 y_offset_input.addEventListener("input", (e) => {
-    y_offset = parseInt(e.target.value);
-    render_thumb();
+    let n = parse_int(e.target.value);
+    if (n != null) {
+        y_offset = parseInt(e.target.value);
+        render_thumb();
+    }
 });
 
