@@ -1,0 +1,15 @@
+{% extends "core/extendables/base.html" %}
+
+{% block content %}
+<form class="preserve-whitespace" method="post">
+    {% csrf_token %}
+    <p class="no-js-warn">Your JavaScript is disabled, so whitespace preservation and thumbnail previews will not work.</p>
+    {{ form.as_p }}
+    <pre class="thumb-preview"></pre>
+    <input type="submit" value="{% block submit_value %}{% endblock %}" />
+</form>
+{% endblock %}
+
+{% block js %}
+{{ form.media }}
+{% endblock %}

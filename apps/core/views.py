@@ -28,7 +28,7 @@ __all__ = [
 
 
 class IndexView(ListView):
-    template_name = "core/index.html"
+    template_name = "core/pages/index.html"
     context_object_name = "arts"
     paginate_by = 25
 
@@ -49,13 +49,13 @@ class IndexView(ListView):
 
 
 class JoinView(CreateView):
-    template_name = "core/join.html"
+    template_name = "core/pages/join.html"
     form_class = JoinForm
     success_url = reverse_lazy("core:index")
 
 
 class SignInView(LoginView):
-    template_name = "core/sign_in.html"
+    template_name = "core/pages/sign_in.html"
 
 
 class SignOutView(LogoutView):
@@ -63,7 +63,7 @@ class SignOutView(LogoutView):
 
 
 class AddArtView(LoginRequiredMixin, CreateView):
-    template_name = "core/add.html"
+    template_name = "core/pages/add.html"
     form_class = ArtForm
 
     def form_valid(self, form):
@@ -73,7 +73,7 @@ class AddArtView(LoginRequiredMixin, CreateView):
 
 
 class UserListView(ListView):
-    template_name = "core/users.html"
+    template_name = "core/pages/users.html"
     context_object_name = "users"
     paginate_by = 100
 
@@ -85,7 +85,7 @@ class UserListView(ListView):
 
 
 class UserView(DetailView):
-    template_name = "core/user.html"
+    template_name = "core/pages/user.html"
     context_object_name = "user"
 
     def get_object(self):
@@ -111,7 +111,7 @@ class UserView(DetailView):
 
 
 class ArtGalleryView(ListView):
-    template_name = "core/arts.html"
+    template_name = "core/pages/arts.html"
     context_object_name = "arts"
     paginate_by = 25
 
@@ -123,7 +123,7 @@ class ArtGalleryView(ListView):
 
 
 class ArtView(DetailView):
-    template_name = "core/art.html"
+    template_name = "core/pages/art.html"
     context_object_name = "art"
 
     def get_object(self):
@@ -131,7 +131,7 @@ class ArtView(DetailView):
 
 
 class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    template_name = "core/edit.html"
+    template_name = "core/pages/edit.html"
     form_class = ArtForm
     context_object_name = "art"
 

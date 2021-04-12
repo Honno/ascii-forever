@@ -85,8 +85,8 @@ class Art(Model):
     text = TextField(validators=[validate_text])
     timestamp = DateTimeField(default=timezone.now)
 
-    thumb_x_offset = IntegerField(default=0, validators=[MinValueValidator(0)])
-    thumb_y_offset = IntegerField(default=0, validators=[MinValueValidator(0)])
+    thumb_x_offset = IntegerField(default=0)
+    thumb_y_offset = IntegerField(default=0)
 
     @property
     def size(self):
@@ -119,9 +119,12 @@ class Art(Model):
         for y in range(self.thumb_y_offset, self.thumb_y_offset + THUMB_H):
             line = ""
             for x in range(self.thumb_x_offset, self.thumb_x_offset + THUMB_W):
-                try:
-                    line += text_lines[y][x]
-                except IndexError:
+                if y >= 0 and x >= 0:
+                    try:
+                        line += text_lines[y][x]
+                    except IndexError:
+                        line += " "
+                else:
                     line += " "
 
             thumb_lines.append(line)
@@ -140,7 +143,7 @@ class Art(Model):
     def clean(self):
         if (
                 not - THUMB_W < self.thumb_x_offset < self.w or
-                not - THUMB_H < self.thumb_x_offset < self.h
+                not - THUMB_H < self.thumb_y_offset < self.h
         ):
             raise ValidationError("thumbnail is out-of-bounds")
 
