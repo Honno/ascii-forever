@@ -7,6 +7,7 @@ from django.db.models import *
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils.functional import cached_property
 
 __all__ = ["User", "Art"]
 
@@ -88,7 +89,7 @@ class Art(Model):
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
 
-    @property
+    @cached_property
     def size(self):
         text_lines = self.text.splitlines()
 
@@ -99,19 +100,19 @@ class Art(Model):
 
         return width, height
 
-    @property
+    @cached_property
     def w(self):
         w, _ = self.size
 
         return w
 
-    @property
+    @cached_property
     def h(self):
         _, h = self.size
 
         return h
 
-    @property
+    @cached_property
     def renderable_thumb(self):
         text_lines = self.text.splitlines()
         thumb_lines = []
@@ -133,7 +134,7 @@ class Art(Model):
 
         return thumb
 
-    @property
+    @cached_property
     def native_thumb(self):
         if self.w < THUMB_W and self.h < THUMB_H:
             return self.text
