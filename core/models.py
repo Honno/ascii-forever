@@ -90,27 +90,21 @@ class Art(Model):
     thumb_y_offset = IntegerField(default=0)
 
     @cached_property
-    def size(self):
+    def w(self):
         text_lines = self.text.splitlines()
 
         widths = [len(line) for line in text_lines]
         width = max(widths)
 
-        height = len(text_lines)
-
-        return width, height
-
-    @cached_property
-    def w(self):
-        w, _ = self.size
-
-        return w
+        return width
 
     @cached_property
     def h(self):
-        _, h = self.size
+        text_lines = self.text.splitlines()
 
-        return h
+        height = len(text_lines)
+
+        return height
 
     @cached_property
     def renderable_thumb(self):
