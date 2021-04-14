@@ -51,7 +51,7 @@ class User(AbstractUser):
     following = ManyToManyField("self", related_name="following")
 
     def get_absolute_url(self):
-        return reverse("core:user", args=[str(self.pk)])
+        return reverse("core:user", args=[self.username])
 
     def __str__(self):
         return self.username

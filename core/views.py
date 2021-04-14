@@ -51,8 +51,6 @@ class IndexView(ListView):
 class JoinView(CreateView):
     template_name = "core/pages/join.html"
     form_class = JoinForm
-    success_url = reverse_lazy("core:index")
-    # TODO auto sign in
 
 
 class SignInView(LoginView):
