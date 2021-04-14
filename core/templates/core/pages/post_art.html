@@ -4,7 +4,8 @@
 
 {% block path %}
 <li><a href="{% url 'core:index' %}" >home</a></li>
-<li>add</li>
+<li><a href="{% url 'core:arts' %}" >art</a></li>
+<li>post</li>
 {% endblock %}
 
-{% block submit_value %}Add art{% endblock %}
+{% block submit_value %}Post art{% endblock %}
