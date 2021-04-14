@@ -52,13 +52,26 @@ class JoinView(CreateView):
     template_name = "core/pages/join.html"
     form_class = JoinForm
 
+    def form_valid(self, form):
+        user = form.save()
+
+        login(self.request, user)
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse("core:user", args=[self.request.user.username])
+
 
 class SignInView(LoginView):
     template_name = "core/pages/sign_in.html"
 
+    def get_success_url(self):
+        return reverse("core:user", args=[self.request.user.username])
+
 
 class SignOutView(LogoutView):
-    pass
+    next_page = reverse_lazy("core:index")
 
 
 class PostArtView(LoginRequiredMixin, CreateView):

@@ -77,7 +77,6 @@ validators = [
     "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     "django.contrib.auth.password_validation.MinimumLengthValidator",
     "django.contrib.auth.password_validation.CommonPasswordValidator",
-    "django.contrib.auth.password_validation.NumericPasswordValidator",
 ]
 AUTH_PASSWORD_VALIDATORS = [{"NAME": validator} for validator in validators]
 
@@ -94,10 +93,3 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = "/static/"
-
-
-# Auth
-
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
-LOGIN_URL = "/signin"
