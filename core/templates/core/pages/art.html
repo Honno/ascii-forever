@@ -12,6 +12,24 @@
 <h2>{{ art.title }}</h2>
 <pre>{{ art.text }}</pre>
 
+{% if art.description %}
+<div>{{ art.description }}</div>
+{% endif %}
+
+{% if comments %}
+{% for comment in comments %}
+<p>{{ comment.author.username }}</p>
+<div>{{ comment.text }}</div>
+<br />
+{% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Comment" />
+</form>
+
 {% if request.user == art.artist %}
 <p><a href="{% url 'core:edit' art.pk %}">Edit</a></p>
 {% endif %}

@@ -7,22 +7,28 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils.text import slugify
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import get_current_timezone
+import lorem
 
 from core.models import *
 
 
 rng = Random()
 data_dir = Path(__file__).resolve().parents[1] / "data"
-names = {}
-
-with open(data_dir / "first_names.txt") as f:
-    names["first"] = f.readlines()
-
-with open(data_dir / "last_names.txt") as f:
-    names["last"] = f.readlines()
 
 
 def create_usernames(n=100):
+    names = {}
+
+    try:
+        with open(data_dir / "first_names.txt") as f:
+            names["first"] = f.readlines()
+
+        with open(data_dir / "last_names.txt") as f:
+            names["last"] = f.readlines()
+
+    except FileNotFoundError as e:
+        raise CommandError("first_names.txt and last_names.txt required") from e
+
     first_names = rng.sample(names["first"], n)
 
     nlast = rng.randint(0, n)
@@ -52,12 +58,15 @@ def create_usernames(n=100):
 
 
 def get_art():
-    for path in Path(data_dir / "art").iterdir():
-        with open(path) as f:
-            art = f.read()
+    try:
+        for path in Path(data_dir / "art").iterdir():
+            with open(path) as f:
+                art = f.read()
 
-            yield slugify(path.name), art
+                yield slugify(path.name), art
 
+    except FileNotFoundError as e:
+        raise CommandError("art folder required")
 
 
 class Command(BaseCommand):
@@ -76,14 +85,10 @@ class Command(BaseCommand):
 
         usernames = create_usernames()
 
-        try:
-            users = []
-            for id, username in enumerate(usernames, 1):
-                user = User(id=id, username=username, password=password)
-                users.append(user)
-
-        except FileNotFoundError as e:
-            raise CommandError("first_names.txt and last_names.txt required") from e
+        users = []
+        for id, username in enumerate(usernames, 1):
+            user = User(id=id, username=username, password=password)
+            users.append(user)
 
         User.objects.bulk_create(users)
 
@@ -98,26 +103,29 @@ class Command(BaseCommand):
         dt_diff = dt_end - dt_start
         tz = get_current_timezone()
 
-        try:
-            arts = []
-            for fname, art in get_art():
-                user = rng.choice(users)
-                naive_dt = dt_start + rng.random() * dt_diff
-                dt = tz.localize(naive_dt)
+        arts = []
+        comments = []
+        for base_id, (fname, art) in enumerate(get_art()):
+            naive_dt = dt_start + rng.random() * dt_diff
+            dt = tz.localize(naive_dt)
 
-                art_rand = Art(artist=user, title=fname, text=art, timestamp=dt)
-                arts.append(art_rand)
+            rand_user = rng.choice(users)
 
-                art_admin = Art(artist=admin, title=fname, text=art, timestamp=dt)
-                arts.append(art_admin)
+            artists = [rand_user, admin, bob, alice]
+            for step, user in enumerate(artists):
+                id = base_id * len(artists) + step
+                art_obj = Art(id=id, artist=user, title=fname, text=art, timestamp=dt)
 
-                art_bob = Art(artist=bob, title=fname, text=art, timestamp=dt)
-                arts.append(art_bob)
+                arts.append(art_obj)
 
-                art_alice = Art(artist=alice, title=fname, text=art, timestamp=dt)
-                arts.append(art_alice)
+                ncomments = rng.randint(0, 50)
+                for _ in range(ncomments):
+                    rand_author = rng.choice(users)
+                    text = lorem.paragraph()
+                    comment = Comment(art=art_obj, author=rand_author, text=text)
 
-        except FileNotFoundError as e:
-            raise CommandError("art folder required")
+                    comments.append(comment)
 
         Art.objects.bulk_create(arts)
+        Comment.objects.bulk_create(comments)
+

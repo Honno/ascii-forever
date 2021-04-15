@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import *
 
-__all__ = ["JoinForm", "ArtForm"]
+__all__ = ["JoinForm", "ArtForm", "CommentForm"]
 
 
 # ------------------------------------------------------------------------------
@@ -35,11 +35,12 @@ class ArtCharField(CharField):
 
 class ArtForm(ModelForm):
     text = ArtCharField()
-    js_enabled = BooleanField(required=False, widget=HiddenInput())
+    js_enabled = BooleanField(required=False, widget=HiddenInput)
+    description = CharField(required=False, widget=Textarea)
 
     class Meta:
         model = Art
-        fields = ["title", "text", "thumb_x_offset", "thumb_y_offset"]
+        fields = ["title", "text", "description", "thumb_x_offset", "thumb_y_offset"]
 
     class Media:
         js = ["core/art_form.js"]
@@ -57,3 +58,13 @@ class ArtForm(ModelForm):
                 data["text"] = data["text"][1:]
 
         return data
+
+
+# ------------------------------------------------------------------------------
+# CommentForm
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["text"]

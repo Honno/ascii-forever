@@ -9,7 +9,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.functional import cached_property
 
-__all__ = ["User", "Art"]
+__all__ = ["User", "Art", "Comment"]
 
 
 # ------------------------------------------------------------------------------
@@ -81,9 +81,11 @@ THUMB_H = 19
 
 
 class Art(Model):
-    artist = ForeignKey(User, on_delete=CASCADE)
-    title = CharField(max_length=80, validators=[validate_text])
+    artist = ForeignKey(User, on_delete=PROTECT)
     text = TextField(validators=[validate_text])
+
+    title = CharField(max_length=80, validators=[validate_text])
+    description = TextField(null=True, blank=True, validators=[validate_text])
     timestamp = DateTimeField(default=timezone.now)
 
     thumb_x_offset = IntegerField(default=0)
@@ -150,3 +152,21 @@ class Art(Model):
 
     def __str__(self):
         return self.title
+
+
+# ------------------------------------------------------------------------------
+# Comment
+
+
+class Comment(Model):
+    art = ForeignKey(Art, on_delete=PROTECT)
+    author = ForeignKey(User, on_delete=PROTECT)
+    text = TextField(validators=[validate_text])
+
+    timestamp = DateTimeField(default=timezone.now)
+
+    def get_absolute_url(self):
+        return reverse("core:art", args=[str(self.art.pk)])
+
+    def __str__(self):
+        return self.text
