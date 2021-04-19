@@ -6,6 +6,8 @@
 
 $white: #ffffff;
 $primary: #212121;
+$secondary: #444444;
+$tertiary: #7e7e7e;
 $blue: #0000ff;
 $purple: #8000ff;
 $red: #ff0000;
@@ -73,8 +75,11 @@ a.nostyle {
     text-decoration: none;
 }
 
-@mixin inbetween-content($content) {
-    &:before { content: $content }
+@mixin inbetween-content($content, $color: $tertiary) {
+    &:before {
+        content: $content;
+        color: $color;
+    }
     &:first-child:before { content: "" }
 }
 
