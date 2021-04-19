@@ -10,10 +10,10 @@
 {% if request.user.is_authenticated %}
 {% if arts %}
 {% for art in arts %}
-{% include "core/components/art_thumb.html" with art=art %}
+{% include "core/includes/art_thumb.html" with art=art %}
 {% endfor %}
 
-{% include "core/components/pagination.html" %}
+{% include "core/includes/pagination.html" %}
 {% else %}
 {% if request.user.following.count > 0 %}
 <p>Start following artists to see their latest work on your timeline!</p>

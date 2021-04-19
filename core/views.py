@@ -7,6 +7,8 @@ from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.views.generic.base import TemplateView, ContextMixin
 from django.views.generic.edit import ModelFormMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -24,6 +26,7 @@ __all__ = [
     "SignInView",
     "SignOutView",
     "ArtView",
+    "like_art",
     "ArtGalleryView",
     "PostArtView",
     "ArtEditView",
@@ -123,7 +126,13 @@ class ArtView(ModelFormMixin, TemplateView):
         art = get_object_or_404(Art, pk=pk)
         comments = art.comment_set.all()
 
-        return {"art": art, "comments": comments, "form": self.get_form() }
+        ctx = {
+            "art": art,
+            "comments": comments,
+            "comment_form": self.get_form(),
+        }
+
+        return ctx
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -144,6 +153,30 @@ class ArtView(ModelFormMixin, TemplateView):
 
     def get_success_url(self):
         return reverse("core:art", args=[self.kwargs["pk"]])
+
+
+@require_POST
+@login_required
+def like_art(request, pk):
+    art = get_object_or_404(Art, pk=pk)
+
+    if request.headers.get("x-requested-with") != "XMLHttpRequest":
+        raise Http404()
+
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+
+    like = json.load(request)["like"]
+
+    if like:
+        art.likes.add(request.user)
+    else:
+        art.likes.remove(request.user)
+
+    like_tally = art.likes.count()
+    art_liked = request.user in art.likes.all()
+
+    return JsonResponse({"like_tally": like_tally, "art_liked": art_liked})
 
 
 class ArtGalleryView(ListView):

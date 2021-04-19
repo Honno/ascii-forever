@@ -1,5 +1,7 @@
 {% extends "core/extendables/base.html" %}
 
+{% load static %}
+
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block path %}
@@ -10,64 +12,22 @@
 
 {% block content %}
 <p>{{ user.username }}</p>
-{% if request.user != user %}
+
+{% if request.user.is_authenticated and request.user != user %}
 {% if user not in request.user.following.all %}
 <span id="follow-button" class="follow">Follow</span>
 {% else %}
 <span id="follow-button" class="unfollow">Unfollow</span>
 {% endif %}
 {% endif %}
+
 {% endblock %}
 
 {% block js %}
 {% if request.user.is_authenticated and request.user != user %}
+<script src="{% static 'core/js/get_cookie.js' %}"></script>
 <script>
- function get_cookie(name) {
-     let cookie_value = null;
-     if (document.cookie && document.cookie !== "") {
-         const cookies = document.cookie.split(";");
-         for (let i = 0; i < cookies.length; i++) {
-             const cookie = cookies[i].trim();
-             // does this cookie string begin with the name we want?
-             if (cookie.substring(0, name.length + 1) === (name + "=")) {
-                 cookie_value = decodeURIComponent(cookie.substring(name.length + 1));
-                 break;
-             }
-         }
-     }
-     return cookie_value;
- }
-
- var follow_button = document.querySelector("#follow-button");
-
- follow_button.addEventListener("click", (event) => {
-     var follow_user = follow_button.className == "follow";
-
-     fetch("{{ request.path }}", {
-         method: "POST",
-         credentials: "same-origin",
-         headers: {
-             "Accept": "application/json",
-             "X-Requested-With": "XMLHttpRequest",
-             "X-CSRFToken": get_cookie("csrftoken"),
-         },
-         body: JSON.stringify({"follow_user": follow_user}),
-     })
-         .then((response) => {
-             response.json().then((data) => {
-                 if (data.user_followed) {
-                     follow_button.className = "unfollow";
-                     follow_button.innerHTML = "Unfollow";
-                 } else {
-                     follow_button.className = "follow";
-                     follow_button.innerHTML = "Follow";
-                 }
-             });
-         })
-         .catch((error) => {
-             console.error(error);
-         });
- });
+{% include "core/js/follow_user.js" %}
 </script>
 {% endif %}
 {% endblock %}

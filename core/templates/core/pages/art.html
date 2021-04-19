@@ -1,5 +1,7 @@
 {% extends "core/extendables/base.html" %}
 
+{% load static %}
+
 {% block title %}{{ art.title }} by {{ art.artist.username }}{% endblock %}
 
 {% block path %}
@@ -11,6 +13,16 @@
 {% block content %}
 <h2>{{ art.title }}</h2>
 <pre>{{ art.text }}</pre>
+
+<span id="art-like-tally-{{ art.pk }}" class="art-like-tally">{{ art.likes.count }}</span>
+
+{% if request.user.is_authenticated %}
+{% if user not in art.likes.all %}
+<span id="like-art-{{ art.pk }}" class="like-art like">Like</span>
+{% else %}
+<span id="like-art-{{ art.pk }}" class="like-art unlike">Unlike</span>
+{% endif %}
+{% endif %}
 
 {% if art.description %}
 <div>{{ art.description }}</div>
@@ -26,11 +38,20 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ comment_form.as_p }}
     <input type="submit" value="Comment" />
 </form>
 
 {% if request.user == art.artist %}
-<p><a href="{% url 'core:edit' art.pk %}">Edit</a></p>
+<p><a href="{% url 'core:edit_art' art.pk %}">Edit</a></p>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+{% if request.user.is_authenticated %}
+<script src="{% static 'core/js/get_cookie.js' %}"></script>
+<script>
+{% include "core/js/like_art.js" with pk=art.pk %}
+</script>
 {% endif %}
 {% endblock %}

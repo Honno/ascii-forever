@@ -10,9 +10,9 @@
 {% block content %}
 {% if arts %}
 {% for art in arts %}
-{% include "core/components/art_thumb.html" with art=art %}
+{% include "core/includes/art_thumb.html" with art=art %}
 {% endfor %}
 
-{% include "core/components/pagination.html" %}
+{% include "core/includes/pagination.html" %}
 {% endif %}
 {% endblock %}

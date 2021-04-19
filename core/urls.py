@@ -14,5 +14,6 @@ urlpatterns = [
     path("art/", ArtGalleryView.as_view(), name="arts"),
     path("art/post", PostArtView.as_view(), name="post_art"),
     path("art/<int:pk>", ArtView.as_view(), name="art"),
-    path("art/<int:pk>/edit", ArtEditView.as_view(), name="edit"),
+    path("art/<int:pk>/like", like_art, name="like_art"),
+    path("art/<int:pk>/edit", ArtEditView.as_view(), name="edit_art"),
 ]

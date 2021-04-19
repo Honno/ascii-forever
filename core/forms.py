@@ -43,7 +43,7 @@ class ArtForm(ModelForm):
         fields = ["title", "text", "description", "thumb_x_offset", "thumb_y_offset"]
 
     class Media:
-        js = ["core/art_form.js"]
+        js = ["core/js/art_form.js"]
 
     def clean(self):
         data = super().clean()

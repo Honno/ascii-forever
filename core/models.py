@@ -91,6 +91,8 @@ class Art(Model):
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
 
+    likes = ManyToManyField(User, related_name="likes")
+
     @cached_property
     def w(self):
         text_lines = self.text.splitlines()
