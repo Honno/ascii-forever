@@ -21,6 +21,12 @@
 {% endif %}
 {% endif %}
 
+{% if arts %}
+{% for art in arts %}
+{% include "core/includes/art_thumb.html" with art=art %}
+{% endfor %}
+{% include "core/includes/pagination.html" %}
+{% endif %}
 {% endblock %}
 
 {% block js %}

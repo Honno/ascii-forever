@@ -34,7 +34,7 @@ __all__ = [
 
 
 # ------------------------------------------------------------------------------
-# Views
+# IndexView
 
 
 class IndexView(ListView):
@@ -58,30 +58,8 @@ class IndexView(ListView):
             return []
 
 
-class UserView(DetailView):
-    template_name = "core/pages/user.html"
-    context_object_name = "user"
-
-    def get_object(self):
-        return get_object_or_404(User, username=self.kwargs["username"])
-
-    def post(self, request, username):
-        if request.headers.get("x-requested-with") == "XMLHttpRequest":
-            follow_user = json.load(request)["follow_user"]
-
-            follower = request.user
-            target = self.get_object()
-            if follow_user:
-                follower.following.add(target)
-            else:
-                follower.following.remove(target)
-
-            user_followed = target in follower.following.all()
-
-            return JsonResponse({"user_followed": user_followed})
-
-        else:
-            return super().post(request, username)
+# ------------------------------------------------------------------------------
+# Directories
 
 
 class UserListView(ListView):
@@ -94,6 +72,22 @@ class UserListView(ListView):
               User.objects
               .order_by("username")
         )
+
+
+class ArtGalleryView(ListView):
+    template_name = "core/pages/arts.html"
+    context_object_name = "arts"
+    paginate_by = 25
+
+    def get_queryset(self):
+        return (
+            Art.objects
+            .order_by("-timestamp")
+        )
+
+
+# ------------------------------------------------------------------------------
+# User gateways
 
 
 class JoinView(CreateView):
@@ -120,6 +114,65 @@ class SignInView(LoginView):
 
 class SignOutView(LogoutView):
     next_page = reverse_lazy("core:index")
+
+
+# ------------------------------------------------------------------------------
+# UserView
+
+
+class ArtGalleryComponent(MultipleObjectMixin):
+    context_object_name = "arts"
+    paginate_by = 25
+
+    def __init__(self, request, username):
+        self.request = request
+        self.kwargs = { "username": username }
+        self.object_list = self.get_queryset()
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs["username"])
+
+        return user.art_set.all().order_by("-timestamp")
+
+
+class UserView(TemplateView):
+    template_name = "core/pages/user.html"
+
+    def get(self, request, username):
+        self.arts_component = ArtGalleryComponent(request, username)
+
+        return super().get(request, username)
+
+    def get_context_data(self):
+        user = get_object_or_404(User, username=self.kwargs["username"])
+        ctx = { "user": user }
+
+        arts_ctx = self.arts_component.get_context_data()
+        ctx.update(arts_ctx)
+
+        return ctx
+
+    def post(self, request, username):
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            follow_user = json.load(request)["follow_user"]
+
+            follower = request.user
+            target = self.get_object()
+            if follow_user:
+                follower.following.add(target)
+            else:
+                follower.following.remove(target)
+
+            user_followed = target in follower.following.all()
+
+            return JsonResponse({"user_followed": user_followed})
+
+        else:
+            return super().post(request, username)
+
+
+# ------------------------------------------------------------------------------
+# ArtView
 
 
 class PostCommentView(CreateView):
@@ -180,40 +233,8 @@ class ArtView(TemplateView):
         return view(request, *args, **kwargs)
 
 
-@require_POST
-@login_required
-def like_art(request, pk):
-    art = get_object_or_404(Art, pk=pk)
-
-    if request.headers.get("x-requested-with") != "XMLHttpRequest":
-        raise Http404()
-
-    if not request.user.is_authenticated:
-        return HttpResponse("Unauthorized", status=401)
-
-    like = json.load(request)["like"]
-
-    if like:
-        art.likes.add(request.user)
-    else:
-        art.likes.remove(request.user)
-
-    like_tally = art.likes.count()
-    art_liked = request.user in art.likes.all()
-
-    return JsonResponse({"like_tally": like_tally, "art_liked": art_liked})
-
-
-class ArtGalleryView(ListView):
-    template_name = "core/pages/arts.html"
-    context_object_name = "arts"
-    paginate_by = 25
-
-    def get_queryset(self):
-        return (
-            Art.objects
-            .order_by("-timestamp")
-        )
+# ------------------------------------------------------------------------------
+# Art upsert
 
 
 class PostArtView(LoginRequiredMixin, CreateView):
@@ -242,3 +263,31 @@ class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_object(self):
         return get_object_or_404(Art, pk=self.kwargs["pk"])
+
+
+# ------------------------------------------------------------------------------
+# Ajax endpoints
+
+
+@require_POST
+@login_required
+def like_art(request, pk):
+    art = get_object_or_404(Art, pk=pk)
+
+    if request.headers.get("x-requested-with") != "XMLHttpRequest":
+        raise Http404()
+
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+
+    like = json.load(request)["like"]
+
+    if like:
+        art.likes.add(request.user)
+    else:
+        art.likes.remove(request.user)
+
+    like_tally = art.likes.count()
+    art_liked = request.user in art.likes.all()
+
+    return JsonResponse({"like_tally": like_tally, "art_liked": art_liked})
