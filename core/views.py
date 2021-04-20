@@ -22,6 +22,7 @@ __all__ = [
     "IndexView",
     "UserView",
     "UserListView",
+    "follow_user",
     "JoinView",
     "SignInView",
     "SignOutView",
@@ -152,37 +153,16 @@ class UserView(TemplateView):
 
         return ctx
 
-    def post(self, request, username):
-        if request.headers.get("x-requested-with") == "XMLHttpRequest":
-            follow_user = json.load(request)["follow_user"]
-
-            follower = request.user
-            target = self.get_object()
-            if follow_user:
-                follower.following.add(target)
-            else:
-                follower.following.remove(target)
-
-            user_followed = target in follower.following.all()
-
-            return JsonResponse({"user_followed": user_followed})
-
-        else:
-            return super().post(request, username)
-
 
 # ------------------------------------------------------------------------------
 # ArtView
 
 
-class PostCommentView(CreateView):
+class PostCommentView(LoginRequiredMixin, CreateView):
     form_class = CommentForm
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
-            form.instance.author = self.request.user
-        else:
-            return HttpResponse("Unauthorized", status=401)
+        form.instance.author = self.request.user
 
         form.instance.art = get_object_or_404(Art, pk=self.kwargs["pk"])
 
@@ -242,10 +222,7 @@ class PostArtView(LoginRequiredMixin, CreateView):
     form_class = ArtForm
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
-            form.instance.artist = self.request.user
-        else:
-            return HttpResponse("Unauthorized", status=401)
+        form.instance.artist = self.request.user
 
         return super().form_valid(form)
 
@@ -269,16 +246,40 @@ class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 # Ajax endpoints
 
 
+def require_ajax(func):
+    def wrapper(request, *args, **kwargs):
+        if not request.headers.get("x-requested-with") == "XMLHttpRequest":
+            raise Http404()
+
+        response = func(request, *args, **kwargs)
+
+        return response
+
+    return wrapper
+
+@require_ajax
+@require_POST
+@login_required
+def follow_user(request, username):
+    target = get_object_or_404(User, username=username)
+    follower = request.user
+
+    follow_user = json.load(request)["follow_user"]
+    if follow_user:
+        follower.following.add(target)
+    else:
+        follower.following.remove(target)
+
+    user_followed = target in follower.following.all()
+
+    return JsonResponse({"user_followed": user_followed})
+
+
+@require_ajax
 @require_POST
 @login_required
 def like_art(request, pk):
     art = get_object_or_404(Art, pk=pk)
-
-    if request.headers.get("x-requested-with") != "XMLHttpRequest":
-        raise Http404()
-
-    if not request.user.is_authenticated:
-        return HttpResponse("Unauthorized", status=401)
 
     like = json.load(request)["like"]
 

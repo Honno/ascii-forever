@@ -15,9 +15,9 @@
 
 {% if request.user.is_authenticated and request.user != user %}
 {% if user not in request.user.following.all %}
-<span id="follow-button" class="follow">Follow</span>
+<span id="follow-button-{{ user.username }}" class="follow-button follow">Follow</span>
 {% else %}
-<span id="follow-button" class="unfollow">Unfollow</span>
+<span id="follow-button-{{ user.username }}" class="follow-button unfollow">Unfollow</span>
 {% endif %}
 {% endif %}
 
@@ -33,7 +33,7 @@
 {% if request.user.is_authenticated and request.user != user %}
 <script src="{% static 'core/js/get_cookie.js' %}"></script>
 <script>
-{% include "core/js/follow_user.js" %}
+{% include "core/js/follow_user.js" with username=user.username %}
 </script>
 {% endif %}
 {% endblock %}

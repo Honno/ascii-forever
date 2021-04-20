@@ -1,9 +1,9 @@
-var follow_button = document.querySelector("#follow-button");
+var follow_button = document.querySelector("#follow-button-{{ username }}");
 
 follow_button.addEventListener("click", (event) => {
-    var follow_user = follow_button.className == "follow";
+    var follow_user = follow_button.className == "follow-button follow";
 
-    fetch("{{ request.path }}", {
+    fetch("{% url 'core:follow_user' username %}", {
         method: "POST",
         credentials: "same-origin",
         headers: {
@@ -16,10 +16,10 @@ follow_button.addEventListener("click", (event) => {
         .then((response) => {
             response.json().then((data) => {
                 if (data.user_followed) {
-                    follow_button.className = "unfollow";
+                    follow_button.className = "follow-button unfollow";
                     follow_button.innerHTML = "Unfollow";
                 } else {
-                    follow_button.className = "follow";
+                    follow_button.className = "follow-button follow";
                     follow_button.innerHTML = "Follow";
                 }
             });

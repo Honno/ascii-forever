@@ -11,6 +11,7 @@ urlpatterns = [
     path("users/sign_in", SignInView.as_view(), name="sign_in"),
     path("users/sign_out", SignOutView.as_view(), name="sign_out"),
     path("users/<slug:username>", UserView.as_view(), name="user"),
+    path("users/<slug:username>/follow", follow_user, name="follow_user"),
     path("art/", ArtGalleryView.as_view(), name="arts"),
     path("art/post", PostArtView.as_view(), name="post_art"),
     path("art/<int:pk>", ArtView.as_view(), name="art"),
