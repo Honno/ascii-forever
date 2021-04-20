@@ -6,13 +6,13 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.views.generic.base import TemplateView, ContextMixin
 from django.views.generic.edit import ModelFormMixin
+from django.views.generic.list import MultipleObjectMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic.list import MultipleObjectMixin
 from django.contrib.auth.models import User
 
 from .models import *
@@ -31,6 +31,10 @@ __all__ = [
     "PostArtView",
     "ArtEditView",
 ]
+
+
+# ------------------------------------------------------------------------------
+# Views
 
 
 class IndexView(ListView):
@@ -118,28 +122,8 @@ class SignOutView(LogoutView):
     next_page = reverse_lazy("core:index")
 
 
-class ArtView(ModelFormMixin, TemplateView):
-    template_name = "core/pages/art.html"
+class PostCommentView(CreateView):
     form_class = CommentForm
-
-    def get_context_data(self, pk):
-        art = get_object_or_404(Art, pk=pk)
-        comments = art.comment_set.all()
-
-        ctx = {
-            "art": art,
-            "comments": comments,
-            "comment_form": self.get_form(),
-        }
-
-        return ctx
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
     def form_valid(self, form):
         if self.request.user.is_authenticated:
@@ -153,6 +137,47 @@ class ArtView(ModelFormMixin, TemplateView):
 
     def get_success_url(self):
         return reverse("core:art", args=[self.kwargs["pk"]])
+
+class CommentsComponent(MultipleObjectMixin):
+    context_object_name = "comments"
+    paginate_by = 50
+
+    def __init__(self, request, pk):
+        self.request = request
+        self.kwargs = { "pk": pk }
+        self.object_list = self.get_queryset()
+
+    def get_queryset(self):
+        art = get_object_or_404(Art, pk=self.kwargs["pk"])
+
+        return art.comment_set.all().order_by("timestamp")
+
+
+class ArtView(TemplateView):
+    template_name = "core/pages/art.html"
+
+    def get(self, request, pk):
+        self.comments_component = CommentsComponent(request, pk)
+
+        return super().get(request, pk)
+
+    def get_context_data(self):
+        art = get_object_or_404(Art, pk=self.kwargs["pk"])
+
+        ctx ={
+            "art": art,
+            "comment_form": CommentForm(),
+        }
+
+        comments_ctx = self.comments_component.get_context_data()
+        ctx.update(comments_ctx)
+
+        return ctx
+
+    def post(self, request, *args, **kwargs):
+        view = PostCommentView.as_view()
+
+        return view(request, *args, **kwargs)
 
 
 @require_POST

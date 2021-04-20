@@ -118,7 +118,7 @@ class Command(BaseCommand):
 
                 arts.append(art_obj)
 
-                ncomments = rng.randint(0, 50)
+                ncomments = rng.randint(0, 150)
                 for _ in range(ncomments):
                     rand_author = rng.choice(users)
                     text = lorem.paragraph()
