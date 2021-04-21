@@ -1,2 +1,8 @@
 <h2><a class="nostyle" href="{% url 'core:art' art.pk %}">{{ art.title }}</a></h2>
 <pre>{{ art.native_thumb }}</pre>
+{% if art.description_preview %}
+<p>{{ art.description_preview }}</p>
+{% endif %}
+
+
+

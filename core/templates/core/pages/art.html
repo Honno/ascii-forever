@@ -25,7 +25,7 @@
 {% endif %}
 
 {% if art.description %}
-<div>{{ art.description }}</div>
+<div>{{ art.description | linebreaks }}</div>
 {% endif %}
 
 {% if comments %}

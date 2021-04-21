@@ -69,6 +69,19 @@ def get_art():
         raise CommandError("art folder required")
 
 
+def gen_text():
+    nparagraphs = rng.randint(0, 3)
+    paragraphs = []
+    for _ in range(nparagraphs):
+        p = lorem.paragraph()
+        paragraphs.append(p)
+
+    join_char = rng.choice(["\n", "\n\n", "\n\n"])
+    text = join_char.join(paragraphs)
+
+    return text
+
+
 class Command(BaseCommand):
     help = "Populates the database for a development environment"
 
@@ -114,14 +127,23 @@ class Command(BaseCommand):
             artists = [rand_user, admin, bob, alice]
             for step, user in enumerate(artists):
                 id = base_id * len(artists) + step
-                art_obj = Art(id=id, artist=user, title=fname, text=art, timestamp=dt)
+                desc = gen_text()
+
+                art_obj = Art(
+                    id=id,
+                    artist=user,
+                    title=fname,
+                    text=art,
+                    description=desc,
+                    timestamp=dt,
+                )
 
                 arts.append(art_obj)
 
                 ncomments = rng.randint(0, 150)
                 for _ in range(ncomments):
                     rand_author = rng.choice(users)
-                    text = lorem.paragraph()
+                    text = gen_text()
                     comment = Comment(art=art_obj, author=rand_author, text=text)
 
                     comments.append(comment)

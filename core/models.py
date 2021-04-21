@@ -1,4 +1,5 @@
 import re
+from itertools import takewhile
 
 from django.urls import reverse
 from django.core.exceptions import ValidationError
@@ -138,6 +139,14 @@ class Art(Model):
             return self.text
         else:
             return self.renderable_thumb
+
+    @cached_property
+    def description_preview(self):
+        if not self.description:
+            return None
+        else:
+            return "".join(takewhile(lambda c: c != "\n", self.description))
+
 
     def clean(self):
         if (
