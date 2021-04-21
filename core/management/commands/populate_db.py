@@ -128,6 +128,7 @@ class Command(BaseCommand):
             for step, user in enumerate(artists):
                 id = base_id * len(artists) + step
                 desc = gen_text()
+                nsfw = rng.choice([True, False])
 
                 art_obj = Art(
                     id=id,
@@ -135,6 +136,7 @@ class Command(BaseCommand):
                     title=fname,
                     text=art,
                     description=desc,
+                    nsfw=nsfw,
                     timestamp=dt,
                 )
 

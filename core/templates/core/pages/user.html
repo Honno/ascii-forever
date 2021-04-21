@@ -31,7 +31,6 @@
 
 {% block js %}
 {% if request.user.is_authenticated and request.user != user %}
-<script src="{% static 'core/js/get_cookie.js' %}"></script>
 <script>
 {% include "core/js/follow_user.js" with username=user.username %}
 </script>

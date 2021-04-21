@@ -10,7 +10,7 @@ like_button.addEventListener("click", (event) => {
         headers: {
             "Accept": "application/json",
             "X-Requested-With": "XMLHttpRequest",
-            "X-CSRFToken": get_cookie("csrftoken"),
+            "X-CSRFToken": Cookies.get("csrftoken"),
         },
         body: JSON.stringify({"like": like}),
     })

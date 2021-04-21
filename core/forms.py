@@ -40,7 +40,7 @@ class ArtForm(ModelForm):
 
     class Meta:
         model = Art
-        fields = ["title", "text", "description", "thumb_x_offset", "thumb_y_offset"]
+        fields = ["title", "text", "description", "nsfw", "thumb_x_offset", "thumb_y_offset"]
 
     class Media:
         js = ["core/js/art_form.js"]

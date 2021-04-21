@@ -20,6 +20,7 @@
                     <li><a href="{% url 'core:sign_in' %}">Sign in</a></li>
                     <li><a href="{% url 'core:join' %}">Join</a></li>
                     {% endif %}
+                    <li>Blur NSFW <input type="checkbox" id="blur-nsfw"></li>
                 </ul>
             </header>
             <section>{% block content %}{% endblock %}</section>
@@ -27,6 +28,8 @@
                 Made with <span id="heart">♥</span> by <a href="http://matthewbarber.io/">Honno</a>.
             </footer>
         </main>
+        <script src="{% static 'core/js/js.cookie.js' %}"></script>
+        <script src="{% static 'core/js/blur_nsfw.js' %}"></script>
         {% block js %}{% endblock %}
     </body>
 </html>

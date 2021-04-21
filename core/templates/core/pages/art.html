@@ -12,7 +12,7 @@
 
 {% block content %}
 <h2>{{ art.title }}</h2>
-<pre>{{ art.text }}</pre>
+<pre class="art{% if art.nsfw %} nsfw blur{% endif %}">{{ art.text }}</pre>
 
 <span id="art-like-tally-{{ art.pk }}" class="art-like-tally">{{ art.likes.count }}</span>
 
@@ -51,7 +51,6 @@
 
 {% block js %}
 {% if request.user.is_authenticated %}
-<script src="{% static 'core/js/get_cookie.js' %}"></script>
 <script>
 {% include "core/js/like_art.js" with pk=art.pk %}
 </script>

@@ -89,6 +89,8 @@ class Art(Model):
     description = TextField(null=True, blank=True, validators=[validate_text])
     timestamp = DateTimeField(default=timezone.now)
 
+    nsfw = BooleanField()
+
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
 

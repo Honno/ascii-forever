@@ -43,6 +43,11 @@ pre {
     line-height: 15px;
 }
 
+.blur {
+    color: transparent;
+    text-shadow: 0 0 24px $primary;
+}
+
 p {
     margin-bottom: 1em;
     &:last-child { margin-bottom: 0 }
