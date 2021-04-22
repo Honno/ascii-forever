@@ -12,17 +12,29 @@
 
 {% block content %}
 <h2>{{ art.title }}</h2>
+
+<p>by {{ art.artist.username }}
+{% if request.user.is_authenticated and request.user != art.artist %}
+{% if request.user not in art.artist.following.all %}
+<span id="follow-button-{{ art.artist.username }}" class="follow-button follow">Follow</span>
+{% else %}
+<span id="follow-button-{{ art.artist.username }}" class="follow-button unfollow">Unfollow</span>
+{% endif %}
+{% endif %}
+</p>
+
 <pre class="art{% if art.nsfw %} nsfw blur{% endif %}">{{ art.text }}</pre>
 
-<span id="art-like-tally-{{ art.pk }}" class="art-like-tally">{{ art.likes.count }}</span>
-
+<span id="art-like-{{ art.pk }}" class="art-like" >
+<span class="art-like-tally">{{ art.likes.count }}</span>
 {% if request.user.is_authenticated %}
-{% if user not in art.likes.all %}
-<span id="like-art-{{ art.pk }}" class="like-art like">Like</span>
+{% if request.user not in art.likes.all %}
+<span class="like-art like">Like</span>
 {% else %}
-<span id="like-art-{{ art.pk }}" class="like-art unlike">Unlike</span>
+<span class="like-art unlike">Unlike</span>
 {% endif %}
 {% endif %}
+</span>
 
 {% if art.description %}
 <div>{{ art.description | linebreaks }}</div>
@@ -51,8 +63,9 @@
 
 {% block js %}
 {% if request.user.is_authenticated %}
-<script>
-{% include "core/js/like_art.js" with pk=art.pk %}
-</script>
+<script src="{% static 'core/js/like_art.js' %}"></script>
+{% if request.user != art.artist %}
+<script src="{% static 'core/js/follow_user.js' %}"></script>
+{% endif %}
 {% endif %}
 {% endblock %}

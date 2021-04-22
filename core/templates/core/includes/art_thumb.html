@@ -1,4 +1,15 @@
 <h2><a class="nostyle" href="{% url 'core:art' art.pk %}">{{ art.title }}</a></h2>
+<p>by {{ art.artist.username }}</p>
+<span id="art-like-{{ art.pk }}" class="art-like" >
+    <span class="art-like-tally">{{ art.likes.count }}</span>
+    {% if request.user.is_authenticated %}
+    {% if request.user not in art.likes.all %}
+    <span class="like-art like">Like</span>
+    {% else %}
+    <span class="like-art unlike">Unlike</span>
+    {% endif %}
+    {% endif %}
+</span>
 <pre class="art{% if art.nsfw %} nsfw blur{% endif %}">{{ art.native_thumb }}</pre>
 {% if art.description_preview %}
 <p>{{ art.description_preview }}</p>

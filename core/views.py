@@ -257,6 +257,7 @@ def require_ajax(func):
 
     return wrapper
 
+
 @require_ajax
 @require_POST
 @login_required

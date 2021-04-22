@@ -1,5 +1,7 @@
 {% extends "core/extendables/base.html" %}
 
+{% load static %}
+
 {% block title %}Art Gallery{% endblock %}
 
 {% block path %}
@@ -14,5 +16,11 @@
 {% endfor %}
 
 {% include "core/includes/pagination.html" %}
+{% endif %}
+{% endblock %}
+
+{% block js %}
+{% if request.user.is_authenticated %}
+<script src="{% static 'core/js/like_art.js' %}"></script>
 {% endif %}
 {% endblock %}
