@@ -4,6 +4,10 @@
 
 {% block title %}{{ art.title }} by {{ art.artist.username }}{% endblock %}
 
+{% block og %}
+<meta property="og:image" content="{{ art.thumb_render.url }}" />
+{% endblock %}
+
 {% block path %}
 <li><a href="{% url 'core:index' %}" >home</a></li>
 <li><a href="{% url 'core:arts' %}" >art</a></li>

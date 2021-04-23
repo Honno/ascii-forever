@@ -1,14 +1,19 @@
 import re
+from uuid import uuid4
 from itertools import takewhile
+from pathlib import Path
+from io import BytesIO
 
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.core.files.images import ImageFile
 from django.conf import settings
 from django.db.models import *
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.functional import cached_property
+from PIL import Image, ImageDraw, ImageFont
 
 __all__ = ["User", "Art", "Comment"]
 
@@ -77,6 +82,9 @@ def validate_text(text):
         raise ValidationError("no one is allowed to use emojis except me 😈")
 
 
+thumb_font_path = Path(__file__).parent / "SourceCodePro-Regular.ttf"
+
+
 THUMB_W = 80
 THUMB_H = 19
 
@@ -93,6 +101,9 @@ class Art(Model):
 
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
+
+    thumb_render = ImageField(upload_to="thumbs", editable=False)
+    uuid = UUIDField(default=uuid4, editable=False, unique=True)
 
     likes = ManyToManyField(User, related_name="likes")
 
@@ -142,13 +153,23 @@ class Art(Model):
         else:
             return self.renderable_thumb
 
+    def render_thumb(self):
+        image = Image.new("RGB", (1200, 628), (255, 255, 255))
+        font = ImageFont.truetype(thumb_font_path.as_posix(), size=24)
+        dwg = ImageDraw.Draw(image)
+        dwg.multiline_text((25, 8), self.renderable_thumb, font=font, spacing=8, fill=(33, 33, 33))
+
+        buf = BytesIO()
+        image.save(buf, "PNG")
+
+        return buf
+
     @cached_property
     def description_preview(self):
         if not self.description:
             return None
         else:
             return "".join(takewhile(lambda c: c != "\n", self.description))
-
 
     def clean(self):
         if (
@@ -159,6 +180,14 @@ class Art(Model):
 
         if r_nothing.match(self.renderable_thumb):
             raise ValidationError("thumbnail contains only whitespace")
+
+    def save(self, *args, **kwargs):
+        thumb_fname = f"{self.uuid}.png"
+        thumb_bytes = self.render_thumb()
+        thumb_f = ImageFile(thumb_bytes)
+        self.thumb_render.save(thumb_fname, thumb_f, save=False)
+
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("core:art", args=[str(self.pk)])

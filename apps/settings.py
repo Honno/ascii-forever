@@ -66,9 +66,11 @@ DATABASES = {
 }
 
 
-# Custom user model
+# Auth
 
 AUTH_USER_MODEL = "core.User"
+
+LOGIN_URL = "/users/sign_in"
 
 
 # Password validation
@@ -90,6 +92,10 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Files
 
+STATIC_ROOT = "/var/www/asciiforever.net/static/"
 STATIC_URL = "/static/"
+
+MEDIA_ROOT = "/var/www/asciiforever.net/media/"
+MEDIA_URL = "/media/"
