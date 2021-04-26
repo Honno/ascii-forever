@@ -102,8 +102,8 @@ class Art(Model):
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
 
-    thumb_render = ImageField(upload_to="thumbs", editable=False)
-    uuid = UUIDField(default=uuid4, editable=False, unique=True)
+    thumb_render = ImageField(upload_to="thumbs", default="thumbs/default.png")
+    uuid = UUIDField(default=uuid4, unique=True)
 
     likes = ManyToManyField(User, related_name="likes")
 
