@@ -1,13 +1,21 @@
-/* modified from https://github.com/hankchizljaw/modern-css-reset/ */
+/* styles modified from:
+- https://github.com/hankchizljaw/modern-css-reset/
+- https://gist.github.com/anthonyshort/552543 */
 
-/* Box sizing rules */
+@import "base";
+
+/* base resets
+------------------------------------------------------------------------------*/
+
+/* box sizing rules */
+
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
 
-/* Remove default margin */
+// remove default margin
 body,
 h1,
 h2,
@@ -22,37 +30,37 @@ pre {
     margin: 0;
 }
 
-/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+// remove list styles on ul, ol elements with a list role, which suggests default styling will be removed
 ul[role="list"],
 ol[role="list"] {
     list-style: none;
 }
 
-/* Set core root defaults */
+// set core root defaults
 html:focus-within {
     scroll-behavior: smooth;
 }
 
-/* Set core body defaults */
+// set core body defaults
 body {
     min-height: 100vh;
-    text-rendering: optimizeSpeed;
+    text-rendering: optimizespeed;
     line-height: 1.5;
 }
 
-/* A elements that don't have a class get default styles */
+// a elements that don't have a class get default styles
 a:not([class]) {
     text-decoration-skip-ink: auto;
 }
 
-/* Make images easier to work with */
+// make images easier to work with
 img,
 picture {
     max-width: 100%;
     display: block;
 }
 
-/* Inherit fonts for inputs and buttons */
+// inherit fonts for inputs and buttons
 input,
 button,
 textarea,
@@ -60,7 +68,7 @@ select {
     font: inherit;
 }
 
-/* Remove all animations and transitions for people that prefer not to see them */
+// remove all animations and transitions for people that prefer not to see them
 @media (prefers-reduced-motion: reduce) {
     html:focus-within {
         scroll-behavior: auto;
@@ -75,42 +83,110 @@ select {
     }
 }
 
-// /* Remove input styles */
+/* form resets
+------------------------------------------------------------------------------*/
 
-// input[type="number"] {
-//     -moz-appearance: textfield;
-// }
-// input[type="number"]::-webkit-inner-spin-button,
-// input[type="number"]::-webkit-outer-spin-button {
-//     -moz-appearance: none;
-//     -webkit-appearance: none;
-//     appearance:none;
-//     margin: 0;
-// }
-// input[type="number"]:hover::-webkit-inner-spin-button,
-// input[type="number"]:hover::-webkit-outer-spin-button {
-//     -moz-appearance: none;
-//     -webkit-appearance: none;
-//     appearance:none;
-//     margin:0;
-// }
+input,
+label,
+select,
+button {
+	  margin: 0;
+	  border: 0;
+	  padding: 0;
+	  display: inline-block;
+	  vertical-align: middle;
+	  white-space: normal;
+	  background: none;
+	  line-height: 1;
 
-// button {
-//     background: transparent;
-//     box-shadow: 0px 0px 0px transparent;
-//     border: 0px solid transparent;
-//     text-shadow: 0px 0px 0px transparent;
-// }
-// button:hover {
-//     background: transparent;
-//     box-shadow: 0px 0px 0px transparent;
-//     border: 0px solid transparent;
-//     text-shadow: 0px 0px 0px transparent;
-// }
-// button:active {
-//     outline: none;
-//     border: none;
-// }
-// button:focus {
-//     outline: 0;
-// }
+    // browsers have different default form fonts
+    font-size: $body-font-size;
+    font-family: $body-font-family;
+}
+
+// remove the outer glow in webkit
+input:focus {
+	  outline: 0;
+}
+
+/* box sizing reset */
+
+// all of our custom controls should be what we expect them to be
+input,
+textarea {
+	  -webkit-box-sizing: content-box;
+	  -moz-box-sizing: content-box;
+	  box-sizing: content-box;
+}
+
+// these elements are usually rendered a certain way by the browser
+button,
+input[type=reset],
+input[type=button],
+input[type=submit],
+input[type=checkbox],
+input[type=radio],
+select {
+	  -webkit-box-sizing: border-box;
+	  -moz-box-sizing: border-box;
+	  box-sizing: border-box;
+}
+
+/* search input */
+
+// make webkit render the search input like a normal text field
+input[type=search] {
+	  -webkit-appearance: textfield;
+	  -webkit-box-sizing: content-box;
+}
+
+// turn off the recent search for webkit. it adds about 15px padding on the left
+::-webkit-search-decoration {
+	  display: none;
+}
+
+/* buttons */
+
+// fix IE7 display bug
+button,
+input[type="reset"],
+input[type="button"],
+input[type="submit"] {
+	  overflow: visible;
+	  width: auto;
+}
+
+// IE8 and FF freak out if this rule is within another selector
+::-webkit-file-upload-button {
+	  padding: 0;
+	  border: 0;
+	  background: none;
+}
+
+/* textarea */
+
+textarea {
+	  vertical-align: top; // move the label to the top
+	  overflow: auto; // turn off scroll bars in IE unless needed
+}
+
+/* selects */
+
+select[multiple] {
+	  /* move the label to the top */
+	  vertical-align: top;
+}
+
+/* numbers */
+
+// chrome, safari, edge, opera
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+// firefox
+input[type=number] {
+    -moz-appearance: textfield;
+}

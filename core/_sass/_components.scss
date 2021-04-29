@@ -1,0 +1,276 @@
+@import "base";
+
+/* layout styles */
+
+ul#nav {
+    li {
+        @include inbetween-content(" / ");
+        &.final-dir:after { content: " / " }
+    }
+}
+
+ul#account {
+    @include media(">=tablet") {
+        li {
+            @include inbetween-content(" | ");
+        }
+    }
+}
+
+#heart {
+    color: $red;
+}
+
+/* common */
+
+body {
+    font-family: $body-font-family;
+    font-size: $body-font-size;
+    font-weight: 400;
+    line-height: $body-font-line-height;
+
+    background-color: $white;
+    color: $primary;
+}
+
+pre {
+    @extend .monospaced;
+}
+
+.blur {
+    color: transparent;
+    text-shadow: 0 0 2em $primary;
+}
+
+p {
+    @include inbetween-margin(1em);
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a, a:active, a:hover, a:visited {
+    color: $blue;
+}
+
+a:active, a:hover {
+    color: $purple;
+}
+
+/* componenets */
+
+ul.pagination {
+    @include media(">=tablet") {
+        width: 100%;
+        text-align: center;
+
+        li {
+            display: inline-block;
+
+            @include inbetween-content("\00a0\00a0");
+        }
+    }
+
+    li {
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+/* forms */
+
+.line-input {
+    display: inline-block;
+    width: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+
+    border-bottom: 1px solid $tertiary;
+}
+
+.line-input:focus {
+    border-bottom-color: $highlight;
+}
+
+.multiline-input {
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+
+    outline: none;
+
+    border: 1px solid $tertiary;
+    border-radius: 6px;
+}
+
+.multiline-input:focus {
+    border-color: $highlight;
+}
+
+.text-input {
+    /* resize: none; */
+}
+
+.form-group {
+    width: 100%;
+    @include inbetween-margin(1em);
+}
+
+.form-input {
+    padding: 1em;
+}
+
+.number-input {
+    @extend .monospaced;
+}
+
+.label {
+    color: $secondary;
+    font-weight: bold;
+}
+
+.sub-label {
+    color: $secondary;
+}
+
+.button {
+    @extend .monospaced;
+
+    padding: 0.25em 0.5em;
+
+    background-color: $tertiary;
+    color: $white;
+}
+
+.button:hover {
+    background-color: $highlight;
+}
+
+.submit-input-outer {
+    display: flex;
+    justify-content: right;
+}
+
+.art-input {
+    @extend .monospaced;
+}
+
+// thumbnail
+
+.thumbnail-input-group {
+    display: grid;
+    grid-template-columns: 1fr min-content 1fr;
+
+    grid-gap: 0.5em;
+}
+
+.x-offset-input-group-outer {
+    grid-column: 2;
+    grid-row: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.x-offset-input-group-inner {
+    display: inline-grid;
+    grid-template-columns: auto auto auto;
+
+    grid-gap: 1em;
+
+    & > label { grid-column: 1 / -1 }
+}
+
+.x-offset-number-input {
+    text-align: center;
+}
+
+.y-offset-input-group-outer {
+    grid-column: 1;
+    grid-row: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.y-offset-input-group-inner {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+
+    grid-gap: 1em;
+
+    & > label {
+        grid-row: 1 / span 3;
+        text-align: center;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+    }
+}
+
+.y-offset-number-input {
+    text-align: center;
+}
+
+.offset-input-label {
+    color: $secondary;
+    font-style: italic;
+    font-size: 9px;
+
+    text-align: center;
+}
+
+.offset-button-outer {
+    display: flex;
+    justify-content: center;
+}
+
+.thumb-preview {
+    grid-column: 2;
+    grid-row: 2;
+
+    border: 1px dashed $primary;
+
+    padding: 1em;
+
+    font-size: 8px;
+}
+
+.y-thumb-char-count-outer {
+    grid-column: 3;
+    grid-row: 2;
+
+    display: flex;
+    justify-content: left;
+}
+
+.x-thumb-char-count-outer {
+    grid-column: 2;
+    grid-row: 3;
+
+    display: flex;
+    justify-content: center;
+}
+
+.y-thumb-char-count-inner {
+    writing-mode: vertical-lr;
+    transform: -rotate(180deg);
+
+    text-align: center;
+}
+
+.x-thumb-char-count-inner {
+    text-align: center;
+}
+
+.thumb-char-count {
+    color: $tertiary;
+
+    @extend .monospaced;
+    font-size: 9px;
+}
