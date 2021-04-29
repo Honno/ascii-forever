@@ -19,31 +19,21 @@ class JoinForm(UserCreationForm):
 # ArtForm
 
 
-class ArtTextarea(Widget):
-    template_name = "core/widgets/art_textarea.html"
-
-    def __init__(self, attrs=None):
-        default_attrs = {"cols": "80", "rows": "24"}
-        if attrs:
-            default_attrs.update(attrs)
-        super().__init__(default_attrs)
-
-
-class ArtCharField(CharField):
-    widget = ArtTextarea
-
-
 class ArtForm(ModelForm):
-    text = ArtCharField()
+    text = CharField()
     js_enabled = BooleanField(required=False, widget=HiddenInput)
-    description = CharField(required=False, widget=Textarea)
+    description = CharField(required=False)
 
     class Meta:
         model = Art
-        fields = ["title", "text", "description", "nsfw", "thumb_x_offset", "thumb_y_offset"]
-
-    class Media:
-        js = ["core/js/art_form.js"]
+        fields = [
+            "title",
+            "text",
+            "thumb_x_offset",
+            "thumb_y_offset",
+            "nsfw",
+            "description",
+        ]
 
     def clean(self):
         data = super().clean()

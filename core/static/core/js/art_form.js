@@ -33,7 +33,13 @@ form.addEventListener("submit", (event) => {
 var preview = document.querySelector("pre.thumb-preview");
 
 var x_offset_input = form.querySelector("input[name='thumb_x_offset']");
+var x_offset_input_inc = form.querySelector("#x-offset-inc");
+var x_offset_input_dec = form.querySelector("#x-offset-dec");
+
 var y_offset_input = form.querySelector("input[name='thumb_y_offset']");
+var y_offset_input_inc = form.querySelector("#y-offset-inc");
+var y_offset_input_dec = form.querySelector("#y-offset-dec");
+
 
 var text = textarea.value;
 
@@ -76,6 +82,8 @@ function render_thumb() {
                     thumb += " ";
                 }
             }
+        } else {
+            thumb += " ".repeat(80);
         }
         thumb += "\n";
     }
@@ -98,6 +106,26 @@ x_offset_input.addEventListener("input", (e) => {
     }
 });
 
+x_offset_input_inc.addEventListener("click", (event) => {
+    let cur_n = parse_int(x_offset_input.value);
+    if (cur_n != null) {
+        let n = cur_n + 1;
+        x_offset_input.value = n;
+        x_offset = n;
+        render_thumb();
+    }
+});
+
+x_offset_input_dec.addEventListener("click", (event) => {
+    let cur_n = parse_int(x_offset_input.value);
+    if (cur_n != null) {
+        let n = cur_n - 1;
+        x_offset_input.value = n;
+        x_offset = n;
+        render_thumb();
+    }
+});
+
 y_offset_input.addEventListener("input", (e) => {
     let n = parse_int(e.target.value);
     if (n != null) {
@@ -106,3 +134,22 @@ y_offset_input.addEventListener("input", (e) => {
     }
 });
 
+y_offset_input_inc.addEventListener("click", (event) => {
+    let cur_n = parse_int(y_offset_input.value);
+    if (cur_n != null) {
+        let n = cur_n + 1;
+        y_offset_input.value = n;
+        y_offset = n;
+        render_thumb();
+    }
+});
+
+y_offset_input_dec.addEventListener("click", (event) => {
+    let cur_n = parse_int(y_offset_input.value);
+    if (cur_n != null) {
+        let n = cur_n - 1;
+        y_offset_input.value = n;
+        y_offset = n;
+        render_thumb();
+    }
+});

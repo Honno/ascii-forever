@@ -1,15 +1,129 @@
 {% extends "core/extendables/base.html" %}
 
+{% load static %}
+
 {% block content %}
 <form class="preserve-whitespace" method="post">
     {% csrf_token %}
-    <p class="no-js-warn">Your JavaScript is disabled, so whitespace preservation and thumbnail previews will not work.</p>
-    {{ form.as_p }}
-    <pre class="thumb-preview"></pre>
-    <input type="submit" value="{% block submit_value %}{% endblock %}" />
+
+    <p class="no-js-warn">JavaScript is disabled or something went wrong, so some functionality will not work.</p>
+
+    <div class="form-group">
+        <label class="label">Title</label>
+        <div class="form-input">
+            <input
+                class="line-input"
+                type="text"
+                name="title"
+                maxlength="80"
+                {% if form.title.value %} value="{{ form.title.value }}"{% endif %}
+                required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="label">Text art</label>
+        <div class="form-input">
+            <textarea
+                class="multiline-input art-input"
+                name="text"
+                spellcheck="false"
+                rows="24"
+                required>{% if form.text.value %}{{ form.text.value }}{% endif %}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="label">Thumbnail offsets</label>
+        <div class="form-input">
+            <div class="thumbnail-input-group" >
+                <div class="x-offset-input-group-outer">
+                    <div class="x-offset-input-group-inner">
+                        <label class="sub-label offset-input-label x-offset-input-label">X offset</label>
+                        <div class="offset-button-outer">
+                            <button id="x-offset-inc" class="button" type="button" ><</button>
+                        </div>
+                        <input
+                            class="number-input x-offset-number-input"
+                            type="number"
+                            name="thumb_x_offset"
+                            value="{% if form.thumb_x_offset.value %}{{ form.thumb_x_offset.value }}{% else %}0{% endif %}"
+                            size="4"
+                            required>
+                        <div class="offset-button-outer">
+                            <button id="x-offset-dec" class="button" type="button" >></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="y-offset-input-group-outer">
+                    <div class="y-offset-input-group-inner">
+                        <label class="sub-label offset-input-label x-offset-input-label">Y offset</label>
+                        <div class="offset-button-outer">
+                            <button id="y-offset-inc" class="button" type="button" >^</button>
+                        </div>
+                        <input
+                            class="number-input y-offset-number-input"
+                            type="number"
+                            name="thumb_y_offset"
+                            value="{% if form.thumb_y_offset.value %}{{ form.thumb_y_offset.value }}{% else %}0{% endif %}"
+                            size="4"
+                            required>
+                        <div class="offset-button-outer">
+                            <button id="y-offset-dec" class="button" type="button" >v</button>
+                        </div>
+                    </div>
+                </div>
+
+                <pre class="thumb-preview"></pre>
+
+                <div class="y-thumb-char-count-outer">
+                    <div class="y-thumb-char-count-inner thumb-char-count"><- 19 rows -></div>
+                </div>
+                <div class="x-thumb-char-count-outer">
+                    <div class="thumb-char-count-inner thumb-char-count"><- 80 columns -></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">Description</label>
+            <div class="form-input">
+                <div class="grow-wrap">
+                    <textarea
+                        class="multiline-input text-input"
+                        name="description"
+                        rows="1">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">NSFW</label>
+            <div class="form-input">
+                <input
+                    id="nsfw"
+                    type="checkbox"
+                    name="nsfw"
+                    {% if form.nsfw.value %}checked{% endif %}>
+            </div>
+        </div>
+
+        {% for hidden_field in form.hidden_fields %}
+        {{ hidden_field }}
+        {% endfor %}
+
+        <div class="form-group">
+            <div class="form-input submit-input-outer" >
+                <input
+                    type="submit"
+                    class="button"
+                    value="{% block submit_value %}{% endblock %}">
+            </div>
+        </div>
 </form>
 {% endblock %}
 
 {% block js %}
-{{ form.media }}
+<script src="{% static 'core/js/art_form.js' %}"></script>
 {% endblock %}

@@ -3,17 +3,13 @@
 
 @import "include-media";
 @import "reset";
+@import "form-reset";
 
-$white: #ffffff;
-$primary: #212121;
-$secondary: #444444;
-$tertiary: #7e7e7e;
-$blue: #0000ff;
-$purple: #8000ff;
-$red: #ff0000;
+@import "variables";
+@import "helpers";
+@import "art-form";
 
-$body-font-family: "Roboto", "Verdana", sans-serif;
-$art-font-family: "Source Code Pro", "Courier New", monospace;
+/* sections */
 
 body {
     font-family: $body-font-family;
@@ -35,12 +31,18 @@ main {
     }
 }
 
+header, footer {
+    padding: 1em;
+}
+
+section {
+    padding: 0 1em;
+}
+
+/* elements */
+
 pre {
-    font-family: $art-font-family;
-    white-space: pre;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 15px;
+    @extend .monospaced;
 }
 
 .blur {
@@ -49,16 +51,7 @@ pre {
 }
 
 p {
-    margin-bottom: 1em;
-    &:last-child { margin-bottom: 0 }
-}
-
-header, footer {
-    padding: 1em;
-}
-
-section {
-    padding: 0 1em;
+    @include inbetween-margin(1em);
 }
 
 ul {
@@ -78,14 +71,6 @@ a:active, a:hover {
 a.nostyle {
     color: inherit;
     text-decoration: none;
-}
-
-@mixin inbetween-content($content, $color: $tertiary) {
-    &:before {
-        content: $content;
-        color: $color;
-    }
-    &:first-child:before { content: "" }
 }
 
 /* header styles */
@@ -144,3 +129,77 @@ ul.pagination {
     }
 }
 
+/* forms */
+
+
+.line-input {
+    display: inline-block;
+    width: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+
+    border-bottom: 1px solid $tertiary;
+}
+
+.line-input:focus {
+    border-bottom-color: $highlight;
+}
+
+.multiline-input {
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+
+    outline: none;
+
+    border: 1px solid $tertiary;
+    border-radius: 6px;
+}
+
+.multiline-input:focus {
+    border-color: $highlight;
+}
+
+.text-input {
+    /* resize: none; */
+}
+
+.form-group {
+    width: 100%;
+    @include inbetween-margin(1em);
+}
+
+.form-input {
+    padding: 1em;
+}
+
+.number-input {
+    @extend .monospaced;
+}
+
+.label {
+    color: $secondary;
+    font-weight: bold;
+}
+
+.sub-label {
+    color: $secondary;
+}
+
+.button {
+    @extend .monospaced;
+
+    padding: 0.25em 0.5em;
+
+    background-color: $tertiary;
+    color: $white;
+}
+
+.button:hover {
+    background-color: $highlight;
+}
+
+.submit-input-outer {
+    display: flex;
+    justify-content: right;
+}
