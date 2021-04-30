@@ -23,11 +23,9 @@ ul {
 }
 
 a {
-    &, &:active, &:hover, &:visited {
-        color: $blue;
-    }
+    color: $blue;
 
-    &:active, &:hover {
+    &:hover {
         color: $purple;
     }
 
@@ -77,13 +75,17 @@ ul.user-actions {
     }
 }
 
+section > * {
+    @include inbetween-margin(1em);
+}
+
 .heart {
     color: $red;
 }
 
 /* common */
 
-pre.art {
+.art {
     @extend .monospaced;
 
     &.-blur {
@@ -92,26 +94,18 @@ pre.art {
     }
 }
 
-ul.pagination {
-    @include media(">=tablet") {
-        width: 100%;
-        text-align: center;
+.pagination {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 
-        > li {
-            display: inline-block;
-        }
-
-        > li:after {
-            content: "\00a0\00a0";
-        }
-
-        > li:last-child:after {
-            content: "";
-        }
+    > a {
+        @extend .-nostyle;
+        @extend .button-input;
     }
 
-    li > a {
-        text-decoration: none;
+    > a.-active {
+        @extend .button-input, .-selected;
     }
 }
 
@@ -181,6 +175,15 @@ ul.pagination {
     &:hover {
         background-color: $highlight;
     }
+
+    &.-selected {
+        background-color: $white;
+        color: $tertiary;
+    }
+
+    &.-selected:hover {
+        background-color: $white;
+    }
 }
 
 .art-input {
@@ -241,7 +244,6 @@ ul.pagination {
 .offset-input-group {
     display: flex;
 
-
     &.-x {
         flex-direction: row;
     }
@@ -260,7 +262,6 @@ ul.pagination {
         width: 2em;
         text-align: center;
     }
-
 }
 
 .thumb-preview {
