@@ -24,17 +24,3 @@ header {
         justify-content: space-between;
     }
 }
-
-ul#nav {
-    li {
-        display: inline-block;
-    }
-}
-
-ul#account {
-    @include media(">=tablet") {
-        li {
-            display: inline-block;
-        }
-    }
-}

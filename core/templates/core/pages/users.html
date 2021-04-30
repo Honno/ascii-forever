@@ -2,8 +2,10 @@
 {% block title %}User List{% endblock %}
 
 {% block path %}
-<li><a href="{% url 'core:index' %}" >home</a></li>
-<li class="final-dir">users</li>
+<ul class="nav-bar">
+    <li><a href="{% url 'core:index' %}" >home</a></li>
+    <li class="final-dir">users</li>
+</ul>
 {% endblock %}
 
 {% block content %}

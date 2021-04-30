@@ -1,27 +1,6 @@
 @import "base";
 
-/* layout styles */
-
-ul#nav {
-    li {
-        @include inbetween-content(" / ");
-        &.final-dir:after { content: " / " }
-    }
-}
-
-ul#account {
-    @include media(">=tablet") {
-        li {
-            @include inbetween-content(" | ");
-        }
-    }
-}
-
-#heart {
-    color: $red;
-}
-
-/* common */
+/* elements */
 
 body {
     font-family: $body-font-family;
@@ -31,15 +10,6 @@ body {
 
     background-color: $white;
     color: $primary;
-}
-
-pre {
-    @extend .monospaced;
-}
-
-.blur {
-    color: transparent;
-    text-shadow: 0 0 2em $primary;
 }
 
 p {
@@ -52,36 +22,119 @@ ul {
     list-style: none;
 }
 
-a, a:active, a:hover, a:visited {
-    color: $blue;
+a {
+    &, &:active, &:hover, &:visited {
+        color: $blue;
+    }
+
+    &:active, &:hover {
+        color: $purple;
+    }
+
+    &.-nostyle {
+        color: inherit;
+        text-decoration: none;
+    }
 }
 
-a:active, a:hover {
-    color: $purple;
+/* base layout */
+
+ul.nav-bar {
+    > li {
+        display: inline-block;
+    }
+
+    > li:after {
+        content: " / ";
+        color: $tertiary;
+    }
+
+    &.-final > li:last-child:after {
+        content: "";
+    }
 }
 
-/* componenets */
+ul.user-actions {
+    @include media("<tablet") {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    @include media(">=tablet") {
+        > li {
+            display: inline-block;
+        }
+
+        > li:after {
+            content: " | ";
+            color: $tertiary;
+        }
+
+        > li:last-child:after {
+            content: "";
+        }
+    }
+}
+
+.heart {
+    color: $red;
+}
+
+/* common */
+
+pre.art {
+    @extend .monospaced;
+
+    &.-blur {
+        color: transparent;
+        text-shadow: 0 0 2em $primary;
+    }
+}
 
 ul.pagination {
     @include media(">=tablet") {
         width: 100%;
         text-align: center;
 
-        li {
+        > li {
             display: inline-block;
+        }
 
-            @include inbetween-content("\00a0\00a0");
+        > li:after {
+            content: "\00a0\00a0";
+        }
+
+        > li:last-child:after {
+            content: "";
         }
     }
 
-    li {
-        a {
-            text-decoration: none;
-        }
+    li > a {
+        text-decoration: none;
     }
 }
 
 /* forms */
+
+.form-group {
+    width: 100%;
+    @include inbetween-margin(1em);
+
+    > label {
+        color: $secondary;
+        font-weight: bold;
+    }
+
+    > .form-input {
+        padding: 1em;
+    }
+
+    > .form-input.-submit {
+        display: flex;
+        justify-content: right;
+    }
+}
 
 .line-input {
     display: inline-block;
@@ -90,10 +143,10 @@ ul.pagination {
     box-sizing: border-box;
 
     border-bottom: 1px solid $tertiary;
-}
 
-.line-input:focus {
-    border-bottom-color: $highlight;
+    &:focus {
+        border-bottom-color: $highlight;
+    }
 }
 
 .multiline-input {
@@ -105,54 +158,29 @@ ul.pagination {
 
     border: 1px solid $tertiary;
     border-radius: 6px;
-}
 
-.multiline-input:focus {
-    border-color: $highlight;
-}
-
-.text-input {
-    /* resize: none; */
-}
-
-.form-group {
-    width: 100%;
-    @include inbetween-margin(1em);
-}
-
-.form-input {
-    padding: 1em;
+    &:focus {
+        border-color: $highlight;
+    }
 }
 
 .number-input {
     @extend .monospaced;
 }
 
-.label {
-    color: $secondary;
-    font-weight: bold;
-}
-
-.sub-label {
-    color: $secondary;
-}
-
-.button {
+.button-input {
     @extend .monospaced;
 
     padding: 0.25em 0.5em;
 
     background-color: $tertiary;
     color: $white;
-}
 
-.button:hover {
-    background-color: $highlight;
-}
+    text-align: center;
 
-.submit-input-outer {
-    display: flex;
-    justify-content: right;
+    &:hover {
+        background-color: $highlight;
+    }
 }
 
 .art-input {
@@ -165,107 +193,84 @@ ul.pagination {
     display: grid;
     grid-template-columns: 1fr min-content 1fr;
 
-    grid-gap: 0.5em;
-}
-
-.x-offset-input-group-outer {
-    grid-column: 2;
-    grid-row: 1;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.x-offset-input-group-inner {
-    display: inline-grid;
-    grid-template-columns: auto auto auto;
-
     grid-gap: 1em;
 
-    & > label { grid-column: 1 / -1 }
-}
+    > .top, > .right, > .bottom, > .left {
+        display: flex;
+    }
 
-.x-offset-number-input {
-    text-align: center;
-}
+    > .top {
+        grid-column: 2;
+        grid-row: 1;
 
-.y-offset-input-group-outer {
-    grid-column: 1;
-    grid-row: 2;
+        justify-content: center;
+        align-items: flex-end;
+    }
 
-    display: flex;
-    align-items: center;
-    justify-content: right;
-}
+    > .right {
+        grid-column: 3;
+        grid-row: 2;
 
-.y-offset-input-group-inner {
-    display: inline-grid;
-    grid-template-columns: auto auto;
+        justify-content: left;
+        align-items: center;
+    }
 
-    grid-gap: 1em;
 
-    & > label {
-        grid-row: 1 / span 3;
-        text-align: center;
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
+    > .bottom {
+        grid-column: 2;
+        grid-row: 3;
+
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    > .left {
+        grid-column: 1;
+        grid-row: 2;
+
+        justify-content: right;
+        align-items: center;
+    }
+
+    > .center {
+        grid-column: 2;
+        grid-row: 2;
     }
 }
 
-.y-offset-number-input {
-    text-align: center;
-}
-
-.offset-input-label {
-    color: $secondary;
-    font-style: italic;
-    font-size: 9px;
-
-    text-align: center;
-}
-
-.offset-button-outer {
+.offset-input-group {
     display: flex;
-    justify-content: center;
+
+
+    &.-x {
+        flex-direction: row;
+    }
+
+    &.-y {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+
+    &.-y > div {
+        display: flex;
+        justify-content: center;
+    }
+
+    > div > input[type=number] {
+        width: 2em;
+        text-align: center;
+    }
+
 }
 
 .thumb-preview {
     grid-column: 2;
     grid-row: 2;
 
+    padding: 0.75em;
     border: 1px dashed $primary;
 
-    padding: 1em;
-
-    font-size: 8px;
-}
-
-.y-thumb-char-count-outer {
-    grid-column: 3;
-    grid-row: 2;
-
-    display: flex;
-    justify-content: left;
-}
-
-.x-thumb-char-count-outer {
-    grid-column: 2;
-    grid-row: 3;
-
-    display: flex;
-    justify-content: center;
-}
-
-.y-thumb-char-count-inner {
-    writing-mode: vertical-lr;
-    transform: -rotate(180deg);
-
-    text-align: center;
-}
-
-.x-thumb-char-count-inner {
-    text-align: center;
+    font-size: 0.75em;
 }
 
 .thumb-char-count {
@@ -273,4 +278,11 @@ ul.pagination {
 
     @extend .monospaced;
     font-size: 9px;
+
+    text-align: center;
+
+    &.-y {
+        writing-mode: vertical-lr;
+        transform: -rotate(180deg);
+    }
 }

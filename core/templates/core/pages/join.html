@@ -3,9 +3,11 @@
 {% block title %}Join{% endblock %}
 
 {% block path %}
-<li><a href="{% url 'core:index' %}" >home</a></li>
-<li><a href="{% url 'core:users' %}" >users</a></li>
-<li>join</li>
+<ul class="nav-bar -final">
+    <li><a href="{% url 'core:index' %}" >home</a></li>
+    <li><a href="{% url 'core:users' %}" >users</a></li>
+    <li>join</li>
+</ul>
 {% endblock %}
 
 {% block content %}

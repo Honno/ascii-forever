@@ -27,22 +27,12 @@ $art-font-family: "Source Code Pro", "Courier New", monospace;
 $art-font-size: 12px;
 $art-font-line-height: 1.25; // based on the gnome terminal
 
-/* mixins */
+/* utils */
 
 @mixin inbetween-margin($margin) {
     margin-bottom: $margin;
     &:last-child { margin-bottom: 0 }
 }
-
-@mixin inbetween-content($content, $color: $tertiary) {
-    &:before {
-        content: $content;
-        color: $color;
-    }
-    &:first-child:before { content: "" }
-}
-
-/* util classes */
 
 .monospaced {
     font-family: $art-font-family;
@@ -52,7 +42,3 @@ $art-font-line-height: 1.25; // based on the gnome terminal
     line-height: $art-font-line-height;
 }
 
-.nostyle {
-    color: inherit;
-    text-decoration: none;
-}

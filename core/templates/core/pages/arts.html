@@ -5,8 +5,10 @@
 {% block title %}Art Gallery{% endblock %}
 
 {% block path %}
-<li><a href="{% url 'core:index' %}" >home</a></li>
-<li class="final-dir">art</li>
+<ul class="nav-bar">
+    <li><a href="{% url 'core:index' %}" >home</a></li>
+    <li>art</li>
+</ul>
 {% endblock %}
 
 {% block content %}

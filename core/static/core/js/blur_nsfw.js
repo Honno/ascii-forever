@@ -1,18 +1,18 @@
-var arts = document.querySelectorAll(".art.nsfw");
+var arts = document.querySelectorAll(".art[data-nsfw='true']");
 
 function blur_art() {
     arts.forEach((art) => {
-        art.classList.add("blur");
+        art.classList.add("-blur");
     });
 }
 
 function unblur_art() {
     arts.forEach((art) => {
-        art.classList.remove("blur");
+        art.classList.remove("-blur");
     });
 }
 
-var blur_input = document.querySelector("#blur-nsfw");
+var blur_input = document.querySelector("#blur-toggle");
 
 var init_blur_nsfw = Cookies.get("blur_nsfw");
 if (init_blur_nsfw == "true" || typeof init_blur_nsfw == "undefined") {

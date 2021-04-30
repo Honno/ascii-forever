@@ -10,23 +10,23 @@
         <main>
             <header>
                 <nav>
-                    <ul id="nav">{% block path %}{% endblock %}</ul>
+                    {% block path %}{% endblock %}
                 </nav>
-                <ul id="account" >
+                <ul class="user-actions">
                     {% if request.user.is_authenticated %}
-                    <li>Hello <a class="nostyle" href="{% url 'core:user' request.user.username %}">{{ request.user.username }}</a>!</li>
+                    <li>Hello <a class="-nostyle" href="{% url 'core:user' request.user.username %}">{{ request.user.username }}</a>!</li>
                     <li><a href="{% url 'core:sign_out' %}">Sign out</a></li>
                     <li><a href="{% url 'core:post_art' %}">Post art</a></li>
                     {% else %}
                     <li><a href="{% url 'core:sign_in' %}">Sign in</a></li>
                     <li><a href="{% url 'core:join' %}">Join</a></li>
                     {% endif %}
-                    <li>Blur NSFW <input type="checkbox" id="blur-nsfw"></li>
+                    <li>Blur NSFW <input type="checkbox" id="blur-toggle"></li>
                 </ul>
             </header>
             <section>{% block content %}{% endblock %}</section>
             <footer>
-                Made with <span id="heart">♥</span> by <a href="http://matthewbarber.io/">Honno</a>.
+                Made with <span class="heart">♥</span> by <a href="http://matthewbarber.io/">Honno</a>.
             </footer>
         </main>
         <script src="{% static 'core/js/js.cookie.js' %}"></script>

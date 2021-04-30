@@ -9,7 +9,7 @@
     <p class="no-js-warn">JavaScript is disabled or something went wrong, so some functionality will not work.</p>
 
     <div class="form-group">
-        <label class="label">Title</label>
+        <label>Title</label>
         <div class="form-input">
             <input
                 class="line-input"
@@ -22,7 +22,7 @@
     </div>
 
     <div class="form-group">
-        <label class="label">Text art</label>
+        <label>Text art</label>
         <div class="form-input">
             <textarea
                 class="multiline-input art-input"
@@ -34,72 +34,72 @@
     </div>
 
     <div class="form-group">
-        <label class="label">Thumbnail offsets</label>
+        <label>Thumbnail offsets</label>
         <div class="form-input">
             <div class="thumbnail-input-group" >
-                <div class="x-offset-input-group-outer">
-                    <div class="x-offset-input-group-inner">
-                        <label class="sub-label offset-input-label x-offset-input-label">X offset</label>
-                        <div class="offset-button-outer">
-                            <button id="x-offset-inc" class="button" type="button" ><</button>
+                <div class="top">
+                    <div class="offset-input-group -x">
+                        <div>
+                            <button id="x-offset-inc" class="button-input" type="button" ><</button>
                         </div>
-                        <input
-                            class="number-input x-offset-number-input"
-                            type="number"
-                            name="thumb_x_offset"
-                            value="{% if form.thumb_x_offset.value %}{{ form.thumb_x_offset.value }}{% else %}0{% endif %}"
-                            size="4"
-                            required>
-                        <div class="offset-button-outer">
-                            <button id="x-offset-dec" class="button" type="button" >></button>
+                        <div>
+                            <input
+                                class="number-input x-offset-number-input"
+                                type="number"
+                                name="thumb_x_offset"
+                                value="{% if form.thumb_x_offset.value %}{{ form.thumb_x_offset.value }}{% else %}0{% endif %}"
+                                required>
                         </div>
-                    </div>
-                </div>
-
-                <div class="y-offset-input-group-outer">
-                    <div class="y-offset-input-group-inner">
-                        <label class="sub-label offset-input-label x-offset-input-label">Y offset</label>
-                        <div class="offset-button-outer">
-                            <button id="y-offset-inc" class="button" type="button" >^</button>
-                        </div>
-                        <input
-                            class="number-input y-offset-number-input"
-                            type="number"
-                            name="thumb_y_offset"
-                            value="{% if form.thumb_y_offset.value %}{{ form.thumb_y_offset.value }}{% else %}0{% endif %}"
-                            size="4"
-                            required>
-                        <div class="offset-button-outer">
-                            <button id="y-offset-dec" class="button" type="button" >v</button>
+                        <div>
+                            <button id="x-offset-dec" class="button-input" type="button" >></button>
                         </div>
                     </div>
                 </div>
 
-                <pre class="thumb-preview"></pre>
-
-                <div class="y-thumb-char-count-outer">
-                    <div class="y-thumb-char-count-inner thumb-char-count"><- 19 rows -></div>
+                <div class="left">
+                    <div class="offset-input-group -y">
+                        <div>
+                            <button id="y-offset-inc" class="button-input" type="button" >^</button>
+                        </div>
+                        <div>
+                            <input
+                                class="number-input y-offset-number-input"
+                                type="number"
+                                name="thumb_y_offset"
+                                value="{% if form.thumb_y_offset.value %}{{ form.thumb_y_offset.value }}{% else %}0{% endif %}"
+                                required>
+                        </div>
+                        <div>
+                            <button id="y-offset-dec" class="button-input" type="button" >v</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="x-thumb-char-count-outer">
-                    <div class="thumb-char-count-inner thumb-char-count"><- 80 columns -></div>
+
+                <div class="center">
+                    <pre class="thumb-preview"></pre>
+                </div>
+
+                <div class="right">
+                    <span class="thumb-char-count -y"><- 19 rows -></span>
+                </div>
+                <div class="bottom">
+                    <span class="thumb-char-count -x"><- 80 columns -></span>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="label">Description</label>
+            <label>Description</label>
             <div class="form-input">
-                <div class="grow-wrap">
-                    <textarea
-                        class="multiline-input text-input"
-                        name="description"
-                        rows="1">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
-                </div>
+                <textarea
+                    class="multiline-input text-input"
+                    name="description"
+                    rows="1">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="label">NSFW</label>
+            <label>NSFW</label>
             <div class="form-input">
                 <input
                     id="nsfw"
@@ -114,10 +114,10 @@
         {% endfor %}
 
         <div class="form-group">
-            <div class="form-input submit-input-outer" >
+            <div class="form-input -submit" >
                 <input
                     type="submit"
-                    class="button"
+                    class="button-input"
                     value="{% block submit_value %}{% endblock %}">
             </div>
         </div>
