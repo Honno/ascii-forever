@@ -14,7 +14,7 @@ build/
 tests/report/
 
 secrets.env
-*.sqlite3
+my.cnf
 
 **/.sass-cache/
 *.css.map

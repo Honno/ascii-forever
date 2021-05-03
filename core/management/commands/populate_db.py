@@ -91,7 +91,7 @@ class Command(BaseCommand):
 
         password = make_password("pass")
 
-        admin = User(id=0, username="admin", password=password)
+        admin = User(id=1, username="admin", password=password)
         admin.is_superuser = True
         admin.is_staff = True
         admin.save()
@@ -99,7 +99,7 @@ class Command(BaseCommand):
         usernames = create_usernames()
 
         users = []
-        for id, username in enumerate(usernames, 1):
+        for id, username in enumerate(usernames, 2):
             user = User(id=id, username=username, password=password)
             users.append(user)
 
@@ -118,7 +118,7 @@ class Command(BaseCommand):
 
         arts = []
         comments = []
-        for base_id, (fname, art) in enumerate(get_art()):
+        for base_id, (fname, art) in enumerate(get_art(), 1):
             naive_dt = dt_start + rng.random() * dt_diff
             dt = tz.localize(naive_dt)
 
