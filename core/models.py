@@ -112,7 +112,7 @@ class Art(Model):
         text_lines = self.text.splitlines()
 
         widths = [len(line) for line in text_lines]
-        width = max(widths)
+        width = max(widths, default=0)
 
         return width
 

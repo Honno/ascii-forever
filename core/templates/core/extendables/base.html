@@ -24,7 +24,10 @@
                     <li>Blur NSFW <input type="checkbox" id="blur-toggle"></li>
                 </ul>
             </header>
-            <section>{% block content %}{% endblock %}</section>
+            <section>
+                <noscript><p><i>Your JavaScript is disabled so some site functionality will not work!</i></p></noscript>
+                {% block content %}{% endblock %}
+            </section>
             <footer>
                 Made with <span class="heart">♥</span> by <a href="http://matthewbarber.io/">Honno</a>.
             </footer>

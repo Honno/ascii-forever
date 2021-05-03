@@ -1,0 +1,15 @@
+{% if errors %}
+<div class="error-box">
+    <span><b>!</b></span>
+
+    {% if errors|length == 1 %}
+    <span>{{ errors.0 }}</span>
+    {% else %}
+    <ul>
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endif %}

@@ -2,9 +2,6 @@ var form = document.querySelector("form.preserve-whitespace");
 
 /* js status */
 
-var element = form.querySelector(".no-js-warn");
-element.style.display = "none";
-
 var checkbox = form.querySelector("input[name='js_enabled']");
 checkbox.value = "True";
 

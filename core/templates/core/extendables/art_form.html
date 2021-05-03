@@ -6,17 +6,16 @@
 <form class="preserve-whitespace" method="post">
     {% csrf_token %}
 
-    <p class="no-js-warn">JavaScript is disabled or something went wrong, so some functionality will not work.</p>
-
     <div class="form-group">
         <label>Title</label>
         <div class="form-input">
+            {% include "core/includes/error_box.html" with errors=form.title.errors %}
             <input
                 class="line-input"
                 type="text"
                 name="title"
                 maxlength="80"
-                {% if form.title.value %} value="{{ form.title.value }}"{% endif %}
+                {% if form.title.value %}value="{{ form.title.value }}"{% endif %}
                 required>
         </div>
     </div>
@@ -24,6 +23,7 @@
     <div class="form-group">
         <label>Text art</label>
         <div class="form-input">
+            {% include "core/includes/error_box.html" with errors=form.text.errors %}
             <textarea
                 class="multiline-input art-input"
                 name="text"
@@ -36,6 +36,8 @@
     <div class="form-group">
         <label>Thumbnail offsets</label>
         <div class="form-input">
+            {% include "core/includes/error_box.html" with errors=form.thumb_x_offset.errors %}
+            {% include "core/includes/error_box.html" with errors=form.thumb_y_offset.errors %}
             <div class="thumbnail-input-group" >
                 <div class="top">
                     <div class="offset-input-group -x">
@@ -91,6 +93,7 @@
         <div class="form-group">
             <label>Description</label>
             <div class="form-input">
+                {% include "core/includes/error_box.html" with errors=form.description.errors %}
                 <textarea
                     class="multiline-input text-input"
                     name="description"
@@ -101,6 +104,7 @@
         <div class="form-group">
             <label>NSFW</label>
             <div class="form-input">
+                {% include "core/includes/error_box.html" with errors=form.nsfw.errors %}
                 <input
                     id="nsfw"
                     type="checkbox"
@@ -113,12 +117,15 @@
         {{ hidden_field }}
         {% endfor %}
 
-        <div class="form-group">
-            <div class="form-input -submit" >
-                <input
-                    type="submit"
-                    class="button-input"
-                    value="{% block submit_value %}{% endblock %}">
+        <div class="form-group -submit">
+            <div class="form-input" >
+                {% include "core/includes/error_box.html" with errors=form.non_field_errors %}
+                <div class="submit-input" >
+                    <input
+                        type="submit"
+                        class="button-input"
+                        value="{% block submit_value %}{% endblock %}">
+                </div>
             </div>
         </div>
 </form>
