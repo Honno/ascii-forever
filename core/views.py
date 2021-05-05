@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse, FileResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
@@ -27,6 +27,7 @@ __all__ = [
     "SignInView",
     "SignOutView",
     "ArtView",
+    "art_thumb",
     "like_art",
     "ArtGalleryView",
     "PostArtView",
@@ -240,6 +241,17 @@ class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_object(self):
         return get_object_or_404(Art, pk=self.kwargs["pk"])
+
+
+# ------------------------------------------------------------------------------
+# Art thumbnail
+
+
+def art_thumb(request, pk):
+    art = get_object_or_404(Art, pk=pk)
+    image = art.render_thumb()
+
+    return FileResponse(image, filename="thumb.png")
 
 
 # ------------------------------------------------------------------------------

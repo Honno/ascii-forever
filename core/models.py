@@ -102,9 +102,6 @@ class Art(Model):
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
 
-    thumb_render = ImageField(upload_to="thumbs", default="thumbs/default.png")
-    uuid = UUIDField(default=uuid4, unique=True)
-
     likes = ManyToManyField(User, related_name="likes")
 
     @cached_property
@@ -161,6 +158,7 @@ class Art(Model):
 
         buf = BytesIO()
         image.save(buf, "PNG")
+        buf.seek(0)
 
         return buf
 
@@ -180,14 +178,6 @@ class Art(Model):
 
         if r_nothing.match(self.renderable_thumb):
             raise ValidationError("thumbnail contains only whitespace")
-
-    def save(self, *args, **kwargs):
-        thumb_fname = f"{self.uuid}.png"
-        thumb_bytes = self.render_thumb()
-        thumb_f = ImageFile(thumb_bytes)
-        self.thumb_render.save(thumb_fname, thumb_f, save=False)
-
-        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("core:art", args=[str(self.pk)])

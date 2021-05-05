@@ -5,7 +5,7 @@
 {% block title %}{{ art.title }} by {{ art.artist.username }}{% endblock %}
 
 {% block og %}
-<meta property="og:image" content="{{ art.thumb_render.url }}" />
+<meta property="og:image" content="{% url 'core:art_thumb' art.pk %}" />
 {% endblock %}
 
 {% block path %}
