@@ -14,7 +14,7 @@
                 </nav>
                 <ul class="user-actions">
                     {% if request.user.is_authenticated %}
-                    <li>Hello <a class="-nostyle" href="{% url 'core:user' request.user.username %}">{{ request.user.username }}</a>!</li>
+                    <li>Hello <a class="-lite" href="{% url 'core:user' request.user.username %}">{{ request.user.username }}</a>!</li>
                     <li><a href="{% url 'core:sign_out' %}">Sign out</a></li>
                     <li><a href="{% url 'core:post_art' %}">Post art</a></li>
                     {% else %}

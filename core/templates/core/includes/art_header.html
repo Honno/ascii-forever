@@ -7,7 +7,7 @@
 
     <div class="left -bottom">
         <span class="user-actions">
-            <span>by {{ art.artist.username }}</span>
+            <span>by <a class="-lite" href="{% url 'core:user' art.artist.username %}">{{ art.artist.username }}</a></span>
 
             {% include "core/includes/follow_user.html" with target=art.artist %}
         </span>
