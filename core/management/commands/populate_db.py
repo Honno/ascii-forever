@@ -42,6 +42,7 @@ def create_usernames(n=100):
             username = first + " " + last
 
         username = slugify(username)
+        username = username[:20]
 
         if rng.getrandbits(1):
             username = username.lower()
@@ -137,7 +138,6 @@ class Command(BaseCommand):
                     text=art,
                     description=desc,
                     nsfw=nsfw,
-                    timestamp=dt,
                 )
 
                 arts.append(art_obj)

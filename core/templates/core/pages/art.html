@@ -24,8 +24,10 @@
 {% include "core/includes/art_header.html" with art=art %}
 
 {% if art.description %}
-<div>{{ art.description | linebreaks }}</div>
+{{ art.description | linebreaks }}
 {% endif %}
+
+<p><i>Published {{ art.created_at|date:"d M Y" }}</i></p>
 
 {% if comments %}
 {% for comment in comments %}

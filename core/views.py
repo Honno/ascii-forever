@@ -53,7 +53,7 @@ class IndexView(ListView):
           return (
               Art.objects
               .filter(artist__in=following)
-              .order_by("-timestamp")
+              .order_by("-created_at")
           )
 
         else:
@@ -84,7 +84,7 @@ class ArtGalleryView(ListView):
     def get_queryset(self):
         return (
             Art.objects
-            .order_by("-timestamp")
+            .order_by("-created_at")
         )
 
 
@@ -134,7 +134,7 @@ class ArtGalleryComponent(MultipleObjectMixin):
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs["username"])
 
-        return user.art_set.all().order_by("-timestamp")
+        return user.art_set.all().order_by("-created_at")
 
 
 class UserView(TemplateView):
@@ -184,7 +184,7 @@ class CommentsComponent(MultipleObjectMixin):
     def get_queryset(self):
         art = get_object_or_404(Art, pk=self.kwargs["pk"])
 
-        return art.comment_set.all().order_by("timestamp")
+        return art.comment_set.all().order_by("created_at")
 
 
 class ArtView(TemplateView):

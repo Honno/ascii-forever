@@ -95,7 +95,9 @@ class Art(Model):
 
     title = CharField(max_length=80, validators=[validate_text])
     description = TextField(null=True, blank=True, validators=[validate_text])
-    timestamp = DateTimeField(default=timezone.now)
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     nsfw = BooleanField()
 
@@ -195,7 +197,8 @@ class Comment(Model):
     author = ForeignKey(User, on_delete=PROTECT)
     text = TextField(validators=[validate_text])
 
-    timestamp = DateTimeField(default=timezone.now)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse("core:art", args=[str(self.art.pk)])

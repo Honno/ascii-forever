@@ -101,3 +101,7 @@ STATIC_URL = "/static/"
 
 MEDIA_ROOT = "/var/www/asciiforever.net/media/"
 MEDIA_URL = "/media/"
+
+# Default model id
+
+DEFAULT_AUTO_FIELD="django.db.models.AutoField"
