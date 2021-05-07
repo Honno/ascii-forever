@@ -248,7 +248,7 @@ h2 {
 
 .line-input {
     display: inline-block;
-    width: 100%;
+    width: 20em;
     padding: 2px;
     box-sizing: border-box;
 
@@ -256,6 +256,10 @@ h2 {
 
     &:focus {
         border-bottom-color: $highlight;
+    }
+
+    &.-fullwidth {
+        width: 100%;
     }
 }
 
@@ -272,7 +276,20 @@ h2 {
     &:focus {
         border-color: $highlight;
     }
+
 }
+
+.prose-input {
+    @extend .multiline-input;
+    overflow: auto;
+
+    > textarea {
+        border: none;
+        outline: none;
+        resize: none;
+    }
+}
+
 
 .number-input {
     @extend .monospaced;

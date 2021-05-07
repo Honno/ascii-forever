@@ -150,3 +150,8 @@ y_offset_input_dec.addEventListener("click", (event) => {
         render_thumb();
     }
 });
+
+/* autosize */
+
+var description = form.querySelector("textarea[name='description']");
+autosize(description);
