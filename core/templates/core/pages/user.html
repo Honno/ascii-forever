@@ -13,21 +13,11 @@
 {% endblock %}
 
 {% block content %}
-<p>{{ user.username }}</p>
-
-{% if request.user.is_authenticated and request.user != user %}
-{% if request.user not in user.following.all %}
-<span id="follow-button-{{ user.username }}" class="follow-button follow">Follow</span>
-{% else %}
-<span id="follow-button-{{ user.username }}" class="follow-button unfollow">Unfollow</span>
-{% endif %}
-{% endif %}
+<span>{{ user.username }}</span>
+{% include "core/includes/follow_user.html" with target=user %}
 
 {% if arts %}
-{% for art in arts %}
-{% include "core/includes/art_thumb.html" with art=art %}
-{% endfor %}
-{% include "core/includes/pagination.html" %}
+{% include "core/includes/art_thumbs.html" with arts=arts %}
 {% endif %}
 {% endblock %}
 

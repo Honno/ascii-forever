@@ -75,10 +75,6 @@ ul.user-actions {
     }
 }
 
-section > * {
-    @include inbetween-margin(1em);
-}
-
 .heart {
     color: $red;
 }
@@ -108,6 +104,108 @@ section > * {
         @extend .button-input, .-selected;
     }
 }
+
+.art-thumbs > * {
+    @include inbetween-margin(1em);
+
+    &:not(:last-child)::after  {
+        display: block;
+        margin-top: 1em;
+
+        @extend .monospaced;
+
+        content: "---";
+        color: $tertiary;
+    }
+}
+
+.art-thumb > * {
+    @include inbetween-margin(1em);
+}
+
+.follow-button {
+    font-size: 9px;
+
+    @extend .button-input;
+
+    border: 1px solid transparent;
+
+    cursor: pointer;
+
+    &.-unfollow {
+        color: $secondary;
+        background-color: $white;
+        border-color: $secondary;
+    }
+
+    &.-unfollow:hover {
+        color: $red;
+        background-color: $white;
+        border-color: $red;
+    }
+}
+
+// art header
+
+.art-header {
+    display: grid;
+    grid-template-columns: auto min-content;
+
+    > .left {
+        grid-column: 1;
+    }
+
+    > .-top {
+        grid-row: 1;
+    }
+
+    > .bottom {
+        grid-row: 2;
+    }
+
+    > .right {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+}
+
+h2 {
+    font-size: $body-font-size;
+}
+
+.user-actions {
+    > .follow-button {
+        margin-left: 0.5em;
+    }
+}
+
+.like-actions {
+    width: 3em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    > span {
+        text-align: center;
+    }
+
+    > .like-tally {
+        @extend .monospaced;
+    }
+
+    > .like-button {
+        cursor: pointer;
+    }
+
+    > .like-button.-like {
+        color: $secondary;
+    }
+
+    > .like-button.-unlike {
+        color: $red;
+    }
+}
+
 
 /* forms */
 
@@ -154,7 +252,7 @@ section > * {
     padding: 2px;
     box-sizing: border-box;
 
-    border-bottom: 1px solid $tertiary;
+    border-bottom: 1px solid $secondary;
 
     &:focus {
         border-bottom-color: $highlight;
@@ -168,7 +266,7 @@ section > * {
 
     outline: none;
 
-    border: 1px solid $tertiary;
+    border: 1px solid $secondary;
     border-radius: 6px;
 
     &:focus {
@@ -185,7 +283,7 @@ section > * {
 
     padding: 0.25em 0.5em;
 
-    background-color: $tertiary;
+    background-color: $secondary;
     color: $white;
 
     text-align: center;
@@ -196,7 +294,7 @@ section > * {
 
     &.-selected {
         background-color: $white;
-        color: $tertiary;
+        color: $secondary;
     }
 
     &.-selected:hover {

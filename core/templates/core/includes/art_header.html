@@ -1,0 +1,36 @@
+<div class="art-header">
+    <div class="left -top">
+        <a class="-nostyle" href="{% url 'core:art' art.pk %}">
+            <h2>{{ art.title }}</h2>
+        </a>
+    </div>
+
+    <div class="left -bottom">
+        <span class="user-actions">
+            <span>by {{ art.artist.username }}</span>
+
+            {% include "core/includes/follow_user.html" with target=art.artist %}
+        </span>
+    </div>
+
+    <div class="right">
+        <div
+            class="like-actions"
+            data-id="{{ art.pk }}">
+            {% if not request.user.is_authenticated %}
+            <span class="like-button -like">
+                <a class="-nostyle" href="{% url 'core:sign_in' %}">♡</a>
+            </span>
+            {% elif request.user not in art.likes.all %}
+            <span
+                class="like-button -like"
+                data-like="true">♡</span>
+            {% else %}
+            <span
+                class="like-button -unlike"
+                data-like="false">♥</span>
+            {% endif %}
+            <span class="like-tally">{{ art.likes.count }}</span>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,10 @@
 var follow_buttons = document.querySelectorAll(".follow-button");
 
 follow_buttons.forEach((button) => {
-    let id_words = button.id.split("-");
-    let username = id_words[id_words.length - 1];
+    let username = button.dataset.username;
 
     button.addEventListener("click", (event) => {
-        let follow_user = button.classList.contains("follow");
+        let follow_user = button.dataset.follow == "true";
 
         fetch("/users/" + username + "/follow", {
             method: "POST",
@@ -20,12 +19,14 @@ follow_buttons.forEach((button) => {
             .then((response) => {
                 response.json().then((data) => {
                     if (data.user_followed) {
-                        button.classList.remove("follow");
-                        button.classList.add("unfollow");
+                        button.classList.remove("-follow");
+                        button.classList.add("-unfollow");
+                        button.dataset.follow = "false";
                         button.innerHTML = "Unfollow";
                     } else {
-                        button.classList.remove("unfollow");
-                        button.classList.add("follow");
+                        button.classList.remove("-unfollow");
+                        button.classList.add("-follow");
+                        button.dataset.follow = "true";
                         button.innerHTML = "Follow";
                     }
                 });

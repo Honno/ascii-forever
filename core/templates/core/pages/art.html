@@ -17,30 +17,11 @@
 {% endblock %}
 
 {% block content %}
-<h2>{{ art.title }}</h2>
+<pre
+    class="art {% if art.nsfw %}-blur{% endif %}"
+    data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">{{ art.text }}</pre>
 
-<p>by {{ art.artist.username }}
-{% if request.user.is_authenticated and request.user != art.artist %}
-{% if request.user not in art.artist.following.all %}
-<span id="follow-button-{{ art.artist.username }}" class="follow-button follow">Follow</span>
-{% else %}
-<span id="follow-button-{{ art.artist.username }}" class="follow-button unfollow">Unfollow</span>
-{% endif %}
-{% endif %}
-</p>
-
-<pre class="art{% if art.nsfw %} nsfw blur{% endif %}">{{ art.text }}</pre>
-
-<span id="art-like-{{ art.pk }}" class="art-like" >
-<span class="art-like-tally">{{ art.likes.count }}</span>
-{% if request.user.is_authenticated %}
-{% if request.user not in art.likes.all %}
-<span class="like-art like">Like</span>
-{% else %}
-<span class="like-art unlike">Unlike</span>
-{% endif %}
-{% endif %}
-</span>
+{% include "core/includes/art_header.html" with art=art %}
 
 {% if art.description %}
 <div>{{ art.description | linebreaks }}</div>

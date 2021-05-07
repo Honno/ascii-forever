@@ -1,0 +1,20 @@
+<div class="art-thumbs">
+    {% for art in arts %}
+    <div class="art-thumb">
+        <div>
+            <a class="-nostyle" href="{% url 'core:art' art.pk %}">
+                <pre class="art {% if art.nsfw %}-blur{% endif %}"
+                     data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">{{ art.native_thumb }}</pre>
+            </a>
+        </div>
+
+        {% include "core/includes/art_header.html" with user=user art=art %}
+
+        {% if art.description_preview %}
+        <p>{{ art.description_preview }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% include "core/includes/pagination.html" %}

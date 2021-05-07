@@ -14,8 +14,12 @@ header, footer {
     padding: 1em;
 }
 
-section {
+.content {
     padding: 0 1em;
+
+    > * {
+        @include inbetween-margin(1em);
+    }
 }
 
 header {

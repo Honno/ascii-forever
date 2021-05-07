@@ -31,8 +31,10 @@ $art-font-line-height: 1.25; // based on the gnome terminal
 
 @mixin inbetween-margin($margin) {
     margin-top: 0 !important;
-    margin-bottom: $margin !important;
-    &:last-child { margin-bottom: 0 !important}
+
+    &:not(:last-child)  {
+        margin-bottom: $margin !important;
+    }
 }
 
 .monospaced {
