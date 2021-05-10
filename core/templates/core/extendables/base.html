@@ -4,7 +4,16 @@
     <head>
         <link rel="stylesheet" type="text/css" href="{% static 'core/style.css' %}" />
         <title>{% block title %}{% endblock %}</title>
-        {% block og %}{% endblock %}
+
+        {% block og %}
+        <meta property="og:title" content="ASCII Forever" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.asciiforever.net{{ request.path }}" />
+        <meta property="og:image" content="{% static 'core/default_thumb.png' %}" />
+        <meta property="og:description" content="Platform for sharing ASCII/text art" />
+
+        <meta name="twitter:card" content="summary_large_image">
+        {% endblock %}
     </head>
     <body>
         <main>
