@@ -69,6 +69,7 @@ class User(AbstractUser):
 
 r_nothing = re.compile("^\s+$")
 r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
+r_tab = re.compile("\t")
 
 
 def validate_text(text):
@@ -80,6 +81,9 @@ def validate_text(text):
 
     if r_emoji.search(text):
         raise ValidationError("no one is allowed to use emojis except me 😈")
+
+    if r_tab.search(text):
+        raise ValidationError("tab characters are not allowed")
 
 
 thumb_font_path = Path(__file__).parent / "SourceCodePro-Regular.ttf"
