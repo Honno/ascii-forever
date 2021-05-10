@@ -13,8 +13,10 @@
 {% endblock %}
 
 {% block content %}
-<span>{{ user.username }}</span>
-{% include "core/includes/follow_user.html" with target=user %}
+<div class="user-byline">
+    <span>{{ user.username }}</span>
+    {% include "core/includes/follow_user.html" with target=user %}
+</div>
 
 {% if arts %}
 

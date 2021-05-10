@@ -214,7 +214,13 @@ h2 {
     }
 }
 
-// user art thumb
+// user page
+
+.user-byline {
+    > .follow-button {
+        margin-left: 1em;
+    }
+}
 
 .user-art-thumb {
     .art-outer {
