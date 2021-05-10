@@ -160,11 +160,11 @@ ul.user-actions {
         grid-column: 1;
     }
 
-    > .-top {
+    > .left.-top {
         grid-row: 1;
     }
 
-    > .bottom {
+    > .left.-bottom {
         grid-row: 2;
     }
 
@@ -185,12 +185,15 @@ h2 {
 }
 
 .like-actions {
-    width: 3em;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    &.-vertical {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
     > span {
+        display: inline-block;
+        width: 3em;
         text-align: center;
     }
 
@@ -209,6 +212,19 @@ h2 {
     > .like-button.-unlike {
         color: $red;
     }
+}
+
+// user art thumb
+
+.user-art-thumb {
+    .art-outer {
+        margin-bottom: 1em;
+    }
+}
+
+.user-art-header {
+    display: flex;
+    justify-content: space-between;
 }
 
 // comment

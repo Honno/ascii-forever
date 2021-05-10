@@ -17,7 +17,53 @@
 {% include "core/includes/follow_user.html" with target=user %}
 
 {% if arts %}
-{% include "core/includes/art_thumbs.html" with arts=arts %}
+
+<div class="art-thumbs">
+    {% for art in arts %}
+    <div class="user-art-thumb">
+        <div class="art-outer">
+            <a class="-nostyle" href="{% url 'core:art' art.pk %}">
+                <pre class="art {% if art.nsfw %}-blur{% endif %}"
+                     data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">{{ art.native_thumb }}</pre>
+            </a>
+        </div>
+
+        <div class="user-art-header">
+            <span>
+                <a class="-nostyle" href="{% url 'core:art' art.pk %}">
+                    <h2>{{ art.title }}</h2>
+                </a>
+            </span>
+
+            <span
+                class="like-actions"
+                data-id="{{ art.pk }}">
+                <span class="like-tally">{{ art.likes.count }}</span>
+                {% if not request.user.is_authenticated %}
+                <span class="like-button -like">
+                    <a class="-nostyle" href="{% url 'core:sign_in' %}">♡</a>
+                </span>
+                {% elif request.user not in art.likes.all %}
+                <span
+                    class="like-button -like"
+                    data-like="true">♡</span>
+                {% else %}
+                <span
+                    class="like-button -unlike"
+                    data-like="false">♥</span>
+                {% endif %}
+            </span>
+        </div>
+
+        {% if art.description_preview %}
+        <p>{{ art.description_preview }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% include "core/includes/pagination.html" %}
+
 {% endif %}
 {% endblock %}
 
