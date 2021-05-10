@@ -17,7 +17,6 @@
     <div class="form-group">
         <label>Username</label>
         <div class="form-input">
-            {{ form.username.help_text }}
             {% include "core/includes/error_box.html" with errors=form.username.errors %}
             <input
                 class="line-input"
@@ -31,14 +30,14 @@
     <div class="form-group">
         <label>Password</label>
         <div class="form-input">
-            {{ form.password1.help_text }}
+            <div>{{ form.password1.help_text }}</div>
             {% include "core/includes/error_box.html" with errors=form.password1.errors %}
             <input
                 class="line-input"
                 type="text"
                 name="password1"
                 required>
-            {{ form.password2.help_text }}
+            <div>{{ form.password2.help_text }}</div>
             {% include "core/includes/error_box.html" with errors=form.password2.errors %}
             <input
                 class="line-input"
