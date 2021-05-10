@@ -29,22 +29,6 @@
 
 <p><i>Published {{ art.created_at|date:"d M Y" }}</i></p>
 
-{% if comments %}
-{% for comment in comments %}
-<p>{{ comment.author.username }}</p>
-<div>{{ comment.text }}</div>
-<br />
-{% endfor %}
-
-{% include "core/includes/pagination.html" %}
-{% endif %}
-
-<form method="post">
-    {% csrf_token %}
-    {{ comment_form.as_p }}
-    <input type="submit" value="Comment" />
-</form>
-
 {% if request.user == art.artist %}
 <p><a href="{% url 'core:edit_art' art.pk %}">Edit</a></p>
 {% endif %}

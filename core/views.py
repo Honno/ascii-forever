@@ -159,60 +159,9 @@ class UserView(TemplateView):
 # ArtView
 
 
-class PostCommentView(LoginRequiredMixin, CreateView):
-    form_class = CommentForm
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-
-        form.instance.art = get_object_or_404(Art, pk=self.kwargs["pk"])
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("core:art", args=[self.kwargs["pk"]])
-
-class CommentsComponent(MultipleObjectMixin):
-    context_object_name = "comments"
-    paginate_by = 50
-
-    def __init__(self, request, pk):
-        self.request = request
-        self.kwargs = { "pk": pk }
-        self.object_list = self.get_queryset()
-
-    def get_queryset(self):
-        art = get_object_or_404(Art, pk=self.kwargs["pk"])
-
-        return art.comment_set.all().order_by("created_at")
-
-
-class ArtView(TemplateView):
+class ArtView(DetailView):
     template_name = "core/pages/art.html"
-
-    def get(self, request, pk):
-        self.comments_component = CommentsComponent(request, pk)
-
-        return super().get(request, pk)
-
-    def get_context_data(self):
-        art = get_object_or_404(Art, pk=self.kwargs["pk"])
-
-        ctx ={
-            "art": art,
-            "comment_form": CommentForm(),
-        }
-
-        comments_ctx = self.comments_component.get_context_data()
-        ctx.update(comments_ctx)
-
-        return ctx
-
-    def post(self, request, *args, **kwargs):
-        view = PostCommentView.as_view()
-
-        return view(request, *args, **kwargs)
-
+    model = Art
 
 # ------------------------------------------------------------------------------
 # Art upsert
