@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse, FileResponse
+from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
@@ -14,6 +14,8 @@ from django.utils import timezone
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from werkzeug.wsgi import FileWrapper
+
 
 from .models import *
 from .forms import *
@@ -198,9 +200,9 @@ class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 def art_thumb(request, pk):
     art = get_object_or_404(Art, pk=pk)
-    image = art.render_thumb()
+    image = FileWrapper(art.render_thumb())
 
-    return FileResponse(image, filename="thumb.png")
+    return HttpResponse(image, content_type="image/png")
 
 
 # ------------------------------------------------------------------------------
