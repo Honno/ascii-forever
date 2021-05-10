@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ascii-world"
+name = "ascii-forever"
 version = "0.1.0"
 description = ""
 authors = ["Matthew Barber <quitesimplymatt@gmail.com>"]

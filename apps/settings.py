@@ -5,10 +5,11 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(dotenv_path=BASE_DIR / "secrets.env")
-SECRET_KEY = getenv("SECRET_KEY")
+load_dotenv(dotenv_path=BASE_DIR / "django.env")
 
-DEBUG = True
+SECRET_KEY = getenv("DJANGO_SECRET_KEY")
+
+DEBUG = getenv("DJANGO_DEBUG") == "True"
 
 ALLOWED_HOSTS = ["www.asciiforever.net"]
 
@@ -96,10 +97,10 @@ USE_TZ = True
 
 # Files
 
-STATIC_ROOT = "/var/www/asciiforever.net/static/"
+STATIC_ROOT = "/var/www/www.asciiforever.net/static/"
 STATIC_URL = "/static/"
 
-MEDIA_ROOT = "/var/www/asciiforever.net/media/"
+MEDIA_ROOT = "/var/www/www.asciiforever.net/media/"
 MEDIA_URL = "/media/"
 
 # Default model id
