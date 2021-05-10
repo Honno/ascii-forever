@@ -154,4 +154,15 @@ y_offset_input_dec.addEventListener("click", (event) => {
 /* autosize */
 
 var description = form.querySelector("textarea[name='description']");
+var description_outer = description.parentElement;
+
 autosize(description);
+
+description.addEventListener("focus", (event) => {
+    description_outer.classList.add("-focus");
+});
+
+description.addEventListener("blur", (event) => {
+    description_outer.classList.remove("-focus");
+});
+

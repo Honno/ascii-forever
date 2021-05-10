@@ -324,7 +324,12 @@ h2 {
     @extend .multiline-input;
     overflow: auto;
 
+    &.-focus {
+        border-color: $highlight;
+    }
+
     > textarea {
+        width: 100%;
         border: none;
         outline: none;
         resize: none;
