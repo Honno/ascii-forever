@@ -38,13 +38,6 @@ def validate_username(username):
     if not r_slug.fullmatch(username):
         raise ValidationError("must only contain ASCII letters, numbers, and underscores")
 
-    if not r_alpha.match(username[0]):
-        raise ValidationError("first character must be a letter")
-
-    if not r_alphanumeric.match(username[-1]):
-        raise ValidationError("last character must be a letter or number")
-
-
 class User(AbstractUser):
     objects = CIUserManager()
     username_validator = validate_username
