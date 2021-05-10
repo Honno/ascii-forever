@@ -11,7 +11,7 @@ SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 DEBUG = getenv("DJANGO_DEBUG") == "True"
 
-ALLOWED_HOSTS = ["www.asciiforever.net"]
+ALLOWED_HOSTS = ["127.0.0.1", "www.asciiforever.net"]
 
 
 # Application definition
