@@ -200,11 +200,11 @@ class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 def art_thumb(request, pk):
     art = get_object_or_404(Art, pk=pk)
-    image = FileWrapper(art.render_thumb())
+    image = art.render_thumb()
 
     # https://help.pythonanywhere.com/pages/FlaskSendFileBytesIO/
     wrapped_image = FileWrapper(image)
-    response = HttpResponse(image, content_type="image/png")
+    response = HttpResponse(wrapped_image, content_type="image/png")
     response["Content-Disposition"] = 'filename="thumb.png"'
 
     return response
