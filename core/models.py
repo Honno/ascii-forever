@@ -105,6 +105,7 @@ class Art(Model):
 
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
+    native_thumb = TextField(validators=[validate_text])
 
     likes = ManyToManyField(User, related_name="likes")
 
@@ -147,13 +148,6 @@ class Art(Model):
 
         return thumb
 
-    @cached_property
-    def native_thumb(self):
-        if self.w < THUMB_W and self.h < THUMB_H:
-            return self.text
-        else:
-            return self.renderable_thumb
-
     def render_thumb(self):
         image = Image.new("RGB", (1200, 628), (255, 255, 255))
         font = ImageFont.truetype(thumb_font_path.as_posix(), size=24)
@@ -182,6 +176,14 @@ class Art(Model):
 
         if r_nothing.match(self.renderable_thumb):
             raise ValidationError("thumbnail contains only whitespace")
+
+    def save(self, *args, **kwargs):
+        if self.w < THUMB_W and self.h < THUMB_H:
+            self.native_thumb = self.text
+        else:
+            self.native_thumb = self.renderable_thumb
+
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("core:art", args=[str(self.pk)])
