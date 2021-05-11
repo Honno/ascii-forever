@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils.text import slugify
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import get_current_timezone
+from django.conf import settings
 import lorem
 
 from core.models import *
@@ -87,8 +88,12 @@ class Command(BaseCommand):
     help = "Populates the database for a development environment"
 
     def handle(self, *args, **options):
+        if not settings.DEBUG:
+            raise CommandError("Not in debug mode (don't use this in prod!)")
+
+
         if User.objects.exists() or Art.objects.exists():
-            raise CommandError("objects already exist")
+            raise CommandError("Objects already exist")
 
         password = make_password("pass")
 
