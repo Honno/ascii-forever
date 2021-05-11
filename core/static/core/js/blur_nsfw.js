@@ -24,7 +24,6 @@ if (init_blur_nsfw == "true" || typeof init_blur_nsfw == "undefined") {
 }
 
 blur_input.addEventListener("change", (event) => {
-    console.log(event);
     if (event.target.checked) {
         Cookies.set("blur_nsfw", "true",  { secure: true });
         blur_art();
