@@ -52,6 +52,11 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("core:user", args=[self.username])
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        self.following.add(self)
+
     def __str__(self):
         return self.username
 
