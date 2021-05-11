@@ -1,9 +1,14 @@
 {% load static %}
+{% load compress %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'core/style.css' %}" />
         <title>{% block title %}{% endblock %}</title>
+
+        {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href="{% static 'core/css/style.scss' %}" />
+        {% endcompress %}
 
         {% block og %}
         <meta property="og:title" content="ASCII Forever" />
@@ -41,9 +46,14 @@
                 Made with <span class="heart">♥</span> by <a href="http://matthewbarber.io/">Honno</a>.
             </footer>
         </main>
-        <script src="{% static 'core/js/js.cookie.js' %}"></script>
-        <script src="{% static 'core/js/autosize.js' %}"></script>
-        <script src="{% static 'core/js/blur_nsfw.js' %}"></script>
+
+        {% compress js %}
+        <script type="text/javascript" src="{% static 'core/js/js.cookie.js' %}"></script>
+        <script type="text/javascript" src="{% static 'core/js/autosize.js' %}"></script>
+        <script type="text/javascript" src="{% static 'core/js/blur_nsfw.js' %}"></script>
+        <script type="text/javascript" src="{% static 'core/js/like_art.js' %}"></script>
+        <script type="text/javascript" src="{% static 'core/js/follow_user.js' %}"></script>
+        {% endcompress %}
         {% block js %}{% endblock %}
     </body>
 </html>

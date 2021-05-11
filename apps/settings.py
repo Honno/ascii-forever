@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "compressor",
 ]
 
 MIDDLEWARE = [
@@ -96,6 +98,16 @@ USE_TZ = True
 
 
 # Files
+
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+]
+
+COMPRESS_PRECOMPILERS = [
+    ("text/x-scss", "django_libsass.SassCompiler"),
+]
 
 STATIC_ROOT = "/var/www/www.asciiforever.net/static/"
 STATIC_URL = "/static/"

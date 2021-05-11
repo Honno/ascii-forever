@@ -15,7 +15,3 @@ tests/report/
 
 django.env
 my.cnf
-
-**/.sass-cache/
-*.css.map
-*.css
