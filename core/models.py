@@ -127,6 +127,47 @@ class Art(Model):
         return height
 
     @cached_property
+    def wide(self):
+        return self.w > THUMB_W
+
+    @cached_property
+    def tall(self):
+        return self.h > THUMB_H
+
+    @property
+    def natively_thumb(self):
+        text_lines = self.text.splitlines()
+        thumb_lines = []
+
+        if not self.tall:
+            y_range = range(self.h)
+        else:
+            y_range = range(self.thumb_y_offset, self.thumb_y_offset + THUMB_H)
+
+        if not self.wide:
+            x_range = range(self.w)
+        else:
+            x_range = range(self.thumb_x_offset, self.thumb_x_offset + THUMB_W)
+
+
+        for y in y_range:
+            line = ""
+            for x in x_range:
+                if y >= 0 and x >= 0:
+                    try:
+                        line += text_lines[y][x]
+                    except IndexError:
+                        line += " "
+                else:
+                    line += " "
+
+            thumb_lines.append(line)
+
+        thumb = "\n".join(thumb_lines)
+
+        return thumb
+
+    @cached_property
     def renderable_thumb(self):
         text_lines = self.text.splitlines()
         thumb_lines = []
@@ -178,8 +219,8 @@ class Art(Model):
             raise ValidationError("thumbnail contains only whitespace")
 
     def save(self, *args, **kwargs):
-        if self.w < THUMB_W and self.h < THUMB_H:
-            self.native_thumb = self.text
+        if not self.wide or not self.tall:
+            self.native_thumb = self.natively_thumb
         else:
             self.native_thumb = self.renderable_thumb
 
