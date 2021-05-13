@@ -50,10 +50,12 @@
         {% compress js %}
         <script type="text/javascript" src="{% static 'core/js/js.cookie.js' %}"></script>
         <script type="text/javascript" src="{% static 'core/js/autosize.js' %}"></script>
+
         <script type="text/javascript" src="{% static 'core/js/blur_nsfw.js' %}"></script>
         <script type="text/javascript" src="{% static 'core/js/like_art.js' %}"></script>
         <script type="text/javascript" src="{% static 'core/js/follow_user.js' %}"></script>
+
+        <script type="text/javascript" src="{% static 'core/js/art_form.js' %}"></script>
         {% endcompress %}
-        {% block js %}{% endblock %}
     </body>
 </html>

@@ -7,7 +7,7 @@
     <li><a href="{% url 'core:index' %}" >home</a></li>
     <li><a href="{% url 'core:arts' %}" >art</a></li>
     <li><a href="{% url 'core:art' art.pk %}" >{{ art.pk }}</a></li>
-    <li>edit</li>
+    <li><a href="{% url 'core:edit_art' art.pk %}" >edit</a></li>
 </ul>
 {% endblock %}
 

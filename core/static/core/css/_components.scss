@@ -43,17 +43,56 @@ a {
 /* base layout */
 
 ul.nav-bar {
+    @extend .monospaced;
+    white-space: nowrap;
+
     > li {
         display: inline-block;
     }
 
-    > li:after {
+    > li::after {
         content: " / ";
         color: $tertiary;
     }
 
-    &.-final > li:last-child:after {
+    &.-final > li:last-child::after, &.-input > li:last-child::after {
         content: "";
+    }
+
+    &.-input > li:last-child {
+        white-space: normal;
+    }
+}
+
+.page-select {
+    position: relative;
+    display: inline-block;
+
+    > button {
+        @extend .monospaced;
+        color: $secondary;
+        font-style: italic;
+    }
+
+    &:hover > button {
+        color: $highlight;
+        border-color: $highlight;
+    }
+
+    > .pages {
+        display: none;
+
+        position: absolute;
+        z-index: 1;
+    }
+
+    &:hover > .pages {
+        display: block;
+    }
+
+    > .pages > a {
+        @extend .-nostyle;
+        @extend .button-input;
     }
 }
 
@@ -343,6 +382,8 @@ h2 {
 
 .button-input {
     @extend .monospaced;
+
+    display: inline-block;
 
     padding: 0.25em 0.5em;
 

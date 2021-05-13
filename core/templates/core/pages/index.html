@@ -5,8 +5,17 @@
 {% block title %}Home{% endblock %}
 
 {% block path %}
-<ul class="nav-bar">
-    <li>home</li>
+<ul class="nav-bar -input">
+    <li><a href="{% url 'core:index' %}">home</a></li>
+    <li>
+        <div class="page-select">
+            <button>-></button>
+            <div class="pages">
+                <a href="{% url 'core:arts' %}">art</a>
+                <a href="{% url 'core:users' %}">users</a>
+            </div>
+        </div>
+    </li>
 </ul>
 {% endblock %}
 

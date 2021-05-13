@@ -1,44 +1,43 @@
-var form = document.querySelector("form.preserve-whitespace");
+var af_form = document.querySelector("form.preserve-whitespace");
 
 /* js status */
 
-var checkbox = form.querySelector("input[name='js_enabled']");
-checkbox.value = "True";
+var af_checkbox = af_form.querySelector("input[name='js_enabled']");
+af_checkbox.value = "True";
 
 /* whitespace preservation */
 
-var textarea = form.querySelector("textarea[name='text']");
+var af_textarea = af_form.querySelector("textarea[name='text']");
 
 // if a server-side error occurs, the page is POST'd to
 // browsers may carry over the dot that was prepended previously
 // so we remove any such dot
 // note that this may remove a legitimate dot ¯\_(ツ)_/¯
-if (textarea.value.length > 0) {
-    if (textarea.value[0] == ".") {
-        textarea.value = textarea.value.substring(1);
+if (af_textarea.value.length > 0) {
+    if (af_textarea.value[0] == ".") {
+        af_textarea.value = af_textarea.value.substring(1);
     }
 }
 
-form.addEventListener("submit", (event) => {
+af_form.addEventListener("submit", (event) => {
     event.preventDefault();
-    textarea.value = "." + textarea.value;
-    form.submit();
+    af_textarea.value = "." + af_textarea.value;
+    af_form.submit();
 });
 
-/* thumbnail preview */
+/* thumbnail af_preview */
 
-var preview = document.querySelector("pre.thumb-preview");
+var af_preview = document.querySelector("pre.thumb-preview");
 
-var x_offset_input = form.querySelector("input[name='thumb_x_offset']");
-var x_offset_input_inc = form.querySelector("#x-offset-inc");
-var x_offset_input_dec = form.querySelector("#x-offset-dec");
+var x_offset_input = af_form.querySelector("input[name='thumb_x_offset']");
+var x_offset_input_inc = af_form.querySelector("#x-offset-inc");
+var x_offset_input_dec = af_form.querySelector("#x-offset-dec");
 
-var y_offset_input = form.querySelector("input[name='thumb_y_offset']");
-var y_offset_input_inc = form.querySelector("#y-offset-inc");
-var y_offset_input_dec = form.querySelector("#y-offset-dec");
+var y_offset_input = af_form.querySelector("input[name='thumb_y_offset']");
+var y_offset_input_inc = af_form.querySelector("#y-offset-inc");
+var y_offset_input_dec = af_form.querySelector("#y-offset-dec");
 
-
-var text = textarea.value;
+var af_text = af_textarea.value;
 
 function parse_int(value) {
     if (isNaN(value))
@@ -65,7 +64,7 @@ if (y_offset == null)
     y_offset = 0;
 
 function render_thumb() {
-    let lines = text.split(/\r?\n/);
+    let lines = af_text.split(/\r?\n/);
     let thumb = "";
 
     for (let y = y_offset; y < y_offset + 19; y++) {
@@ -85,13 +84,13 @@ function render_thumb() {
         thumb += "\n";
     }
 
-    preview.innerHTML = thumb;
+    af_preview.innerHTML = thumb;
 }
 
 render_thumb();
 
-textarea.addEventListener("input", (e) => {
-    text = e.target.value;
+af_textarea.addEventListener("input", (e) => {
+    af_text = e.target.value;
     render_thumb();
 });
 
@@ -153,16 +152,15 @@ y_offset_input_dec.addEventListener("click", (event) => {
 
 /* autosize */
 
-var description = form.querySelector("textarea[name='description']");
-var description_outer = description.parentElement;
+var af_description = af_form.querySelector("textarea[name='description']");
+var af_description_outer = af_description.parentElement;
 
-autosize(description);
+autosize(af_description);
 
-description.addEventListener("focus", (event) => {
-    description_outer.classList.add("-focus");
+af_description.addEventListener("focus", (event) => {
+    af_description_outer.classList.add("-focus");
 });
 
-description.addEventListener("blur", (event) => {
-    description_outer.classList.remove("-focus");
+af_description.addEventListener("blur", (event) => {
+    af_description_outer.classList.remove("-focus");
 });
-

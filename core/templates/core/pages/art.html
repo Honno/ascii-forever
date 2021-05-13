@@ -20,10 +20,20 @@
 {% endblock %}
 
 {% block path %}
-<ul class="nav-bar">
+<ul class="nav-bar {% if request.user != art.artist %}-final{% else %}-input{% endif %}">
     <li><a href="{% url 'core:index' %}" >home</a></li>
     <li><a href="{% url 'core:arts' %}" >art</a></li>
-    <li>{{ art.pk }}</li>
+    <li><a href="{% url 'core:art' art.pk %}" >{{ art.pk }}</a></li>
+    {% if request.user == art.artist %}
+    <li>
+        <div class="page-select">
+            <button>-></button>
+            <div class="pages">
+                <a href="{% url 'core:edit_art' art.pk %}">edit</a>
+            </div>
+        </div>
+    </li>
+    {% endif %}
 </ul>
 {% endblock %}
 

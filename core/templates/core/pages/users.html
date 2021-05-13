@@ -2,9 +2,19 @@
 {% block title %}User List{% endblock %}
 
 {% block path %}
-<ul class="nav-bar">
-    <li><a href="{% url 'core:index' %}" >home</a></li>
-    <li class="final-dir">users</li>
+<ul class="nav-bar -input">
+    <li><a href="{% url 'core:index' %}">home</a></li>
+    <li><a href="{% url 'core:users' %}">users</a></li>
+    <li>
+        <div class="page-select">
+            <button>-></button>
+            <div class="pages">
+                <a href="{% url 'core:join' %}">join</a>
+                <a href="{% url 'core:sign_in' %}">sign_in</a>
+                <a href="{% url 'core:sign_out' %}">sign_out</a>
+            </div>
+        </div>
+    </li>
 </ul>
 {% endblock %}
 

@@ -5,9 +5,17 @@
 {% block title %}Art Gallery{% endblock %}
 
 {% block path %}
-<ul class="nav-bar">
-    <li><a href="{% url 'core:index' %}" >home</a></li>
-    <li>art</li>
+<ul class="nav-bar -input">
+    <li><a href="{% url 'core:index' %}">home</a></li>
+    <li><a href="{% url 'core:arts' %}">art</a></li>
+    <li>
+        <div class="page-select">
+            <button>-></button>
+            <div class="pages">
+                <a href="{% url 'core:post_art' %}">post</a>
+            </div>
+        </div>
+    </li>
 </ul>
 {% endblock %}
 

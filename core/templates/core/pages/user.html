@@ -5,10 +5,10 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block path %}
-<ul class="nav-bar">
+<ul class="nav-bar -final">
     <li><a href="{% url 'core:index' %}" >home</a></li>
     <li><a href="{% url 'core:users' %}" >users</a></li>
-    <li>{{ user.username }}</li>
+    <li><a href="{% url 'core:user' user.username %}" >{{ user.username }}</a></li>
 </ul>
 {% endblock %}
 
