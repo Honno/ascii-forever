@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.functional import cached_property
+from django.db.models.signals import post_save
 from PIL import Image, ImageDraw, ImageFont
 
 __all__ = ["User", "Art", "Comment"]
@@ -231,6 +232,14 @@ class Art(Model):
         if r_nothing.match(self.renderable_thumb):
             raise ValidationError("thumbnail contains only whitespace")
 
+
+    @staticmethod
+    def self_like(sender, instance, created, **kwargs):
+        if created:
+            instance.likes.add(instance.artist)
+            instance.save()
+
+
     def save(self, *args, **kwargs):
         if not self.wide or not self.tall:
             self.native_thumb = self.natively_thumb
@@ -244,6 +253,9 @@ class Art(Model):
 
     def __str__(self):
         return self.title
+
+
+post_save.connect(Art.self_like, sender=Art)
 
 
 # ------------------------------------------------------------------------------

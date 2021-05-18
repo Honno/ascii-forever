@@ -135,3 +135,13 @@ def test_native_thumb(django_user_model):
    art = Art(artist=user, title="mrlc's test", text=mrlc_test)
 
    multiline_assert(art.natively_thumb, mrlc_test_native)
+
+
+@mark.django_db
+def test_self_like(django_user_model):
+   user = django_user_model.objects.create(username="bob", password="pass")
+
+   art = Art(artist=user, title="mrlc's test", text=mrlc_test, nsfw=False)
+   art.save()
+
+   assert user in art.likes.get_queryset().all()
