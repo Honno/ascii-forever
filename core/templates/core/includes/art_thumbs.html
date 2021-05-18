@@ -1,14 +1,23 @@
 <div class="art-thumbs">
     {% for art in arts %}
-    <div class="art-thumb">
-        <div>
+    <div
+        class="art-thumb"
+        data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">
+
+        {% if art.nsfw %}
+        <div class="nsfw-actions">
+            <span>NSFW content</span>
+            <button class="nsfw-show inline-button">Show</button>
+        </div>
+        {% endif %}
+
+        <div class="art {% if art.nsfw %}-hide{% endif %}">
             <a class="-nostyle" href="{% url 'core:art' art.pk %}">
-                <pre class="art {% if art.nsfw %}-blur{% endif %}"
-                     data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">{{ art.native_thumb }}</pre>
+                <pre>{{ art.native_thumb }}</pre>
             </a>
         </div>
 
-        {% include "core/includes/art_header.html" with user=user art=art %}
+        {% include "core/includes/art_header.html" with art=art %}
 
         {% if art.description_preview %}
         <p>{{ art.description_preview }}</p>

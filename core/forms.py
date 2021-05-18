@@ -3,11 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import *
 
-__all__ = ["JoinForm", "ArtForm", "CommentForm"]
-
-
-# ------------------------------------------------------------------------------
-# UserCreationForm
+__all__ = ["JoinForm", "SettingsForm", "ArtForm", "CommentForm"]
 
 
 class JoinForm(UserCreationForm):
@@ -15,8 +11,10 @@ class JoinForm(UserCreationForm):
         model = User
 
 
-# ------------------------------------------------------------------------------
-# ArtForm
+class SettingsForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ["nsfw_pref"]
 
 
 class ArtForm(ModelForm):
@@ -48,10 +46,6 @@ class ArtForm(ModelForm):
                 data["text"] = data["text"][1:]
 
         return data
-
-
-# ------------------------------------------------------------------------------
-# CommentForm
 
 
 class CommentForm(ModelForm):

@@ -38,6 +38,13 @@ def validate_username(username):
     if not r_slug.fullmatch(username):
         raise ValidationError("must only contain ASCII letters, numbers, and underscores")
 
+
+class NSFWChoices(TextChoices):
+    ALWAYS_ASK = "AA"
+    SHOW_ALL = "SA"
+    HIDE_ALL = "HA"
+
+
 class User(AbstractUser):
     objects = CIUserManager()
     username_validator = validate_username
@@ -47,7 +54,13 @@ class User(AbstractUser):
         unique=True,
         validators=[validate_username],
     )
+
     following = ManyToManyField("self", related_name="following")
+    nsfw_pref = CharField(
+        max_length=2,
+        choices=NSFWChoices.choices,
+        default=NSFWChoices.ALWAYS_ASK,
+    )
 
     def get_absolute_url(self):
         return reverse("core:user", args=[self.username])

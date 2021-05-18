@@ -38,9 +38,21 @@
 {% endblock %}
 
 {% block content %}
-<pre
-    class="art {% if art.nsfw %}-blur{% endif %}"
-    data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">{{ art.text }}</pre>
+<div
+    class="art-container"
+    data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">
+
+    {% if art.nsfw %}
+    <div class="nsfw-actions">
+        <span>NSFW content</span>
+        <button class="nsfw-show inline-button">Show</button>
+    </div>
+    {% endif %}
+
+    <div class="art {% if art.nsfw %}-hide{% endif %}">
+        <pre>{{ art.text }}</pre>
+    </div>
+</div>
 
 {% include "core/includes/art_header.html" with art=art %}
 

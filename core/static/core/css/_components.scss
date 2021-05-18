@@ -9,7 +9,10 @@ body {
     line-height: $body-font-line-height;
 
     background-color: $white;
-    color: $primary;
+}
+
+h2 {
+    font-size: $body-font-size;
 }
 
 p {
@@ -40,7 +43,9 @@ a {
     }
 }
 
-/* base layout */
+pre {
+    @extend .monospaced;
+}
 
 ul.nav-bar {
     @extend .monospaced;
@@ -91,7 +96,7 @@ ul.nav-bar {
     }
 
     > .pages > a {
-        @extend .-nostyle;
+        text-decoration: none;
         @extend .button-input;
     }
 }
@@ -108,13 +113,9 @@ ul.user-actions {
             display: inline-block;
         }
 
-        > li:after {
+        > li:not(:last-child)::after {
             content: " • ";
             color: $tertiary;
-        }
-
-        > li:last-child:after {
-            content: "";
         }
     }
 }
@@ -125,22 +126,13 @@ ul.user-actions {
 
 /* common */
 
-.art {
-    @extend .monospaced;
-
-    &.-blur {
-        color: transparent;
-        text-shadow: 0 0 2em $primary;
-    }
-}
-
 .pagination {
     width: 100%;
     display: flex;
     justify-content: center;
 
     > a {
-        @extend .-nostyle;
+        text-decoration: none;
         @extend .button-input;
     }
 
@@ -148,6 +140,8 @@ ul.user-actions {
         @extend .button-input, .-selected;
     }
 }
+
+/* art */
 
 .art-thumbs > * {
     @include inbetween-margin(1em);
@@ -163,33 +157,43 @@ ul.user-actions {
     }
 }
 
-.art-thumb > * {
-    @include inbetween-margin(1em);
+.-hide {
+    display: none !important;
+}
+
+.art-thumb {
+    > * {
+        @include inbetween-margin(1em);
+    }
+}
+
+.nsfw-actions {
+    display: flex;
+    justify-content: left;
+    gap: 1em;
 }
 
 .follow-button {
-    font-size: 9px;
+    @extend .inline-button;
 
-    @extend .button-input;
+    color: $white;
+    background-color: $secondary;
 
-    border: 1px solid transparent;
-
-    cursor: pointer;
+    &:hover {
+        color: $white;
+        background-color: $highlight;
+    }
 
     &.-unfollow {
         color: $secondary;
-        background-color: $white;
-        border-color: $secondary;
+        background-color: transparent;
     }
 
     &.-unfollow:hover {
         color: $red;
-        background-color: $white;
         border-color: $red;
     }
 }
-
-// art header
 
 .art-header {
     display: grid;
@@ -211,10 +215,6 @@ ul.user-actions {
         grid-column: 2;
         grid-row: 1 / span 2;
     }
-}
-
-h2 {
-    font-size: $body-font-size;
 }
 
 .user-actions {
@@ -262,7 +262,7 @@ h2 {
 }
 
 .user-art-thumb {
-    .art-outer {
+    .art {
         margin-bottom: 1em;
     }
 }
@@ -285,7 +285,6 @@ h2 {
         font-style: italic;
     }
 }
-
 
 /* forms */
 
@@ -375,35 +374,8 @@ h2 {
     }
 }
 
-
 .number-input {
     @extend .monospaced;
-}
-
-.button-input {
-    @extend .monospaced;
-
-    display: inline-block;
-
-    padding: 0.25em 0.5em;
-
-    background-color: $secondary;
-    color: $white;
-
-    text-align: center;
-
-    &:hover {
-        background-color: $highlight;
-    }
-
-    &.-selected {
-        background-color: $white;
-        color: $secondary;
-    }
-
-    &.-selected:hover {
-        background-color: $white;
-    }
 }
 
 .art-input {

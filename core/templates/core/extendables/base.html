@@ -35,7 +35,6 @@
                     <li><a href="{% url 'core:sign_in' %}">Sign in</a></li>
                     <li><a href="{% url 'core:join' %}">Join</a></li>
                     {% endif %}
-                    <li>Blur NSFW <input type="checkbox" id="blur-toggle"></li>
                 </ul>
             </header>
             <section class="content">
@@ -51,7 +50,7 @@
         <script type="text/javascript" src="{% static 'core/js/js.cookie.js' %}"></script>
         <script type="text/javascript" src="{% static 'core/js/autosize.js' %}"></script>
 
-        <script type="text/javascript" src="{% static 'core/js/blur_nsfw.js' %}"></script>
+        <script type="text/javascript" src="{% static 'core/js/censor_nsfw.js' %}"></script>
         <script type="text/javascript" src="{% static 'core/js/like_art.js' %}"></script>
         <script type="text/javascript" src="{% static 'core/js/follow_user.js' %}"></script>
 

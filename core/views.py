@@ -9,7 +9,7 @@ from django.views.generic.edit import ModelFormMixin
 from django.views.generic.list import MultipleObjectMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -24,6 +24,8 @@ __all__ = [
     "IndexView",
     "UserView",
     "UserListView",
+    "SettingsView",
+    "nsfw_pref",
     "follow_user",
     "JoinView",
     "SignInView",
@@ -158,12 +160,32 @@ class UserView(TemplateView):
 
 
 # ------------------------------------------------------------------------------
+# User upsert
+
+
+class SettingsView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    template_name = "core/pages/settings.html"
+    form_class = SettingsForm
+    context_object_name = "user"
+
+    def test_func(self):
+        return self.request.user == self.get_object()
+
+    def get_object(self):
+        return get_object_or_404(User, username=self.kwargs["username"])
+
+    def get_success_url(self):
+        return reverse("core:user", args=[self.get_object().username])
+
+
+# ------------------------------------------------------------------------------
 # ArtView
 
 
 class ArtView(DetailView):
     template_name = "core/pages/art.html"
     model = Art
+
 
 # ------------------------------------------------------------------------------
 # Art upsert
@@ -185,10 +207,7 @@ class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     context_object_name = "art"
 
     def test_func(self):
-        art = self.get_object()
-        user_is_artist = art.artist == self.request.user
-
-        return user_is_artist
+        return self.request.user == self.get_object().artist
 
     def get_object(self):
         return get_object_or_404(Art, pk=self.kwargs["pk"])
@@ -224,6 +243,18 @@ def require_ajax(func):
         return response
 
     return wrapper
+
+
+@require_ajax
+@require_GET
+def nsfw_pref(request):
+    if not request.user.is_authenticated:
+        pref = User.nsfw_pref.choices.ALWAYS_ASK
+    else:
+        pref = request.user.nsfw_pref
+
+    return JsonResponse({"nsfw_pref": pref})
+
 
 
 @require_ajax

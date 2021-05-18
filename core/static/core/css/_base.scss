@@ -27,6 +27,8 @@ $art-font-family: "Source Code Pro", "Courier New", monospace;
 $art-font-size: 12px;
 $art-font-line-height: 1.25; // based on the gnome terminal
 
+$art-font-size-small: 9px;
+
 /* utils */
 
 @mixin inbetween-margin($margin) {
@@ -43,4 +45,49 @@ $art-font-line-height: 1.25; // based on the gnome terminal
     font-size: $art-font-size;
     font-weight: normal;
     line-height: $art-font-line-height;
+}
+
+.button-input {
+    @extend .monospaced;
+
+    display: inline-block;
+    padding: 0.25em 0.5em;
+
+    text-align: center;
+
+    background-color: $secondary;
+    color: $white;
+
+    &:hover {
+        background-color: $highlight;
+    }
+
+    &.-selected {
+        background-color: $white;
+        color: $secondary;
+    }
+
+    &.-selected:hover {
+        background-color: $white;
+    }
+}
+
+.inline-button {
+    @extend .monospaced;
+
+    display: inline;
+    padding: 0.25em 0.5em;
+
+    font-size: $art-font-size-small;
+    text-align: center;
+
+    color: $secondary;
+    border: 1px solid $secondary;
+
+    cursor: pointer;
+
+    &:hover {
+        color: $highlight;
+        border-color: $highlight;
+    }
 }
