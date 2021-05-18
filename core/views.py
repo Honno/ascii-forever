@@ -249,7 +249,7 @@ def require_ajax(func):
 @require_GET
 def nsfw_pref(request):
     if not request.user.is_authenticated:
-        pref = User.nsfw_pref.choices.ALWAYS_ASK
+        pref = "AA"
     else:
         pref = request.user.nsfw_pref
 
