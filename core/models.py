@@ -232,14 +232,6 @@ class Art(Model):
         if r_nothing.match(self.renderable_thumb):
             raise ValidationError("thumbnail contains only whitespace")
 
-
-    @staticmethod
-    def self_like(sender, instance, created, **kwargs):
-        if created:
-            instance.likes.add(instance.artist)
-            instance.save()
-
-
     def save(self, *args, **kwargs):
         if not self.wide or not self.tall:
             self.native_thumb = self.natively_thumb
@@ -255,7 +247,13 @@ class Art(Model):
         return self.title
 
 
-post_save.connect(Art.self_like, sender=Art)
+def artist_self_like(sender, instance, created, **kwargs):
+    if created:
+        instance.likes.add(instance.artist)
+        instance.save()
+
+
+post_save.connect(artist_self_like, sender=Art)
 
 
 # ------------------------------------------------------------------------------
