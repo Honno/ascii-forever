@@ -61,7 +61,7 @@
                 <span class="like-tally">{{ art.likes.count }}</span>
                 {% if not request.user.is_authenticated %}
                 <span class="like-button -like">
-                    <a class="-nostyle" href="{% url 'core:sign_in' %}">♡</a>
+                    <a class="-nostyle" href="{% url 'core:join' %}">♡</a>
                 </span>
                 {% elif request.user not in art.likes.all %}
                 <span
