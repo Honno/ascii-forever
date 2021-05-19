@@ -52,13 +52,13 @@ class IndexView(ListView):
         user = self.request.user
 
         if user.is_authenticated:
-          following = user.following.all()
+            following = user.following.all()
 
-          return (
-              Art.objects
-              .filter(artist__in=following)
-              .order_by("-created_at")
-          )
+            arts = Art.objects.filter(artist__in=following)
+            if user.nsfw_pref == "HA":
+                arts = arts.exclude(nsfw=True)
+
+            return arts.order_by("-created_at")
 
         else:
             return []
@@ -86,10 +86,13 @@ class ArtGalleryView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        return (
-            Art.objects
-            .order_by("-created_at")
-        )
+        arts = Art.objects
+
+        user = self.request.user
+        if user.is_authenticated and user.nsfw_pref == "HA":
+            arts = arts.exclude(nsfw=True)
+
+        return arts.order_by("-created_at")
 
 
 # ------------------------------------------------------------------------------

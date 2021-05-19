@@ -1,5 +1,3 @@
-from core.models import User
-
 from pytest import mark
 
 @mark.django_db
