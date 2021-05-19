@@ -21,8 +21,11 @@
             <input
                 class="line-input"
                 type="text"
+                autocomplete="username"
+                autocapitalize="none"
                 name="username"
                 maxlength="20"
+                autofocus
                 required>
         </div>
     </div>
@@ -34,14 +37,16 @@
             {% include "core/includes/error_box.html" with errors=form.password1.errors %}
             <input
                 class="line-input"
-                type="text"
+                type="password"
+                autocomplete="new-password"
                 name="password1"
                 required>
             <div>{{ form.password2.help_text }}</div>
             {% include "core/includes/error_box.html" with errors=form.password2.errors %}
             <input
                 class="line-input"
-                type="text"
+                type="password"
+                autocomplete="new-password"
                 name="password2"
                 required>
         </div>
