@@ -362,6 +362,8 @@ ul.user-actions {
     @extend .multiline-input;
     overflow: auto;
 
+    cursor: text;
+
     &.-focus {
         border-color: $highlight;
     }
