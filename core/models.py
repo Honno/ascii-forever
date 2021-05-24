@@ -11,7 +11,7 @@ from django.conf import settings
 from django.db.models import *
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from django.utils.functional import cached_property
 from django.db.models.signals import post_save
 from PIL import Image, ImageDraw, ImageFont
@@ -109,7 +109,7 @@ class Art(Model):
     artist = ForeignKey(User, on_delete=PROTECT)
     text = TextField(validators=[validate_text])
 
-    title = CharField(max_length=80, validators=[validate_text])
+    title = CharField(max_length=80, validators=[validate_text, MinLengthValidator(1)])
     description = TextField(null=True, blank=True, validators=[validate_text])
 
     created_at = DateTimeField(auto_now_add=True)
@@ -263,7 +263,7 @@ post_save.connect(artist_self_like, sender=Art)
 class Comment(Model):
     art = ForeignKey(Art, on_delete=PROTECT)
     author = ForeignKey(User, on_delete=PROTECT)
-    text = TextField(validators=[validate_text])
+    text = TextField(validators=[validate_text, MinLengthValidator(1)])
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -272,4 +272,7 @@ class Comment(Model):
         return reverse("core:art", args=[str(self.art.pk)])
 
     def __str__(self):
-        return self.text
+        if len(self.text) < 20:
+            return self.text
+        else:
+            return self.text[:20] + "..."

@@ -280,8 +280,8 @@ ul.user-actions {
         justify-content: space-between;
     }
 
-    > .header > .date {
-        color: $tertiary;
+    > .header > .datetime {
+        font-size: $body-font-size-small;
         font-style: italic;
     }
 }

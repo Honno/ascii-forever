@@ -150,7 +150,7 @@ y_offset_input_dec.addEventListener("click", (event) => {
     }
 });
 
-/* autosize */
+/* autosize hack */
 
 var af_description = af_form.querySelector("textarea[name='description']");
 var af_description_outer = af_description.parentElement;

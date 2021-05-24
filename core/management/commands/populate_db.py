@@ -17,7 +17,7 @@ rng = Random()
 data_dir = Path(__file__).resolve().parents[1] / "data"
 
 
-def create_usernames(n=100):
+def get_usernames(n=100):
     names = {}
 
     try:
@@ -51,28 +51,41 @@ def create_usernames(n=100):
         if not username in usernames:
             usernames.append(username)
 
-    if "bob" not in usernames:
-        usernames.append("bob")
-    if "alice" not in usernames:
-        usernames.append("alice")
+    for username in ["bob", "alice"]:
+        try:
+            usernames.remove(username)
+        except ValueError:
+            pass
 
     return usernames
 
 
 def get_art():
     try:
-        for path in Path(data_dir / "art").iterdir():
-            with open(path) as f:
-                art = f.read()
+        for path in Path(data_dir / "art").rglob("*"):
+            if path.is_file():
+                with open(path) as f:
+                    art = f.read()
 
-                yield slugify(path.name), art
+                    yield path.name, art
 
     except FileNotFoundError as e:
-        raise CommandError("art folder required")
+        raise CommandError("art folder required") from e
+
+
+def sample_pop(sequence, n):
+    sample = []
+    for _ in range(n):
+        i = rng.randrange(len(sequence))
+        v = sequence.pop(i)
+
+        sample.append(v)
+
+    return sample
 
 
 def gen_text():
-    nparagraphs = rng.randint(0, 3)
+    nparagraphs = rng.randint(1, 3)
     paragraphs = []
     for _ in range(nparagraphs):
         p = lorem.paragraph()
@@ -84,13 +97,24 @@ def gen_text():
     return text
 
 
+tz = get_current_timezone()
+dt_epoch = tz.localize(datetime(1970, 1, 1))
+dt_now = tz.localize(datetime.now())
+
+
+def gen_dt(dt_start=dt_epoch):
+    dt_diff = dt_now - dt_start
+    dt = dt_start + rng.random() * dt_diff
+
+    return dt
+
+
 class Command(BaseCommand):
     help = "Populates the database for a development environment"
 
     def handle(self, *args, **options):
         if not settings.DEBUG:
             raise CommandError("Not in debug mode (don't use this in prod!)")
-
 
         if User.objects.exists() or Art.objects.exists():
             raise CommandError("Objects already exist")
@@ -102,59 +126,69 @@ class Command(BaseCommand):
         admin.is_staff = True
         admin.save()
 
-        usernames = create_usernames()
+        bob = User(id=2, username="bob", password=password)
+        bob.save()
+        alice = User(id=3, username="alice", password=password)
+        alice.save()
+
+        admin.following.add(bob)
+        admin.following.add(alice)
 
         users = []
-        for id, username in enumerate(usernames, 2):
+        for id, username in enumerate(get_usernames(), 4):
             user = User(id=id, username=username, password=password)
             users.append(user)
 
         User.objects.bulk_create(users)
 
-        bob = User.objects.get(username="bob")
-        alice = User.objects.get(username="alice")
+        raw_arts = list(get_art())
 
-        admin.following.add(bob)
-        admin.following.add(alice)
+        user_art_samples = [
+            (admin, sample_pop(raw_arts, 10)),
+            (bob, sample_pop(raw_arts, 10)),
+            (alice, sample_pop(raw_arts, 10)),
+        ]
+        while raw_arts:
+            sample_size = rng.randint(1, min(50, len(raw_arts)))
+            sample = sample_pop(raw_arts, sample_size)
+            user = rng.choice(users)
 
-        dt_start = datetime(1970, 1, 1)
-        dt_end = datetime.now()
-        dt_diff = dt_end - dt_start
-        tz = get_current_timezone()
+            user_art_samples.append((user, sample))
 
+        art_id = 1
         arts = []
         comments = []
-        for base_id, (fname, art) in enumerate(get_art(), 1):
-            naive_dt = dt_start + rng.random() * dt_diff
-            dt = tz.localize(naive_dt)
-
-            rand_user = rng.choice(users)
-
-            artists = [rand_user, admin, bob, alice]
-            for step, user in enumerate(artists):
-                id = base_id * len(artists) + step
-                desc = gen_text()
-                nsfw = rng.choice([True, False])
-
-                art_obj = Art(
-                    id=id,
+        for user, sample in user_art_samples:
+            for fname, text in sample:
+                dt = gen_dt()
+                art = Art(
+                    id=art_id,
                     artist=user,
                     title=fname,
-                    text=art,
-                    description=desc,
-                    nsfw=nsfw,
+                    text=text,
+                    description=gen_text(),
+                    nsfw=rng.choice([True, False]),
+                    created_at=dt,
                 )
+                art_id += 1
 
-                arts.append(art_obj)
+                arts.append(art)
 
-                ncomments = rng.randint(0, 150)
+                ncomments = rng.randint(0, 50)
                 for _ in range(ncomments):
-                    rand_author = rng.choice(users)
-                    text = gen_text()
-                    comment = Comment(art=art_obj, author=rand_author, text=text)
+                    author = rng.choice(users)
+                    comment = Comment(
+                        art=art,
+                        author=author,
+                        text=gen_text(),
+                        created_at=gen_dt(dt_start=dt),
+                    )
 
                     comments.append(comment)
 
         Art.objects.bulk_create(arts)
         Comment.objects.bulk_create(comments)
 
+        # force native thumbnail generation
+        for art in arts:
+            art.save()

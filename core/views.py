@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from werkzeug.wsgi import FileWrapper
 
 
@@ -40,7 +41,7 @@ __all__ = [
 
 
 # ------------------------------------------------------------------------------
-# IndexView
+# Home page
 
 
 class IndexView(ListView):
@@ -65,38 +66,7 @@ class IndexView(ListView):
 
 
 # ------------------------------------------------------------------------------
-# Directories
-
-
-class UserListView(ListView):
-    template_name = "core/pages/users.html"
-    context_object_name = "users"
-    paginate_by = 100
-
-    def get_queryset(self):
-        return (
-              User.objects
-              .order_by("username")
-        )
-
-
-class ArtGalleryView(ListView):
-    template_name = "core/pages/arts.html"
-    context_object_name = "arts"
-    paginate_by = 25
-
-    def get_queryset(self):
-        arts = Art.objects
-
-        user = self.request.user
-        if user.is_authenticated and user.nsfw_pref == "HA":
-            arts = arts.exclude(nsfw=True)
-
-        return arts.order_by("-created_at")
-
-
-# ------------------------------------------------------------------------------
-# User gateways
+# User
 
 
 class JoinView(CreateView):
@@ -125,45 +95,40 @@ class SignOutView(LogoutView):
     next_page = reverse_lazy("core:index")
 
 
-# ------------------------------------------------------------------------------
-# UserView
-
-
-class ArtGalleryComponent(MultipleObjectMixin):
-    context_object_name = "arts"
-    paginate_by = 25
-
-    def __init__(self, request, username):
-        self.request = request
-        self.kwargs = { "username": username }
-        self.object_list = self.get_queryset()
+class UserListView(ListView):
+    template_name = "core/pages/users.html"
+    context_object_name = "users"
+    paginate_by = 100
 
     def get_queryset(self):
-        user = get_object_or_404(User, username=self.kwargs["username"])
-
-        return user.art_set.all().order_by("-created_at")
+        return (
+              User.objects
+              .order_by("username")
+        )
 
 
 class UserView(TemplateView):
     template_name = "core/pages/user.html"
 
-    def get(self, request, username):
-        self.arts_component = ArtGalleryComponent(request, username)
+    def get_context_data(self, username):
+        user = get_object_or_404(User, username=username)
+        arts = user.art_set.all().order_by("-created_at")
 
-        return super().get(request, username)
+        paginator = Paginator(arts, 25)
 
-    def get_context_data(self):
-        user = get_object_or_404(User, username=self.kwargs["username"])
-        ctx = { "user": user }
+        page_no = self.request.GET.get("page", 1)
+        try:
+            page = paginator.page(page_no)
+        except InvalidPage as e:
+            raise Http404(f"Invalid page number {page_no}")
 
-        arts_ctx = self.arts_component.get_context_data()
-        ctx.update(arts_ctx)
+        ctx = {
+            "user": user,
+            "arts": page.object_list,
+            "page_obj": page,
+        }
 
         return ctx
-
-
-# ------------------------------------------------------------------------------
-# User upsert
 
 
 class SettingsView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -182,16 +147,68 @@ class SettingsView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 # ------------------------------------------------------------------------------
-# ArtView
+# Art
 
 
-class ArtView(DetailView):
+class ArtGalleryView(ListView):
+    template_name = "core/pages/arts.html"
+    context_object_name = "arts"
+    paginate_by = 25
+
+    def get_queryset(self):
+        arts = Art.objects
+
+        user = self.request.user
+        if user.is_authenticated and user.nsfw_pref == "HA":
+            arts = arts.exclude(nsfw=True)
+
+        return arts.order_by("-created_at")
+
+
+class ArtView(TemplateView):
     template_name = "core/pages/art.html"
-    model = Art
 
+    def post(self, request, pk):
+        if not request.user.is_authenticated:
+            raise Http404()
 
-# ------------------------------------------------------------------------------
-# Art upsert
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            art = get_object_or_404(Art, pk=pk)
+            form.instance.art = art
+            form.instance.author = request.user
+            form.save()
+
+            return HttpResponseRedirect(reverse("core:art", args=[pk]))
+
+        else:
+            return render(request, self.template_name, self.get_context_data(pk, form=form))
+
+    def get_context_data(self, pk, form=None):
+        art = get_object_or_404(Art, pk=pk)
+        comments = art.comment_set.all().order_by("created_at")
+
+        paginator = Paginator(comments, 25)
+
+        page_no = self.request.GET.get("page", 1)
+        try:
+            page = paginator.page(page_no)
+        except InvalidPage as e:
+            raise Http404(f"Invalid page number {page_no}")
+
+        if not form:
+            form = CommentForm()
+
+        ctx = {
+            "art": art,
+
+            "comments": page.object_list,
+            "page_obj": page,
+
+            "form": form,
+        }
+
+        return ctx
 
 
 class PostArtView(LoginRequiredMixin, CreateView):
@@ -214,10 +231,6 @@ class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_object(self):
         return get_object_or_404(Art, pk=self.kwargs["pk"])
-
-
-# ------------------------------------------------------------------------------
-# Art thumbnail
 
 
 def art_thumb(request, pk):
