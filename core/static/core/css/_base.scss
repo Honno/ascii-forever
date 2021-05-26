@@ -107,3 +107,7 @@ $art-font-size-small: 9px;
         border-color: $highlight;
     }
 }
+
+a.button-input, a.inline-button {
+    cursor: pointer;
+}
