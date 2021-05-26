@@ -67,13 +67,17 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("core:user", args=[self.username])
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        self.following.add(self)
-
     def __str__(self):
         return self.username
+
+
+def user_self_follow(sender, instance: User, created, **kwargs):
+    if created:
+        instance.following.add(instance)
+        instance.save()
+
+
+post_save.connect(user_self_follow, sender=User)
 
 
 # ------------------------------------------------------------------------------
@@ -249,7 +253,7 @@ class Art(Model):
         return self.title
 
 
-def artist_self_like(sender, instance, created, **kwargs):
+def artist_self_like(sender, instance: Art, created, **kwargs):
     if created:
         instance.likes.add(instance.artist)
         instance.save()
