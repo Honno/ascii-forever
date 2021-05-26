@@ -19,6 +19,38 @@ __all__ = ["User", "Art", "Comment"]
 
 
 # ------------------------------------------------------------------------------
+# Helpers
+
+
+r_nothing = re.compile(r"^\s+$")
+r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
+r_tab = re.compile("\t")
+
+
+def validate_whitespace(text):
+    if r_nothing.match(text):
+        raise ValidationError("only whitespace was submitted")
+
+
+def validate_emojis(text):
+    if r_emoji.search(text):
+        raise ValidationError("no one is allowed to use emojis except me 😈")
+
+
+def validate_tabs(text):
+    if r_tab.search(text):
+        raise ValidationError("tab characters are not allowed")
+
+
+text_validators = [
+    MinLengthValidator(1, message="No text was submitted."),
+    validate_whitespace,
+    validate_emojis,
+    validate_tabs,
+]
+
+
+# ------------------------------------------------------------------------------
 # User
 
 
@@ -37,7 +69,7 @@ class CIUserManager(UserManager):
 def validate_username(username):
     if not r_slug.fullmatch(username):
         raise ValidationError(
-            "must only contain ASCII letters, numbers, and underscores"
+            "Must only contain ASCII letters, numbers, and underscores."
         )
 
 
@@ -84,25 +116,6 @@ post_save.connect(user_self_follow, sender=User)
 # Art
 
 
-r_nothing = re.compile(r"^\s+$")
-r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
-r_tab = re.compile("\t")
-
-
-def validate_text(text):
-    if len(text) == 0:
-        raise ValidationError("no text was submitted")
-
-    if r_nothing.match(text):
-        raise ValidationError("only whitespace was submitted")
-
-    if r_emoji.search(text):
-        raise ValidationError("no one is allowed to use emojis except me 😈")
-
-    if r_tab.search(text):
-        raise ValidationError("tab characters are not allowed")
-
-
 thumb_font_path = Path(__file__).parent / "SourceCodePro-Regular.ttf"
 
 
@@ -112,10 +125,10 @@ THUMB_H = 19
 
 class Art(Model):
     artist = ForeignKey(User, on_delete=PROTECT)
-    text = TextField(validators=[validate_text])
+    text = TextField(validators=text_validators)
 
-    title = CharField(max_length=80, validators=[validate_text, MinLengthValidator(1)])
-    description = TextField(null=True, blank=True, validators=[validate_text])
+    title = CharField(max_length=80, validators=text_validators)
+    description = TextField(null=True, blank=True, validators=text_validators)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -124,7 +137,7 @@ class Art(Model):
 
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
-    native_thumb = TextField(validators=[validate_text])
+    native_thumb = TextField(validators=text_validators)
 
     likes = ManyToManyField(User, related_name="likes")
 
@@ -269,7 +282,7 @@ post_save.connect(artist_self_like, sender=Art)
 class Comment(Model):
     art = ForeignKey(Art, on_delete=PROTECT)
     author = ForeignKey(User, on_delete=PROTECT)
-    text = TextField(validators=[validate_text, MinLengthValidator(1)])
+    text = TextField(validators=text_validators)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)

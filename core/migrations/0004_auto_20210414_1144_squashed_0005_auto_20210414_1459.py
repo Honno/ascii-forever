@@ -8,6 +8,9 @@ from django.db import models
 
 import core.models
 
+# noop now non-existent validator so migration works
+core.models.validate_text = lambda x: None
+
 
 class Migration(migrations.Migration):
 
