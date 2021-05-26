@@ -6,7 +6,7 @@ follow_buttons.forEach((button) => {
     button.addEventListener("click", (event) => {
         let follow_user = button.dataset.follow == "true";
 
-        fetch("/users/" + username + "/follow", {
+        fetch("/user/" + username + "/follow", {
             method: "POST",
             credentials: "same-origin",
             headers: {
