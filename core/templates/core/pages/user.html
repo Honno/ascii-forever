@@ -7,7 +7,7 @@
 {% block path %}
 <ul class="nav-bar {% if request.user != user %}-final{% else %}-input{% endif %}">
     <li><a href="{% url 'core:index' %}" >home</a></li>
-    <li><a href="{% url 'core:users' %}" >users</a></li>
+    <li><a href="{% url 'core:users' %}" >user</a></li>
     <li><a href="{% url 'core:user' user.username %}" >{{ user.username }}</a></li>
     {% if request.user == user %}
     <li>

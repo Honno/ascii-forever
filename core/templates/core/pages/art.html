@@ -75,7 +75,57 @@
         <span class="author"><a class="-lite" href="{% url 'core:user' comment.author %}">{{ comment.author.username }}</a></span>
         <span class="datetime">{{ art.created_at|date:"d M Y" }}</span>
     </div>
-    <div>{{ comment.text|linebreaks }}</div>
+
+    <div class="actions-wrapper"
+         data-pk="{{ comment.pk }}" >
+
+        <div class="text">{{ comment.text|linebreaks }}</div>
+
+        <div class="actions">
+            {% if request.user == comment.author %}
+            <span class="inline-button edit">Edit</span>
+            {% endif %}
+        </div>
+
+        {% if request.user == comment.author %}
+        <form class="edit-comment -hide" action="javascript:void(0);">
+            <div class="form-group">
+                <div class="form-input">
+                    <div class="text-errors error-box -hide">
+                        <span><b>!</b></span>
+                        <ul></ul>
+                    </div>
+
+                    <div class="prose-input">
+                        <textarea
+                            name="text"
+                            rows="1">{{ comment.text }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" >
+                <div class="form-input">
+                    <div class="non-field-errors error-box -hide">
+                        <span><b>!</b></span>
+                        <ul></ul>
+                    </div>
+
+                    <div class="submit-input" >
+                        <input
+                            type="button"
+                            class="cancel button-input -inverse"
+                            value="Cancel">
+                        <input
+                            type="submit"
+                            class="save button-input"
+                            value="Save changes">
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+    </div>
 </div>
 {% endfor %}
 

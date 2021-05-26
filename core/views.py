@@ -15,6 +15,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.utils.html import linebreaks
+from django.core.exceptions import ValidationError
 from werkzeug.wsgi import FileWrapper
 
 
@@ -23,20 +25,25 @@ from .forms import *
 
 __all__ = [
     "IndexView",
-    "UserView",
-    "UserListView",
-    "SettingsView",
-    "nsfw_pref",
-    "follow_user",
+
     "JoinView",
     "SignInView",
     "SignOutView",
+
+    "UserListView",
+    "UserView",
+    "SettingsView",
+
+    "ArtGalleryView",
     "ArtView",
     "art_thumb",
-    "like_art",
-    "ArtGalleryView",
     "PostArtView",
     "ArtEditView",
+
+    "edit_comment",
+    "follow_user",
+    "like_art",
+    "nsfw_pref",
 ]
 
 
@@ -221,6 +228,16 @@ class PostArtView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+class PostArtView(LoginRequiredMixin, CreateView):
+    template_name = "core/pages/post_art.html"
+    form_class = ArtForm
+
+    def form_valid(self, form):
+        form.instance.artist = self.request.user
+
+        return super().form_valid(form)
+
+
 class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "core/pages/edit.html"
     form_class = ArtForm
@@ -308,3 +325,23 @@ def like_art(request, pk):
     art_liked = request.user in art.likes.all()
 
     return JsonResponse({"like_tally": like_tally, "art_liked": art_liked})
+
+
+@require_ajax
+@require_POST
+@login_required
+def edit_comment(request):
+    data = json.load(request)
+    comment = get_object_or_404(Comment, pk=data["pk"])
+    form = CommentForm(instance=comment, data=data)
+
+    if form.is_valid():
+        form.save()
+
+        f_text = linebreaks(comment.text)
+        return JsonResponse({ "valid": True, "markup": f_text })
+
+    else:
+        response = form.errors
+        response.update({ "valid": False })
+        return JsonResponse(response)

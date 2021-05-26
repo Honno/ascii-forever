@@ -75,7 +75,7 @@ DATABASES = {
 
 AUTH_USER_MODEL = "core.User"
 
-LOGIN_URL = "/users/sign_in"
+LOGIN_URL = "/sign_in"
 
 
 # Password validation

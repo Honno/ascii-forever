@@ -157,10 +157,6 @@ ul.user-actions {
     }
 }
 
-.-hide {
-    display: none !important;
-}
-
 .art-thumb {
     > * {
         @include inbetween-margin(1em);
@@ -284,6 +280,16 @@ ul.user-actions {
         font-size: $body-font-size-small;
         font-style: italic;
     }
+
+    > .actions-wrapper > .actions {
+        display: flex;
+        justify-content: right;
+        gap: 1em;
+    }
+
+    > .actions-wrapper > form {
+        margin-top: 1em;
+    }
 }
 
 /* forms */
@@ -324,6 +330,7 @@ ul.user-actions {
     display: flex;
     justify-content: right;
     padding-right: 1em;
+    gap: 1em;
 }
 
 .line-input {

@@ -48,6 +48,10 @@ $art-font-size-small: 9px;
     line-height: $art-font-line-height;
 }
 
+.-hide {
+    display: none !important;
+}
+
 .button-input {
     @extend .monospaced;
 
@@ -58,6 +62,8 @@ $art-font-size-small: 9px;
 
     background-color: $secondary;
     color: $white;
+
+    cursor: default;
 
     &:hover {
         background-color: $highlight;
@@ -70,6 +76,15 @@ $art-font-size-small: 9px;
 
     &.-selected:hover {
         background-color: $white;
+    }
+
+    &.-inverse {
+        background-color: $white;
+        color: $secondary;
+    }
+
+    &.-inverse:hover {
+        color: $highlight;
     }
 }
 
@@ -85,7 +100,7 @@ $art-font-size-small: 9px;
     color: $secondary;
     border: 1px solid $secondary;
 
-    cursor: pointer;
+    cursor: default;
 
     &:hover {
         color: $highlight;
