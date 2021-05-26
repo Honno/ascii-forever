@@ -149,22 +149,3 @@ y_offset_input_dec.addEventListener("click", (event) => {
         render_thumb();
     }
 });
-
-/* autosize hack */
-
-var af_description = af_form.querySelector("textarea[name='description']");
-var af_description_outer = af_description.parentElement;
-
-autosize(af_description);
-
-af_description_outer.addEventListener("click", (event) => {
-    af_description.focus();
-});
-
-af_description.addEventListener("focus", (event) => {
-    af_description_outer.classList.add("-focus");
-});
-
-af_description.addEventListener("blur", (event) => {
-    af_description_outer.classList.remove("-focus");
-});

@@ -1,25 +1,3 @@
-/* autosize hack */
-
-var comment_form = document.querySelector("form.post-comment");
-var comment_text = comment_form.querySelector("textarea[name='text']");
-var comment_text_outer = comment_text.parentElement;
-
-autosize(comment_text);
-
-comment_text_outer.addEventListener("click", (e) => {
-    comment_text.focus();
-});
-
-comment_text.addEventListener("focus", (e) => {
-    comment_text_outer.classList.add("-focus");
-});
-
-comment_text.addEventListener("blur", (e) => {
-    comment_text_outer.classList.remove("-focus");
-});
-
-/* edit feature */
-
 var action_wrappers = document.querySelectorAll(".actions-wrapper");
 
 action_wrappers.forEach((wrapper) => {
@@ -41,20 +19,6 @@ action_wrappers.forEach((wrapper) => {
 
         let edit_general_errors = edit_form.querySelector(".non-field-errors");
         let edit_general_errors_ul = edit_general_errors.querySelector("ul");
-
-        autosize(edit_text);
-
-        edit_text_outer.addEventListener("click", (e) => {
-            edit_text.focus();
-        });
-
-        edit_text.addEventListener("focus", (e) => {
-            edit_text_outer.classList.add("-focus");
-        });
-
-        edit_text.addEventListener("blur", (e) => {
-            edit_text_outer.classList.remove("-focus");
-        });
 
         edit_btn.addEventListener("click", (e) => {
             comment_text.classList.add("-hide");

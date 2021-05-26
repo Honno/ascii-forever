@@ -1,6 +1,7 @@
 {% extends "core/extendables/base.html" %}
 
 {% load static %}
+{% load compress %}
 
 {% block content %}
 <form class="preserve-whitespace" method="post">
@@ -132,4 +133,10 @@
         </div>
     </div>
 </form>
+{% endblock %}
+
+{% block js %}
+{% compress js %}
+<script type="text/javascript" src="{% static 'core/js/art_form.js' %}"></script>
+{% endcompress %}
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends "core/extendables/base.html" %}
 
 {% load static %}
+{% load compress %}
 
 {% block title %}{{ art.title }} by {{ art.artist.username }}{% endblock %}
 
@@ -162,4 +163,10 @@
 </form>
 {% endif %}
 
+{% endblock %}
+
+{% block js %}
+{% compress js %}
+<script type="text/javascript" src="{% static 'core/js/comment.js' %}"></script>
+{% endcompress %}
 {% endblock %}
