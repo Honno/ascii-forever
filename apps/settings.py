@@ -1,5 +1,5 @@
-from pathlib import Path
 from os import getenv
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "compressor",
 ]
 
@@ -117,4 +116,4 @@ MEDIA_URL = "/media/"
 
 # Default model id
 
-DEFAULT_AUTO_FIELD="django.db.models.AutoField"
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

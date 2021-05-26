@@ -1,45 +1,46 @@
 import json
 
-from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse, reverse_lazy
-from django.views.generic import DetailView, ListView, CreateView, UpdateView
-from django.views.generic.base import TemplateView, ContextMixin
-from django.views.generic.edit import ModelFormMixin
-from django.views.generic.list import MultipleObjectMixin
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST, require_GET
-from django.utils import timezone
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView
 from django.core.paginator import Paginator
+from django.http import Http404
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils.html import linebreaks
-from django.core.exceptions import ValidationError
+from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
+from django.views.generic import CreateView
+from django.views.generic import ListView
+from django.views.generic import UpdateView
+from django.views.generic.base import TemplateView
 from werkzeug.wsgi import FileWrapper
 
-
-from .models import *
 from .forms import *
+from .models import *
 
 __all__ = [
     "IndexView",
-
     "JoinView",
     "SignInView",
     "SignOutView",
-
     "UserListView",
     "UserView",
     "SettingsView",
-
     "ArtGalleryView",
     "ArtView",
     "art_thumb",
     "PostArtView",
     "ArtEditView",
-
     "edit_comment",
     "follow_user",
     "like_art",
@@ -108,10 +109,7 @@ class UserListView(ListView):
     paginate_by = 100
 
     def get_queryset(self):
-        return (
-              User.objects
-              .order_by("username")
-        )
+        return User.objects.order_by("username")
 
 
 class UserView(TemplateView):
@@ -126,7 +124,7 @@ class UserView(TemplateView):
         page_no = self.request.GET.get("page", 1)
         try:
             page = paginator.page(page_no)
-        except InvalidPage as e:
+        except InvalidPage:
             raise Http404(f"Invalid page number {page_no}")
 
         ctx = {
@@ -189,7 +187,9 @@ class ArtView(TemplateView):
             return HttpResponseRedirect(reverse("core:art", args=[pk]))
 
         else:
-            return render(request, self.template_name, self.get_context_data(pk, form=form))
+            return render(
+                request, self.template_name, self.get_context_data(pk, form=form)
+            )
 
     def get_context_data(self, pk, form=None):
         art = get_object_or_404(Art, pk=pk)
@@ -200,7 +200,7 @@ class ArtView(TemplateView):
         page_no = self.request.GET.get("page", 1)
         try:
             page = paginator.page(page_no)
-        except InvalidPage as e:
+        except InvalidPage:
             raise Http404(f"Invalid page number {page_no}")
 
         if not form:
@@ -208,10 +208,8 @@ class ArtView(TemplateView):
 
         ctx = {
             "art": art,
-
             "comments": page.object_list,
             "page_obj": page,
-
             "form": form,
         }
 
@@ -289,7 +287,6 @@ def nsfw_pref(request):
     return JsonResponse({"nsfw_pref": pref})
 
 
-
 @require_ajax
 @require_POST
 @login_required
@@ -339,9 +336,9 @@ def edit_comment(request):
         form.save()
 
         f_text = linebreaks(comment.text)
-        return JsonResponse({ "valid": True, "markup": f_text })
+        return JsonResponse({"valid": True, "markup": f_text})
 
     else:
         response = form.errors
-        response.update({ "valid": False })
+        response.update({"valid": False})
         return JsonResponse(response)

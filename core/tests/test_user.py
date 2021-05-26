@@ -1,5 +1,6 @@
 from pytest import mark
 
+
 @mark.django_db
 def test_follow_self(django_user_model):
     user = django_user_model.objects.create(username="bob", password="pass")

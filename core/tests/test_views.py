@@ -5,6 +5,7 @@ from core.models import Art
 
 urls = [reverse(name) for name in ["core:index", "core:arts"]]
 
+
 @mark.parametrize("url", urls)
 @mark.django_db
 def test_follow_self(url, django_user_model, client):
@@ -32,5 +33,3 @@ def test_follow_self(url, django_user_model, client):
 
     assert sfw in response.context["arts"]
     assert nsfw not in response.context["arts"]
-
-

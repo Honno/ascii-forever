@@ -18,6 +18,8 @@ django-libsass = "^0.8"
 pytest = "^6.2.2"
 pytest-django = "^4.1.0"
 lorem = "^0.1.1"
+pre-commit = "^2.13.0"
+autoflake = "^1.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

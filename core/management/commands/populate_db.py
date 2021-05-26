@@ -1,17 +1,17 @@
-from random import Random
+from datetime import datetime
 from itertools import zip_longest
 from pathlib import Path
-from datetime import datetime
+from random import Random
 
-from django.core.management.base import BaseCommand, CommandError
-from django.utils.text import slugify
-from django.contrib.auth.hashers import make_password
-from django.utils.timezone import get_current_timezone
-from django.conf import settings
 import lorem
+from django.conf import settings
+from django.contrib.auth.hashers import make_password
+from django.core.management.base import BaseCommand
+from django.core.management.base import CommandError
+from django.utils.text import slugify
+from django.utils.timezone import get_current_timezone
 
 from core.models import *
-
 
 rng = Random()
 data_dir = Path(__file__).resolve().parents[1] / "data"

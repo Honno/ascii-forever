@@ -1,20 +1,19 @@
 import re
-from uuid import uuid4
+from io import BytesIO
 from itertools import takewhile
 from pathlib import Path
-from io import BytesIO
 
-from django.urls import reverse
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import UserManager
 from django.core.exceptions import ValidationError
-from django.core.files.images import ImageFile
-from django.conf import settings
+from django.core.validators import MinLengthValidator
 from django.db.models import *
-from django.utils import timezone
-from django.contrib.auth.models import AbstractUser, UserManager
-from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
-from django.utils.functional import cached_property
 from django.db.models.signals import post_save
-from PIL import Image, ImageDraw, ImageFont
+from django.urls import reverse
+from django.utils.functional import cached_property
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 __all__ = ["User", "Art", "Comment"]
 
@@ -37,7 +36,9 @@ class CIUserManager(UserManager):
 
 def validate_username(username):
     if not r_slug.fullmatch(username):
-        raise ValidationError("must only contain ASCII letters, numbers, and underscores")
+        raise ValidationError(
+            "must only contain ASCII letters, numbers, and underscores"
+        )
 
 
 class NSFWChoices(TextChoices):
@@ -79,7 +80,7 @@ class User(AbstractUser):
 # Art
 
 
-r_nothing = re.compile("^\s+$")
+r_nothing = re.compile(r"^\s+$")
 r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
 r_tab = re.compile("\t")
 
@@ -163,7 +164,6 @@ class Art(Model):
         else:
             x_range = range(self.thumb_x_offset, self.thumb_x_offset + THUMB_W)
 
-
         for y in y_range:
             line = ""
             for x in x_range:
@@ -207,7 +207,9 @@ class Art(Model):
         image = Image.new("RGB", (1200, 628), (255, 255, 255))
         font = ImageFont.truetype(thumb_font_path.as_posix(), size=24)
         dwg = ImageDraw.Draw(image)
-        dwg.multiline_text((25, 8), self.renderable_thumb, font=font, spacing=8, fill=(33, 33, 33))
+        dwg.multiline_text(
+            (25, 8), self.renderable_thumb, font=font, spacing=8, fill=(33, 33, 33)
+        )
 
         buf = BytesIO()
         image.save(buf, "PNG")
@@ -224,8 +226,8 @@ class Art(Model):
 
     def clean(self):
         if (
-                not - THUMB_W < self.thumb_x_offset < self.w or
-                not - THUMB_H < self.thumb_y_offset < self.h
+            not -THUMB_W < self.thumb_x_offset < self.w
+            or not -THUMB_H < self.thumb_y_offset < self.h
         ):
             raise ValidationError("thumbnail is out-of-bounds")
 

@@ -1,8 +1,10 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
+from django.core.management.base import CommandError
 
 import core.models
 
 models = [getattr(core.models, name) for name in core.models.__all__]
+
 
 class Command(BaseCommand):
     help = "Triggers save method for a model's objects"
