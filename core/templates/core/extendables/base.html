@@ -6,6 +6,8 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
 
+        <link rel="shortcut icon" type="image/png" href="{% static 'core/favicon.ico' %}"/>
+
         {% compress css %}
         <link rel="stylesheet" type="text/x-scss" href="{% static 'core/css/style.scss' %}" />
         {% endcompress %}
