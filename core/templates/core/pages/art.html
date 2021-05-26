@@ -74,7 +74,7 @@
 <div class="comment">
     <div class="header">
         <span class="author"><a class="-lite" href="{% url 'core:user' comment.author %}">{{ comment.author.username }}</a></span>
-        <span class="datetime">{{ art.created_at|date:"d M Y" }}</span>
+        <span class="datetime">{{ comment.created_at|date:"d M Y" }}</span>
     </div>
 
     <div class="actions-wrapper"
