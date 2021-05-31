@@ -17,7 +17,8 @@ urlpatterns = [
     path("art/<int:pk>", ArtView.as_view(), name="art"),
     path("art/<int:pk>/thumb.png", art_thumb, name="art_thumb"),
     path("art/<int:pk>/like", like_art, name="like_art"),
-    path("art/<int:pk>/edit", ArtEditView.as_view(), name="edit_art"),
+    path("art/<int:pk>/edit", EditArtView.as_view(), name="edit_art"),
+    path("art/<int:pk>/delete", DeleteArtView.as_view(), name="delete_art"),
     path("nsfw_pref", nsfw_pref, name="nsfw_pref"),
     path("edit_comment", edit_comment, name="edit_comment"),
 ]

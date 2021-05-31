@@ -9,8 +9,10 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 from django.db.models import *
 from django.db.models.signals import post_save
+from django.db.models.signals import pre_save
 from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.timezone import now
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -21,6 +23,7 @@ __all__ = ["User", "Art", "Comment"]
 # ------------------------------------------------------------------------------
 # Helpers
 
+# Validation
 
 r_nothing = re.compile(r"^\s+$")
 r_emoji = re.compile("[\U00010000-\U0010ffff]", flags=re.UNICODE)
@@ -49,6 +52,70 @@ text_validators = [
     validate_tabs,
 ]
 
+# Time stamping
+
+
+class SoftDeletableQuerySet(QuerySet):
+    def delete(self):
+        return super(self).update(deleted_at=now())
+
+    def hard_delete(self):
+        return super(self).delete()
+
+
+class SoftDeletableManager(Manager):
+    def __init__(self, *args, show_deleted=False, **kwargs):
+        self.show_deleted = show_deleted
+        super().__init__(*args, **kwargs)
+
+    def get_queryset(self):
+        queryset = SoftDeletableQuerySet(self.model)
+
+        if not self.show_deleted:
+            return queryset.filter(deleted_at=None)
+        else:
+            return queryset
+
+
+class TimeStamped(Model):
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(blank=True, null=True)
+    deleted_at = DateTimeField(blank=True, null=True)
+
+    objects = SoftDeletableManager()
+    _objects = SoftDeletableManager(show_deleted=True)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def updated(self):
+        return bool(self.updated_at)
+
+    @property
+    def deleted(self):
+        return bool(self.deleted_at)
+
+    def delete(self):
+        self.deleted_at = now()
+        self.save()
+
+    def hard_delete(self):
+        super(SoftDeletionModel, self).delete()
+
+
+def update_timestamp(sender, instance, created, **kwargs):
+    if isinstance(instance, TimeStamped) and not created and not instance.deleted:
+        post_save.disconnect(update_timestamp)
+
+        instance.updated_at = now()
+        instance.save()
+
+        post_save.connect(update_timestamp)
+
+
+post_save.connect(update_timestamp)
+
 
 # ------------------------------------------------------------------------------
 # User
@@ -59,7 +126,7 @@ r_slug = re.compile("[a-zA-Z0-9_]+", re.ASCII)
 r_alphanumeric = re.compile("[a-zA-Z0-9]", re.ASCII)
 
 
-class CIUserManager(UserManager):
+class CIUserManager(SoftDeletableManager, UserManager):
     def get_by_natural_key(self, username):
         field = f"{self.model.USERNAME_FIELD}__iexact"
 
@@ -79,9 +146,9 @@ class NSFWChoices(TextChoices):
     HIDE_ALL = "HA"
 
 
-class User(AbstractUser):
+class User(TimeStamped, AbstractUser):
     objects = CIUserManager()
-    username_validator = validate_username
+    _objects = CIUserManager(show_deleted=True)
 
     username = CharField(
         max_length=20,
@@ -106,7 +173,6 @@ class User(AbstractUser):
 def user_self_follow(sender, instance: User, created, **kwargs):
     if created:
         instance.following.add(instance)
-        instance.save()
 
 
 post_save.connect(user_self_follow, sender=User)
@@ -123,15 +189,12 @@ THUMB_W = 80
 THUMB_H = 19
 
 
-class Art(Model):
+class Art(TimeStamped, Model):
     artist = ForeignKey(User, on_delete=PROTECT)
     text = TextField(validators=text_validators)
 
     title = CharField(max_length=80, validators=text_validators)
-    description = TextField(null=True, blank=True, validators=text_validators)
-
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
+    description = TextField(blank=True, null=True, validators=text_validators)
 
     nsfw = BooleanField()
 
@@ -269,7 +332,6 @@ class Art(Model):
 def artist_self_like(sender, instance: Art, created, **kwargs):
     if created:
         instance.likes.add(instance.artist)
-        instance.save()
 
 
 post_save.connect(artist_self_like, sender=Art)
@@ -279,13 +341,10 @@ post_save.connect(artist_self_like, sender=Art)
 # Comment
 
 
-class Comment(Model):
+class Comment(TimeStamped, Model):
     art = ForeignKey(Art, on_delete=PROTECT)
     author = ForeignKey(User, on_delete=PROTECT)
     text = TextField(validators=text_validators)
-
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse("core:art", args=[str(self.art.pk)])

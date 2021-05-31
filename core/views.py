@@ -7,7 +7,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
+from django.core.paginator import InvalidPage
 from django.core.paginator import Paginator
+from django.db.models import Model
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -20,6 +22,7 @@ from django.utils.html import linebreaks
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView
+from django.views.generic import DeleteView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
 from django.views.generic.base import TemplateView
@@ -40,7 +43,8 @@ __all__ = [
     "ArtView",
     "art_thumb",
     "PostArtView",
-    "ArtEditView",
+    "EditArtView",
+    "DeleteArtView",
     "edit_comment",
     "follow_user",
     "like_art",
@@ -192,7 +196,11 @@ class ArtView(TemplateView):
             )
 
     def get_context_data(self, pk, form=None):
-        art = get_object_or_404(Art, pk=pk)
+        try:
+            art = Art._objects.get(pk=pk)
+        except Model.DoesNotExist as e:
+            raise Http404() from e
+
         comments = art.comment_set.all().order_by("created_at")
 
         paginator = Paginator(comments, 25)
@@ -236,16 +244,29 @@ class PostArtView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ArtEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EditArtView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "core/pages/edit.html"
     form_class = ArtForm
-    context_object_name = "art"
 
     def test_func(self):
         return self.request.user == self.get_object().artist
 
     def get_object(self):
         return get_object_or_404(Art, pk=self.kwargs["pk"])
+
+
+class DeleteArtView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    template_name = "core/pages/art_confirm_delete.html"
+    model = Art
+
+    def test_func(self):
+        return self.request.user == self.get_object().artist
+
+    def get_object(self):
+        return get_object_or_404(Art, pk=self.kwargs["pk"])
+
+    def get_success_url(self):
+        return reverse("core:user", args=[self.get_object().artist.username])
 
 
 def art_thumb(request, pk):

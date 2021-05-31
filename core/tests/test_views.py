@@ -8,7 +8,7 @@ urls = [reverse(name) for name in ["core:index", "core:arts"]]
 
 @mark.parametrize("url", urls)
 @mark.django_db
-def test_follow_self(url, django_user_model, client):
+def test_nsfw_filter(url, django_user_model, client):
     target = django_user_model.objects.create(username="bob", password="pass")
     follower = django_user_model.objects.create(username="alice", password="pass")
 

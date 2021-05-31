@@ -3,8 +3,15 @@
 {% load static %}
 {% load compress %}
 
-{% block title %}{{ art.title }} by {{ art.artist.username }}{% endblock %}
+{% block title %}
+{% if not art.deleted %}
+{{ art.title }} by {{ art.artist.username }}
+{% else %}
+Deleted
+{% endif %}
+{% endblock %}
 
+{% if not art.deleted %}
 {% block og %}
 <meta property="og:title" content="{{ art.title }}" />
 <meta property="og:type" content="article" />
@@ -19,13 +26,14 @@
 <meta property="twitter:text" content="{% if art.description_preview %}{{ art.description_preview }}{% else %}Art by {{ art.artist }}{% endif %}" />
 <meta property="twitter:image" content="https://www.asciiforever.net{% url 'core:art_thumb' art.pk %}" />
 {% endblock %}
+{% endif %}
 
 {% block path %}
-<ul class="nav-bar {% if request.user != art.artist %}-final{% else %}-input{% endif %}">
+<ul class="nav-bar {% if not art.deleted and request.user != art.artist %}-final{% else %}-input{% endif %}">
     <li><a href="{% url 'core:index' %}" >home</a></li>
     <li><a href="{% url 'core:arts' %}" >art</a></li>
     <li><a href="{% url 'core:art' art.pk %}" >{{ art.pk }}</a></li>
-    {% if request.user == art.artist %}
+    {% if not art.deleted and request.user == art.artist %}
     <li>
         <div class="page-select">
             <button>-></button>
@@ -39,6 +47,7 @@
 {% endblock %}
 
 {% block content %}
+{% if not art.deleted %}
 <div
     class="art-container"
     data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">
@@ -55,6 +64,13 @@
     </div>
 </div>
 
+{% if request.user == art.artist %}
+<div class="actions">
+    <a class="inline-button -negative" href="{% url 'core:delete_art' art.pk %}">Delete</a>
+    <a class="inline-button" href="{% url 'core:edit_art' art.pk %}">Edit</a>
+</div>
+{% endif %}
+
 {% include "core/includes/art_header.html" with art=art %}
 
 {% if art.text %}
@@ -62,9 +78,6 @@
 {% endif %}
 
 <p><i>Published {{ art.created_at|date:"d M Y" }}</i></p>
-
-{% if request.user == art.artist %}
-<p><a href="{% url 'core:edit_art' art.pk %}">Edit</a></p>
 {% endif %}
 
 <h2>Comments</h2>
@@ -133,7 +146,7 @@
 {% include "core/includes/pagination.html" %}
 {% endif %}
 
-{% if request.user.is_authenticated %}
+{% if not art.deleted and request.user.is_authenticated %}
 <form class="post-comment" method="post">
     {% csrf_token %}
 

@@ -19,13 +19,11 @@ follow_buttons.forEach((button) => {
             .then((response) => {
                 response.json().then((data) => {
                     if (data.user_followed) {
-                        button.classList.remove("-follow");
-                        button.classList.add("-unfollow");
+                        button.classList.add("-negative");
                         button.dataset.follow = "false";
                         button.innerHTML = "Unfollow";
                     } else {
-                        button.classList.remove("-unfollow");
-                        button.classList.add("-follow");
+                        button.classList.remove("-negative");
                         button.dataset.follow = "true";
                         button.innerHTML = "Follow";
                     }

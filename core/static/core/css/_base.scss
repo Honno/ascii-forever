@@ -106,8 +106,20 @@ $art-font-size-small: 9px;
         color: $highlight;
         border-color: $highlight;
     }
+
+    &.-negative {
+        color: $secondary;
+        background-color: transparent;
+    }
+
+    &.-negative:hover {
+        color: $red;
+        border-color: $red;
+        background-color: transparent;
+    }
 }
 
 a.button-input, a.inline-button {
     cursor: pointer;
+    text-decoration: none;
 }
