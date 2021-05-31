@@ -46,6 +46,7 @@ __all__ = [
     "EditArtView",
     "DeleteArtView",
     "edit_comment",
+    "delete_comment",
     "follow_user",
     "like_art",
     "nsfw_pref",
@@ -363,3 +364,15 @@ def edit_comment(request):
         response = form.errors
         response.update({"valid": False})
         return JsonResponse(response)
+
+
+@require_ajax
+@require_POST
+@login_required
+def delete_comment(request):
+    data = json.load(request)
+    comment = get_object_or_404(Comment, pk=data["pk"])
+
+    comment.delete()
+
+    return JsonResponse({"success": True})

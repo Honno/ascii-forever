@@ -21,4 +21,5 @@ urlpatterns = [
     path("art/<int:pk>/delete", DeleteArtView.as_view(), name="delete_art"),
     path("nsfw_pref", nsfw_pref, name="nsfw_pref"),
     path("edit_comment", edit_comment, name="edit_comment"),
+    path("delete_comment", delete_comment, name="delete_comment"),
 ]

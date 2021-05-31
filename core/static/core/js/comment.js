@@ -1,15 +1,14 @@
-var action_wrappers = document.querySelectorAll(".actions-wrapper");
+var comments = document.querySelectorAll(".comment");
 
-action_wrappers.forEach((wrapper) => {
-    let pk = parseInt(wrapper.dataset.pk);
+comments.forEach((comment) => {
+    let pk = parseInt(comment.dataset.pk);
 
-    let actions = wrapper.querySelector(".actions");
+    let text = comment.querySelector(".text");
+    let actions = comment.querySelector(".actions");
 
     let edit_btn = actions.querySelector(".edit");
     if (edit_btn != null) {
-        let comment_text = wrapper.querySelector(".text");
-
-        let edit_form = wrapper.querySelector("form.edit-comment");
+        let edit_form = comment.querySelector("form.edit-comment");
 
         let edit_text = edit_form.querySelector("textarea[name='text']");
         let edit_text_outer = edit_text.parentElement;
@@ -21,7 +20,7 @@ action_wrappers.forEach((wrapper) => {
         let edit_general_errors_ul = edit_general_errors.querySelector("ul");
 
         edit_btn.addEventListener("click", (e) => {
-            comment_text.classList.add("-hide");
+            text.classList.add("-hide");
             actions.classList.add("-hide");
             edit_form.classList.remove("-hide");
         });
@@ -48,10 +47,10 @@ action_wrappers.forEach((wrapper) => {
                         edit_general_errors_ul.innerHTML = "";
 
                         if (data.valid == true) {
-                            comment_text.innerHTML = data.markup;
+                            text.innerHTML = data.markup;
 
                             edit_form.classList.add("-hide");
-                            comment_text.classList.remove("-hide");
+                            text.classList.remove("-hide");
                             actions.classList.remove("-hide");
                         } else {
                             if (data.text != undefined) {
@@ -81,10 +80,53 @@ action_wrappers.forEach((wrapper) => {
                 });
         });
 
-        let cancel_btn = edit_form.querySelector(".cancel");
-        cancel_btn.addEventListener("click", (e) => {
+        let cancel_edit_btn = edit_form.querySelector(".cancel");
+        cancel_edit_btn.addEventListener("click", (e) => {
             edit_form.classList.add("-hide");
-            comment_text.classList.remove("-hide");
+            text.classList.remove("-hide");
+            actions.classList.remove("-hide");
+        });
+    }
+
+    let delete_btn = actions.querySelector(".delete");
+    if (delete_btn != null) {
+        let delete_form = comment.querySelector("form.delete-comment");
+
+        delete_btn.addEventListener("click", (e) => {
+            text.classList.add("-hide");
+            actions.classList.add("-hide");
+            delete_form.classList.remove("-hide");
+        });
+
+        delete_form.addEventListener("submit", (e) => {
+            fetch("/delete_comment", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": Cookies.get("csrftoken"),
+                },
+                body: JSON.stringify({
+                    "pk": pk,
+                }),
+            })
+                .then((response) => {
+                    response.json().then((data) => {
+                        if (data.success == true) {
+                            comment.classList.add("-hide");
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        });
+
+        let cancel_delete_btn = delete_form.querySelector(".cancel");
+        cancel_delete_btn.addEventListener("click", (e) => {
+            delete_form.classList.add("-hide");
+            text.classList.remove("-hide");
             actions.classList.remove("-hide");
         });
     }
