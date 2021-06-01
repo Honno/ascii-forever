@@ -1,4 +1,5 @@
 import re
+from functools import lru_cache
 from io import BytesIO
 from itertools import takewhile
 from pathlib import Path
@@ -140,6 +141,64 @@ def validate_username(username):
         )
 
 
+AVATAR_W = 24
+AVATAR_H = 16
+
+
+@lru_cache
+def split_lines(text):
+    return text.replace("\r", "").split("\n")
+
+
+def validate_avatar_cols(text):
+    lines = split_lines(text)
+    col_lengths = [len(line) for line in lines]
+    maxlen = max(col_lengths)
+    if maxlen > AVATAR_W:
+        raise ValidationError(
+            f"Must not exceed {AVATAR_W} columns ({maxlen} cols submitted)"
+        )
+
+
+def validate_avatar_rows(text):
+    lines = split_lines(text)
+    nlines = len(lines)
+    if nlines > AVATAR_H:
+        raise ValidationError(
+            f"Must not exceed {AVATAR_H} rows ({nlines} rows submitted)"
+        )
+
+
+avatar_validators = [validate_avatar_cols, validate_avatar_rows]
+
+
+default_avatar = r"""
+
+       .adAMMMAbn.
+      dMMMMMMMMMMA.
+     'HMMMMMMMMMMMl.
+    db\MMM^"     "^j
+    MMY   .        :
+    ,M|`,----. ,---.
+    :,' \    ;^:   ;
+     q|  `--'  )`--
+     ,:            ;
+    /: \    `---  :
+   /    "-.__  _.'
+  (    \       ;
+.' '.   `      :-.
+     '.   `   '/  "-.
+       "-.__"_/      "-.
+"""
+
+
+def pad(string, maxlen):
+    nspaces = maxlen - len(string)
+    padded_string = string + " " * nspaces
+
+    return padded_string
+
+
 class NSFWChoices(TextChoices):
     ALWAYS_ASK = "AA"
     SHOW_ALL = "SA"
@@ -156,6 +215,11 @@ class User(TimeStamped, AbstractUser):
         validators=[validate_username],
     )
 
+    avatar = TextField(
+        default=default_avatar, validators=[*text_validators, *avatar_validators]
+    )
+    description = TextField(blank=True, null=True)
+
     following = ManyToManyField("self", related_name="following")
     nsfw_pref = CharField(
         max_length=2,
@@ -168,6 +232,22 @@ class User(TimeStamped, AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+def pad_avatar(sender, instance: User, **kwargs):
+    lines = split_lines(instance.avatar)
+
+    nrows_gap = AVATAR_H - len(lines)
+    if nrows_gap > 0:
+        lines.extend(["" for _ in range(nrows_gap)])
+
+    padded_lines = [pad(line, AVATAR_W) for line in lines]
+    padded_avatar = "\n".join(padded_lines)
+
+    instance.avatar = padded_avatar
+
+
+pre_save.connect(pad_avatar, sender=User)
 
 
 def user_self_follow(sender, instance: User, created, **kwargs):

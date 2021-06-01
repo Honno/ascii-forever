@@ -3,7 +3,7 @@ from django.forms import *
 
 from .models import *
 
-__all__ = ["JoinForm", "SettingsForm", "ArtForm", "CommentForm"]
+__all__ = ["JoinForm", "PreferencesForm", "ProfileForm", "ArtForm", "CommentForm"]
 
 
 class JoinForm(UserCreationForm):
@@ -11,16 +11,45 @@ class JoinForm(UserCreationForm):
         model = User
 
 
-class SettingsForm(ModelForm):
+class PreferencesForm(ModelForm):
     class Meta:
         model = User
         fields = ["nsfw_pref"]
 
 
-class ArtForm(ModelForm):
-    text = CharField()
+class PreserveWhitespaceModelForm(ModelForm):
     js_enabled = BooleanField(required=False, widget=HiddenInput)
-    description = CharField(required=False)
+
+    class Meta:
+        preserve_name = None
+
+    def clean(self):
+        data = super().clean()
+
+        if data.get("js_enabled", False):
+            # potential problem:
+            # 1. dot purposely added as the first char
+            # 2. script to prepend dot didn't work
+            # 3. ???
+            # 4. GOODBYE DOT
+            if data[self.Meta.preserve_name][0] == ".":
+                data[self.Meta.preserve_name] = data[self.Meta.preserve_name][1:]
+
+        return data
+
+
+class ProfileForm(PreserveWhitespaceModelForm):
+    js_enabled = BooleanField(required=False, widget=HiddenInput)
+
+    class Meta:
+        model = User
+        fields = ["avatar", "description"]
+
+        preserve_name = "avatar"
+
+
+class ArtForm(PreserveWhitespaceModelForm):
+    preserve_name = "text"
 
     class Meta:
         model = Art
@@ -33,19 +62,7 @@ class ArtForm(ModelForm):
             "description",
         ]
 
-    def clean(self):
-        data = super().clean()
-
-        if data.get("js_enabled", False):
-            # potential problem:
-            # 1. dot purposely added as the first char
-            # 2. script to prepend dot didn't work
-            # 3. ???
-            # 4. GOODBYE DOT
-            if data["text"][0] == ".":
-                data["text"] = data["text"][1:]
-
-        return data
+        preserve_name = "text"
 
 
 class CommentForm(ModelForm):

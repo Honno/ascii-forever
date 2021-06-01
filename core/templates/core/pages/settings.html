@@ -2,49 +2,23 @@
 
 {% load static %}
 
-{% block title %}{{ user.username }}{% endblock %}
+{% block title %}Settings{% endblock %}
 
 {% block path %}
-<ul class="nav-bar -final">
+<ul class="nav-bar -input">
     <li><a href="{% url 'core:index' %}">home</a></li>
     <li><a href="{% url 'core:users' %}">user</a></li>
     <li><a href="{% url 'core:user' user.username %}">{{ user.username }}</a></li>
     <li><a href="{% url 'core:settings' user.username %}">settings</a></li>
-</ul>
-{% endblock %}
-
-{% block content %}
-<form method="post">
-    {% csrf_token %}
-
-    <div class="form-group">
-        <label>NSFW preference</label>
-        <div class="form-input">
-            {% include "core/includes/error_box.html" with errors=form.nsfw_pref.errors %}
-            <select class="select-input" name="nsfw_pref">
-                <option
-                    {% if form.nsfw_pref.value == 'AA' %}selected="selected"{% endif %}
-                    value="AA">Always ask whether to show NSFW content</option>
-                <option
-                    {% if form.nsfw_pref.value == 'SA' %}selected="selected"{% endif %}
-                    value="SA">Show all NSFW content</option>
-                <option
-                    {% if form.nsfw_pref.value == 'HA' %}selected="selected"{% endif %}
-                    value="HA">Hide all NSFW previews</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="form-input" >
-            {% include "core/includes/error_box.html" with errors=form.non_field_errors %}
-            <div class="submit-input" >
-                <input
-                    type="submit"
-                    class="button-input"
-                    value="Save changes">
+    <li>
+        <div class="page-select">
+            <button>-></button>
+            <div class="pages">
+                <a href="{% url 'core:profile_settings' user.username %}">profile</a>
+                <a href="{% url 'core:preferences' user.username %}">preferences</a>
             </div>
         </div>
-    </div>
-</form>
+    </li>
+
+</ul>
 {% endblock %}

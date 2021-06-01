@@ -246,9 +246,19 @@ ul.user-actions {
 
 // user page
 
-.user-byline {
-    > .follow-button {
-        margin-left: 1em;
+.user-spotlight {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-gap: 1em;
+
+    .byline {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .info > * {
+        @include inbetween-margin(1em);
     }
 }
 
@@ -263,8 +273,17 @@ ul.user-actions {
     justify-content: space-between;
 }
 
-// comment
+// user settings
 
+.avatar-input {
+    @extend .monospaced;
+    @extend .multiline-input;
+    width: auto;
+
+    resize: none;
+}
+
+// comment
 
 .comment {
     > .header {
@@ -341,7 +360,6 @@ ul.user-actions {
 }
 
 .multiline-input {
-    width: 100%;
     padding: 1em;
     box-sizing: border-box;
 
@@ -357,6 +375,7 @@ ul.user-actions {
 
 .prose-input {
     @extend .multiline-input;
+    width: 100%;
     overflow: auto;
 
     cursor: text;
@@ -378,7 +397,9 @@ ul.user-actions {
 }
 
 .art-input {
+    @extend .multiline-input;
     @extend .monospaced;
+    width: 100%;
 }
 
 // thumbnail

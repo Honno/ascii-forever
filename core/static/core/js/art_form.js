@@ -1,29 +1,6 @@
-var af_form = document.querySelector("form.preserve-whitespace");
-
-/* js status */
-
-var af_checkbox = af_form.querySelector("input[name='js_enabled']");
-af_checkbox.value = "True";
-
-/* whitespace preservation */
+var af_form = document.querySelector("form.art-form");
 
 var af_textarea = af_form.querySelector("textarea[name='text']");
-
-// if a server-side error occurs, the page is POST'd to
-// browsers may carry over the dot that was prepended previously
-// so we remove any such dot
-// note that this may remove a legitimate dot ¯\_(ツ)_/¯
-if (af_textarea.value.length > 0) {
-    if (af_textarea.value[0] == ".") {
-        af_textarea.value = af_textarea.value.substring(1);
-    }
-}
-
-af_form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    af_textarea.value = "." + af_textarea.value;
-    af_form.submit();
-});
 
 /* thumbnail af_preview */
 

@@ -1,0 +1,63 @@
+{% extends "core/extendables/base.html" %}
+
+{% load static %}
+
+{% block title %}Profile Page Settings{% endblock %}
+
+{% block path %}
+<ul class="nav-bar -final">
+    <li><a href="{% url 'core:index' %}">home</a></li>
+    <li><a href="{% url 'core:users' %}">user</a></li>
+    <li><a href="{% url 'core:user' user.username %}">{{ user.username }}</a></li>
+    <li><a href="{% url 'core:settings' user.username %}">settings</a></li>
+    <li><a href="{% url 'core:profile_settings' user.username %}">profile</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<form class="preserve-whitespace" method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Avatar</label>
+        <div class="form-input">
+            {% include "core/includes/error_box.html" with errors=form.avatar.errors %}
+            <textarea
+                class="avatar-input dot-prepend"
+                name="avatar"
+                spellcheck="false"
+                cols="24"
+                rows="16"
+                required>{{ form.avatar.value }}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Description</label>
+        <div class="form-input">
+            {% include "core/includes/error_box.html" with errors=form.description.errors %}
+            <div class="prose-input">
+                <textarea
+                    name="description"
+                    rows="1">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+
+    {% for hidden_field in form.hidden_fields %}
+    {{ hidden_field }}
+    {% endfor %}
+
+    <div class="form-group">
+        <div class="form-input" >
+            {% include "core/includes/error_box.html" with errors=form.non_field_errors %}
+            <div class="submit-input" >
+                <input
+                    type="submit"
+                    class="button-input"
+                    value="Save changes">
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

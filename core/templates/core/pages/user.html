@@ -23,9 +23,25 @@
 {% endblock %}
 
 {% block content %}
-<div class="user-byline">
-    <span>{{ user.username }}</span>
-    {% include "core/includes/follow_user.html" with target=user %}
+<div class="user-spotlight">
+    <div>
+        <pre>{{ user.avatar }}</pre>
+    </div>
+    <div class="info">
+        <div class="byline">
+            <span>{{ user.username }}</span>
+            {% if request.user != user %}
+            {% include "core/includes/follow_user.html" with target=user %}
+            {% else %}
+            <a class="inline-button" href="{% url 'core:profile_settings' user.username %}">Edit profile</a>
+            {% endif %}
+        </div>
+        {% if user.description %}
+        <div>
+            {{ user.description|linebreaks }}
+        </div>
+        {% endif %}
+    </div>
 </div>
 
 {% if arts %}

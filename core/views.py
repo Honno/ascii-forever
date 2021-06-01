@@ -39,6 +39,8 @@ __all__ = [
     "UserListView",
     "UserView",
     "SettingsView",
+    "ProfileSettingsView",
+    "PreferencesView",
     "ArtGalleryView",
     "ArtView",
     "art_thumb",
@@ -141,9 +143,35 @@ class UserView(TemplateView):
         return ctx
 
 
-class SettingsView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class SettingsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "core/pages/settings.html"
-    form_class = SettingsForm
+    context_object_name = "user"
+
+    def test_func(self):
+        return self.request.user == self.get_object()
+
+    def get_object(self):
+        return get_object_or_404(User, username=self.kwargs["username"])
+
+
+class ProfileSettingsView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    template_name = "core/pages/profile_settings.html"
+    form_class = ProfileForm
+    context_object_name = "user"
+
+    def test_func(self):
+        return self.request.user == self.get_object()
+
+    def get_object(self):
+        return get_object_or_404(User, username=self.kwargs["username"])
+
+    def get_success_url(self):
+        return reverse("core:user", args=[self.get_object().username])
+
+
+class PreferencesView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    template_name = "core/pages/preferences.html"
+    form_class = PreferencesForm
     context_object_name = "user"
 
     def test_func(self):

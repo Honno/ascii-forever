@@ -12,6 +12,16 @@ urlpatterns = [
     path("user/", UserListView.as_view(), name="users"),
     path("user/<slug:username>", UserView.as_view(), name="user"),
     path("user/<slug:username>/settings", SettingsView.as_view(), name="settings"),
+    path(
+        "user/<slug:username>/settings/profile",
+        ProfileSettingsView.as_view(),
+        name="profile_settings",
+    ),
+    path(
+        "user/<slug:username>/settings/preferences",
+        PreferencesView.as_view(),
+        name="preferences",
+    ),
     path("user/<slug:username>/follow", follow_user, name="follow_user"),
     path("art/", ArtGalleryView.as_view(), name="arts"),
     path("art/<int:pk>", ArtView.as_view(), name="art"),

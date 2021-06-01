@@ -4,7 +4,7 @@
 {% load compress %}
 
 {% block content %}
-<form class="preserve-whitespace" method="post">
+<form class="art-form preserve-whitespace" method="post">
     {% csrf_token %}
 
     <div class="form-group">
@@ -27,7 +27,7 @@
         <div class="form-input">
             {% include "core/includes/error_box.html" with errors=form.text.errors %}
             <textarea
-                class="multiline-input art-input"
+                class="art-input dot-prepend"
                 name="text"
                 spellcheck="false"
                 rows="24"
