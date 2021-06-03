@@ -379,7 +379,12 @@ def like_art(request, pk):
 @login_required
 def edit_comment(request):
     data = json.load(request)
+
     comment = get_object_or_404(Comment, pk=data["pk"])
+
+    if request.user != comment.author:
+        raise Http404()
+
     form = CommentForm(instance=comment, data=data)
 
     if form.is_valid():
@@ -399,7 +404,11 @@ def edit_comment(request):
 @login_required
 def delete_comment(request):
     data = json.load(request)
+
     comment = get_object_or_404(Comment, pk=data["pk"])
+
+    if request.user != comment.author:
+        raise Http404()
 
     comment.delete()
 
