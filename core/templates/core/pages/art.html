@@ -87,6 +87,7 @@ Deleted
 {% for comment in comments %}
 <div class="comment"
      data-pk="{{ comment.pk }}">
+    {% if not comment.deleted %}
     <div class="header">
         <span class="author"><a class="-lite" href="{% url 'core:user' comment.author %}">{{ comment.author.username }}</a></span>
         <span class="datetime">{{ comment.created_at|date:"d M Y" }}</span>
@@ -156,6 +157,10 @@ Deleted
             </div>
         </div>
     </form>
+    {% endif %}
+
+    {% else %}
+    <span>[deleted comment]</span>
     {% endif %}
 </div>
 {% endfor %}

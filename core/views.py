@@ -230,7 +230,7 @@ class ArtView(TemplateView):
         except Model.DoesNotExist as e:
             raise Http404() from e
 
-        comments = art.comment_set.all().order_by("created_at")
+        comments = Comment._objects.filter(art=art).order_by("created_at")
 
         paginator = Paginator(comments, 25)
 
