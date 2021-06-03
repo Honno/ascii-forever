@@ -81,7 +81,11 @@ Deleted
 <p><i>Published {{ art.created_at|date:"d M Y" }}</i></p>
 {% endif %}
 
-<h2>Comments</h2>
+<style>
+ #gallery-rule:before { content: "----------------------------------- " }
+ #gallery-rule:after { content: " -----------------------------------" }
+</style>
+<div id="gallery-rule" class="rule">Comments</div>
 
 {% if comments %}
 {% for comment in comments %}

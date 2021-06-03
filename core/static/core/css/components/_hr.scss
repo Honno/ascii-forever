@@ -1,0 +1,6 @@
+.rule {
+    @extend .monospaced;
+
+    text-transform: uppercase;
+    color: $tertiary;
+}
