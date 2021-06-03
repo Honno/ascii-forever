@@ -50,6 +50,7 @@ Deleted
 {% if not art.deleted %}
 <div
     class="art-container"
+    data-pk="{{ art.pk }}"
     data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">
 
     {% if art.nsfw %}

@@ -49,6 +49,7 @@
     {% for art in arts %}
     <div
         class="user-art-thumb"
+        data-pk="{{ art.pk }}"
         data-nsfw="{% if art.nsfw %}true{% else %}false{% endif %}">
 
         {% if art.nsfw %}

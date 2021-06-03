@@ -28,12 +28,23 @@ nsfwables.forEach((thumb) => {
     let actions = thumb.querySelector(".nsfw-actions");
     let art = thumb.querySelector(".art");
 
-    let show = actions.querySelector(".nsfw-show");
-    show.addEventListener("click", (e) => {
+    let cookie_name = "show_nsfw_" + thumb.dataset.pk;
+    let cookie = Cookies.get(cookie_name);
+    if (cookie == "true") {
         actions.classList.add("hide");
         art.classList.remove("hide");
-    });
+    } else {
+        let show = actions.querySelector(".nsfw-show");
+        show.addEventListener("click", (e) => {
+            actions.classList.add("hide");
+            art.classList.remove("hide");
+
+            Cookies.set(cookie_name, "true", {secure: true, expires: 1});
+        });
+    }
 });
+
+/* Applying user preferences */
 
 // Try short-circuiting with cookies first
 
