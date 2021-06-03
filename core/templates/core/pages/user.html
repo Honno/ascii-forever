@@ -29,7 +29,7 @@
     </div>
     <div class="info">
         <div class="byline">
-            <span>{{ user.username }}</span>
+            <span><h1>{{ user.username }}</h1></span>
             {% if request.user != user %}
             {% include "core/includes/follow_user.html" with target=user %}
             {% else %}

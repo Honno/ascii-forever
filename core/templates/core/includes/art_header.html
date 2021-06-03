@@ -1,7 +1,11 @@
 <div class="art-header">
     <div class="left -top">
         <a class="-nostyle" href="{% url 'core:art' art.pk %}">
+            {% if h1 %}
+            <b><h1>{{ art.title }}</h1></b>
+            {% else %}
             <h2>{{ art.title }}</h2>
+            {% endif %}
         </a>
     </div>
 

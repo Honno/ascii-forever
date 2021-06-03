@@ -3,3 +3,9 @@ ul {
     padding: 0;
     list-style: none;
 }
+
+// h1 tags are just used for SEO
+h1 {
+    font: inherit;
+    display: inline;
+}

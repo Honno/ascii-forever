@@ -9,7 +9,7 @@
     <li><a href="{% url 'core:index' %}">home</a></li>
     <li><a href="{% url 'core:users' %}">user</a></li>
     <li><a href="{% url 'core:user' user.username %}">{{ user.username }}</a></li>
-    <li><a href="{% url 'core:settings' user.username %}">settings</a></li>
+    <li><a href="{% url 'core:settings' user.username %}"><h1>settings</h1></a></li>
     <li>
         <div class="page-select">
             <button>-></button>

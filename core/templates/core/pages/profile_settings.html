@@ -10,7 +10,7 @@
     <li><a href="{% url 'core:users' %}">user</a></li>
     <li><a href="{% url 'core:user' user.username %}">{{ user.username }}</a></li>
     <li><a href="{% url 'core:settings' user.username %}">settings</a></li>
-    <li><a href="{% url 'core:profile_settings' user.username %}">profile</a></li>
+    <li><a href="{% url 'core:profile_settings' user.username %}"><h1>profile</h1></a></li>
 </ul>
 {% endblock %}
 
