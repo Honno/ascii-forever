@@ -35,6 +35,18 @@ nsfwables.forEach((thumb) => {
     });
 });
 
+// Try short-circuiting with cookies first
+
+var saved_nsfw_pref = Cookies.get("nsfw_pref");
+
+if (typeof saved_nsfw_pref == "undefined" || saved_nsfw_pref == "HA") {
+    hide_all();
+} else if (saved_nsfw_pref == "HA") {
+    show_all();
+}
+
+// Then check with the server
+
 fetch("/nsfw_pref", {
     method: "GET",
     credentials: "same-origin",
@@ -50,6 +62,10 @@ fetch("/nsfw_pref", {
                 show_all();
             } else if (data.nsfw_pref == "HA") {
                 hide_all();
+            }
+
+            if (saved_nsfw_pref != data.nsfw_pref) {
+                Cookies.set("nsfw_pref", data.nsfw_pref, { secure: true });
             }
         });
     })
