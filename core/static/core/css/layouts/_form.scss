@@ -1,0 +1,38 @@
+.form-group {
+    width: 100%;
+    @include inbetween-margin(1em);
+
+    > * {
+        @include inbetween-margin(1em);
+    }
+
+    > label {
+        color: $secondary;
+        font-weight: bold;
+    }
+
+    > .form-input {
+        padding: 0 1em;
+    }
+
+    > .form-input > * {
+        @include inbetween-margin(1em);
+    }
+
+    > .form-input > .error-box {
+        display: grid;
+        grid-template-columns: min-content max-content;
+        grid-gap: 1em;
+
+        border: $red solid 1px;
+
+        padding: 1em;
+    }
+}
+
+.submit-input {
+    display: flex;
+    justify-content: right;
+    padding-right: 1em;
+    gap: 1em;
+}

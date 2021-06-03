@@ -1,12 +1,12 @@
 {% if request.user.is_authenticated and request.user != target %}
 {% if request.user not in target.following.all %}
 <span
-    class="follow-button"
+    class="inline-button follow-button"
     data-follow="true"
     data-username="{{ target.username }}">Follow</span>
 {% else %}
 <span
-    class="follow-button -negative"
+    class="inline-button -negative follow-button"
     data-follow="false"
     data-username="{{ target.username }}">Unfollow</span>
 {% endif %}

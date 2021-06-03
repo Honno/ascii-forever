@@ -1,0 +1,26 @@
+.user-spotlight {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-gap: 1em;
+
+    .byline {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .info > * {
+        @include inbetween-margin(1em);
+    }
+}
+
+.user-art-thumb {
+    .art {
+        margin-bottom: 1em;
+    }
+}
+
+.user-art-header {
+    display: flex;
+    justify-content: space-between;
+}

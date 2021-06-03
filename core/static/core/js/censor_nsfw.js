@@ -7,20 +7,20 @@ nsfwables.push.apply(nsfwables, nsfw_arts);
 
 function show_all() {
     nsfwables.forEach((thumb) => {
-        thumb.classList.remove("-hide");
+        thumb.classList.remove("hide");
 
         let actions = thumb.querySelector(".nsfw-actions");
         let art = thumb.querySelector(".art");
 
-        actions.classList.add("-hide");
-        art.classList.remove("-hide");
+        actions.classList.add("hide");
+        art.classList.remove("hide");
     });
 }
 
 function hide_all() {
     // all expanded arts should be accessible, hence only hiding the thumbs
     nsfw_art_thumbs.forEach((thumb) => {
-        thumb.classList.add("-hide");
+        thumb.classList.add("hide");
     });
 }
 
@@ -30,8 +30,8 @@ nsfwables.forEach((thumb) => {
 
     let show = actions.querySelector(".nsfw-show");
     show.addEventListener("click", (e) => {
-        actions.classList.add("-hide");
-        art.classList.remove("-hide");
+        actions.classList.add("hide");
+        art.classList.remove("hide");
     });
 });
 

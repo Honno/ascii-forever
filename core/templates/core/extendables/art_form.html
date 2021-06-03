@@ -27,7 +27,7 @@
         <div class="form-input">
             {% include "core/includes/error_box.html" with errors=form.text.errors %}
             <textarea
-                class="art-input dot-prepend"
+                class="multiline-input -fullwidth -resize monospaced dot-prepend"
                 name="text"
                 spellcheck="false"
                 rows="24"
@@ -48,7 +48,7 @@
                         </div>
                         <div>
                             <input
-                                class="number-input x-offset-number-input"
+                                class="monospaced x-offset-number-input"
                                 type="number"
                                 name="thumb_x_offset"
                                 value="{% if form.thumb_x_offset.value %}{{ form.thumb_x_offset.value }}{% else %}0{% endif %}"
@@ -67,7 +67,7 @@
                         </div>
                         <div>
                             <input
-                                class="number-input y-offset-number-input"
+                                class="monospaced y-offset-number-input"
                                 type="number"
                                 name="thumb_y_offset"
                                 value="{% if form.thumb_y_offset.value %}{{ form.thumb_y_offset.value }}{% else %}0{% endif %}"
@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="center">
-                    <pre class="thumb-preview"></pre>
+                    <pre class="monospaced thumb-preview"></pre>
                 </div>
 
                 <div class="right">
@@ -97,7 +97,7 @@
         <label>Description</label>
         <div class="form-input">
             {% include "core/includes/error_box.html" with errors=form.description.errors %}
-            <div class="prose-input">
+            <div class="prose-input -fullwidth">
                 <textarea
                     name="description"
                     rows="1">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>

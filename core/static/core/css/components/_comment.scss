@@ -1,0 +1,21 @@
+.comment {
+    > .header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    > .header > .datetime {
+        font-size: $body-font-size-small;
+        font-style: italic;
+    }
+
+    > form.edit-comment {
+        margin-top: 1em;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: right;
+    gap: 1em;
+}

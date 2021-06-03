@@ -1,0 +1,39 @@
+body {
+    font-family: $body-font-family;
+    font-size: $body-font-size;
+    font-weight: normal;
+    line-height: $body-font-line-height;
+}
+
+h1 {
+    font: inherit;
+}
+
+h2 {
+    font-size: $body-font-size;
+}
+
+.monospaced {
+    font-family: $art-font-family;
+    font-size: $art-font-size;
+    font-weight: normal;
+    line-height: $art-font-line-height;
+}
+
+a {
+    color: $blue;
+
+    &:hover {
+        color: $purple;
+    }
+
+    &.-nostyle {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    &.-lite {
+        color: $secondary;
+        text-decoration: underline;
+    }
+}

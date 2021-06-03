@@ -1,57 +1,3 @@
-/* imports */
-
-@import "include-media";
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
-
-/* colours */
-
-$primary: #212121;
-$secondary: #444444;
-$tertiary: #7e7e7e;
-$highlight: orange;
-
-$white: #ffffff;
-$blue: #0000ff;
-$purple: #8000ff;
-$red: #ff0000;
-
-/* fonts */
-
-$body-font-family: "Roboto", "Verdana", sans-serif;
-$body-font-size: 12px;
-$body-font-line-height: 1.5;
-
-$art-font-family: "Source Code Pro", "Courier New", monospace;
-$art-font-size: 12px;
-$art-font-line-height: 1.25; // based on the gnome terminal
-
-$body-font-size-small: 9px;
-$art-font-size-small: 9px;
-
-/* utils */
-
-@mixin inbetween-margin($margin) {
-    margin-top: 0 !important;
-
-    &:not(:last-child)  {
-        margin-bottom: $margin !important;
-    }
-}
-
-.monospaced {
-    font-family: $art-font-family;
-    white-space: pre;
-    font-size: $art-font-size;
-    font-weight: normal;
-    line-height: $art-font-line-height;
-}
-
-.-hide {
-    display: none !important;
-}
-
 .button-input {
     @extend .monospaced;
 
@@ -120,6 +66,5 @@ $art-font-size-small: 9px;
 }
 
 a.button-input, a.inline-button {
-    cursor: pointer;
     text-decoration: none;
 }

@@ -1,0 +1,7 @@
+@mixin inbetween-margin($margin) {
+    margin-top: 0 !important;
+
+    &:not(:last-child)  {
+        margin-bottom: $margin !important;
+    }
+}

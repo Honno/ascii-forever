@@ -1,0 +1,57 @@
+.line-input {
+    display: inline-block;
+    width: 20em;
+    padding: 2px;
+    box-sizing: border-box;
+
+    border-bottom: 1px solid $secondary;
+
+    &:focus {
+        border-bottom-color: $highlight;
+    }
+
+    &.-fullwidth {
+        width: 100%;
+    }
+}
+
+.multiline-input {
+    padding: 1em;
+    box-sizing: border-box;
+
+    outline: none;
+
+    border: 1px solid $secondary;
+    border-radius: 6px;
+
+    resize: none;
+
+    &:focus {
+        border-color: $highlight;
+    }
+
+    &.-fullwidth {
+        width: 100%;
+    }
+
+    &.-resize {
+        resize: both;
+    }
+}
+
+.prose-input {
+    @extend .multiline-input;
+    overflow: auto;
+    cursor: text;
+
+    &.-focus {
+        border-color: $highlight;
+    }
+
+    > textarea {
+        width: 100%;
+        border: none;
+        outline: none;
+        resize: none;
+    }
+}

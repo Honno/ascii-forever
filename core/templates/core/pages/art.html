@@ -29,7 +29,7 @@ Deleted
 {% endif %}
 
 {% block path %}
-<ul class="nav-bar {% if not art.deleted and request.user != art.artist %}-final{% else %}-input{% endif %}">
+<ul class="monospaced nav-bar {% if not art.deleted and request.user != art.artist %}-final{% else %}-input{% endif %}">
     <li><a href="{% url 'core:index' %}" >home</a></li>
     <li><a href="{% url 'core:arts' %}" >art</a></li>
     <li><a href="{% url 'core:art' art.pk %}" >{{ art.pk }}</a></li>
@@ -59,8 +59,8 @@ Deleted
     </div>
     {% endif %}
 
-    <div class="art {% if art.nsfw %}-hide{% endif %}">
-        <pre>{{ art.text }}</pre>
+    <div class="art {% if art.nsfw %}hide{% endif %}">
+        <pre class="monospaced">{{ art.text }}</pre>
     </div>
 </div>
 
@@ -101,7 +101,7 @@ Deleted
     </div>
 
     {% if request.user == comment.author %}
-    <form class="delete-comment -hide" action="javascript:void(0);">
+    <form class="delete-comment hide" action="javascript:void(0);">
         <div class="form-group">
             <p>Are you sure you want to delete this comment?</p>
             <div class="form-input" >
@@ -119,15 +119,15 @@ Deleted
         </div>
     </form>
 
-    <form class="edit-comment -hide" action="javascript:void(0);">
+    <form class="edit-comment hide" action="javascript:void(0);">
         <div class="form-group">
             <div class="form-input">
-                <div class="text-errors error-box -hide">
+                <div class="text-errors error-box hide">
                     <span><b>!</b></span>
                     <ul></ul>
                 </div>
 
-                <div class="prose-input">
+                <div class="prose-input -fullwidth">
                     <textarea
                         name="text"
                         rows="1">{{ comment.text }}</textarea>
@@ -137,7 +137,7 @@ Deleted
 
         <div class="form-group" >
             <div class="form-input">
-                <div class="non-field-errors error-box -hide">
+                <div class="non-field-errors error-box hide">
                     <span><b>!</b></span>
                     <ul></ul>
                 </div>
@@ -170,7 +170,7 @@ Deleted
         <label>Post comment</label>
         <div class="form-input">
             {% include "core/includes/error_box.html" with errors=form.text.errors %}
-            <div class="prose-input">
+            <div class="prose-input -fullwidth">
                 <textarea
                     name="text"
                     rows="1">{% if form.text.value %}{{ form.text.value }}{% endif %}</textarea>

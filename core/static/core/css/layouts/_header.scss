@@ -1,0 +1,77 @@
+header {
+    @include media(">=tablet") {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+ul.nav-bar {
+    @extend .monospaced;
+
+    > li {
+        display: inline-block;
+    }
+
+    > li::after {
+        content: " / ";
+        color: $tertiary;
+    }
+
+    &.-final > li:last-child::after, &.-input > li:last-child::after {
+        content: "";
+    }
+
+    &.-input > li:last-child {
+        white-space: normal;
+    }
+}
+
+.page-select {
+    position: relative;
+    display: inline-block;
+
+    > button {
+        @extend .monospaced;
+        color: $secondary;
+        font-style: italic;
+    }
+
+    &:hover > button {
+        color: $highlight;
+        border-color: $highlight;
+    }
+
+    > .pages {
+        display: none;
+
+        position: absolute;
+        z-index: 1;
+    }
+
+    &:hover > .pages {
+        display: block;
+    }
+
+    > .pages > a {
+        @extend .button-input;
+    }
+}
+
+ul.user-actions {
+    @include media("<tablet") {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    @include media(">=tablet") {
+        > li {
+            display: inline-block;
+        }
+
+        > li:not(:last-child)::after {
+            content: " • ";
+            color: $tertiary;
+        }
+    }
+}

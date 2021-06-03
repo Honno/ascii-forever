@@ -1,0 +1,83 @@
+.art-thumbs > * {
+    @include inbetween-margin(1em);
+
+    &:not(:last-child)::after  {
+        display: block;
+        margin-top: 1em;
+
+        @extend .monospaced;
+
+        content: "---";
+        color: $tertiary;
+    }
+}
+
+.art-thumb {
+    > * {
+        @include inbetween-margin(1em);
+    }
+}
+
+.nsfw-actions {
+    display: flex;
+    justify-content: left;
+    gap: 1em;
+}
+
+.art-header {
+    display: grid;
+    grid-template-columns: auto min-content;
+
+    > .left {
+        grid-column: 1;
+    }
+
+    > .left.-top {
+        grid-row: 1;
+    }
+
+    > .left.-bottom {
+        grid-row: 2;
+    }
+
+    > .right {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+}
+
+.follow-actions {
+    > *:not(:last-child)  {
+        margin-right: 1em;
+    }
+}
+
+.like-actions {
+    &.-vertical {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    > span {
+        display: inline-block;
+        width: 3em;
+        text-align: center;
+    }
+
+    > .like-tally {
+        @extend .monospaced;
+    }
+
+    > .like-button {
+        cursor: pointer;
+    }
+
+    > .like-button.-like {
+        color: $secondary;
+    }
+
+    > .like-button.-unlike {
+        color: $red;
+    }
+}

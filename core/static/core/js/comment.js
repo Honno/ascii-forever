@@ -20,9 +20,9 @@ comments.forEach((comment) => {
         let edit_general_errors_ul = edit_general_errors.querySelector("ul");
 
         edit_btn.addEventListener("click", (e) => {
-            text.classList.add("-hide");
-            actions.classList.add("-hide");
-            edit_form.classList.remove("-hide");
+            text.classList.add("hide");
+            actions.classList.add("hide");
+            edit_form.classList.remove("hide");
         });
 
         edit_form.addEventListener("submit", (e) => {
@@ -41,17 +41,17 @@ comments.forEach((comment) => {
             })
                 .then((response) => {
                     response.json().then((data) => {
-                        edit_text_errors.classList.add("-hide");
+                        edit_text_errors.classList.add("hide");
                         edit_text_errors_ul.innerHTML = "";
-                        edit_general_errors.classList.add("-hide");
+                        edit_general_errors.classList.add("hide");
                         edit_general_errors_ul.innerHTML = "";
 
                         if (data.valid == true) {
                             text.innerHTML = data.markup;
 
-                            edit_form.classList.add("-hide");
-                            text.classList.remove("-hide");
-                            actions.classList.remove("-hide");
+                            edit_form.classList.add("hide");
+                            text.classList.remove("hide");
+                            actions.classList.remove("hide");
                         } else {
                             if (data.text != undefined) {
                                 data.text.forEach((error) => {
@@ -60,7 +60,7 @@ comments.forEach((comment) => {
                                     li.appendChild(li_text);
                                     edit_text_errors_ul.appendChild(li);
                                 });
-                                edit_text_errors.classList.remove("-hide");
+                                edit_text_errors.classList.remove("hide");
                             }
 
                             if (data.__all__ != undefined) {
@@ -70,7 +70,7 @@ comments.forEach((comment) => {
                                     li.appendChild(li_text);
                                     edit_general_errors_ul.appendChild(li);
                                 });
-                                edit_general_errors.classList.remove("-hide");
+                                edit_general_errors.classList.remove("hide");
                             }
                         }
                     });
@@ -82,9 +82,9 @@ comments.forEach((comment) => {
 
         let cancel_edit_btn = edit_form.querySelector(".cancel");
         cancel_edit_btn.addEventListener("click", (e) => {
-            edit_form.classList.add("-hide");
-            text.classList.remove("-hide");
-            actions.classList.remove("-hide");
+            edit_form.classList.add("hide");
+            text.classList.remove("hide");
+            actions.classList.remove("hide");
         });
     }
 
@@ -93,9 +93,9 @@ comments.forEach((comment) => {
         let delete_form = comment.querySelector("form.delete-comment");
 
         delete_btn.addEventListener("click", (e) => {
-            text.classList.add("-hide");
-            actions.classList.add("-hide");
-            delete_form.classList.remove("-hide");
+            text.classList.add("hide");
+            actions.classList.add("hide");
+            delete_form.classList.remove("hide");
         });
 
         delete_form.addEventListener("submit", (e) => {
@@ -114,7 +114,7 @@ comments.forEach((comment) => {
                 .then((response) => {
                     response.json().then((data) => {
                         if (data.success == true) {
-                            comment.classList.add("-hide");
+                            comment.classList.add("hide");
                         }
                     });
                 })
@@ -125,9 +125,9 @@ comments.forEach((comment) => {
 
         let cancel_delete_btn = delete_form.querySelector(".cancel");
         cancel_delete_btn.addEventListener("click", (e) => {
-            delete_form.classList.add("-hide");
-            text.classList.remove("-hide");
-            actions.classList.remove("-hide");
+            delete_form.classList.add("hide");
+            text.classList.remove("hide");
+            actions.classList.remove("hide");
         });
     }
 });

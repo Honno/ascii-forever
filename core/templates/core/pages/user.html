@@ -5,7 +5,7 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block path %}
-<ul class="nav-bar {% if request.user != user %}-final{% else %}-input{% endif %}">
+<ul class="monospaced nav-bar {% if request.user != user %}-final{% else %}-input{% endif %}">
     <li><a href="{% url 'core:index' %}" >home</a></li>
     <li><a href="{% url 'core:users' %}" >user</a></li>
     <li><a href="{% url 'core:user' user.username %}" >{{ user.username }}</a></li>
@@ -25,7 +25,7 @@
 {% block content %}
 <div class="user-spotlight">
     <div>
-        <pre>{{ user.avatar }}</pre>
+        <pre class="monospaced">{{ user.avatar }}</pre>
     </div>
     <div class="info">
         <div class="byline">
@@ -58,9 +58,9 @@
         </div>
         {% endif %}
 
-        <div class="art {% if art.nsfw %}-hide{% endif %}">
+        <div class="art {% if art.nsfw %}hide{% endif %}">
             <a class="-nostyle" href="{% url 'core:art' art.pk %}">
-                <pre>{{ art.native_thumb }}</pre>
+                <pre class="monospaced">{{ art.native_thumb }}</pre>
             </a>
         </div>
 

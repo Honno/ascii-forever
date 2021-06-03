@@ -1,0 +1,94 @@
+.thumbnail-input-group {
+    display: grid;
+    grid-template-columns: 1fr min-content 1fr;
+
+    grid-gap: 1em;
+
+    > .top, > .right, > .bottom, > .left {
+        display: flex;
+    }
+
+    > .top {
+        grid-column: 2;
+        grid-row: 1;
+
+        justify-content: center;
+        align-items: flex-end;
+    }
+
+    > .right {
+        grid-column: 3;
+        grid-row: 2;
+
+        justify-content: left;
+        align-items: center;
+    }
+
+    > .bottom {
+        grid-column: 2;
+        grid-row: 3;
+
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    > .left {
+        grid-column: 1;
+        grid-row: 2;
+
+        justify-content: right;
+        align-items: center;
+    }
+
+    > .center {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}
+
+.offset-input-group {
+    display: flex;
+
+    &.-x {
+        flex-direction: row;
+    }
+
+    &.-y {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+
+    &.-y > div {
+        display: flex;
+        justify-content: center;
+    }
+
+    > div > input[type=number] {
+        width: 2em;
+        text-align: center;
+    }
+}
+
+.thumb-preview {
+    grid-column: 2;
+    grid-row: 2;
+
+    padding: 0.75em;
+    border: 1px dashed $primary;
+
+    font-size: 0.75em;
+}
+
+.thumb-char-count {
+    color: $tertiary;
+
+    @extend .monospaced;
+    font-size: 9px;
+
+    text-align: center;
+
+    &.-y {
+        writing-mode: vertical-lr;
+        transform: -rotate(180deg);
+    }
+}

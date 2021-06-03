@@ -1,5 +1,3 @@
-@import "base";
-
 main {
     @include media(">=tablet") {
         width: 100%;
@@ -19,12 +17,5 @@ header, footer {
 
     > * {
         @include inbetween-margin(1em);
-    }
-}
-
-header {
-    @include media(">=tablet") {
-        display: flex;
-        justify-content: space-between;
     }
 }

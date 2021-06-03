@@ -5,7 +5,7 @@
 {% block title %}Preferences{% endblock %}
 
 {% block path %}
-<ul class="nav-bar -final">
+<ul class="monospaced nav-bar -final">
     <li><a href="{% url 'core:index' %}">home</a></li>
     <li><a href="{% url 'core:users' %}">user</a></li>
     <li><a href="{% url 'core:user' user.username %}">{{ user.username }}</a></li>
