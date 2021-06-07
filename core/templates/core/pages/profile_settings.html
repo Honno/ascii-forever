@@ -40,12 +40,12 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="form-group">
         <label>Description</label>
         <div class="form-input">
+            <p>100 characters max</p>
             {% include "core/includes/error_box.html" with errors=form.description.errors %}
             <div class="prose-input -fullwidth">
                 <textarea

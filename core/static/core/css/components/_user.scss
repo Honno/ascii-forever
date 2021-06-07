@@ -3,14 +3,14 @@
     grid-template-columns: min-content auto;
     grid-gap: 1em;
 
+    .info > * {
+        @include inbetween-margin(1em);
+    }
+
     .byline {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
-    }
-
-    .info > * {
-        @include inbetween-margin(1em);
     }
 }
 

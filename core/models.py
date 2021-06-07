@@ -7,6 +7,7 @@ from pathlib import Path
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
 from django.core.validators import MinLengthValidator
 from django.db.models import *
 from django.db.models.signals import post_save
@@ -214,9 +215,14 @@ class User(TimeStamped, AbstractUser):
     )
 
     avatar = TextField(
-        default=default_avatar, validators=[*text_validators, *avatar_validators]
+        default=default_avatar,
+        validators=[*text_validators, *avatar_validators],
     )
-    description = TextField(blank=True, null=True)
+    description = TextField(
+        blank=True,
+        null=True,
+        validators=[MaxLengthValidator(100)],
+    )
 
     following = ManyToManyField("self", related_name="following")
     nsfw_pref = CharField(

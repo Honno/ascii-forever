@@ -29,12 +29,14 @@
     </div>
     <div class="info">
         <div class="byline">
-            <span><h1>{{ user.username }}</h1></span>
+            <span><b><h1>{{ user.username }}</h1></b></span>
             {% if request.user != user %}
             {% include "core/includes/follow_user.html" with target=user %}
             {% else %}
             <a class="inline-button" href="{% url 'core:profile_settings' user.username %}">Edit profile</a>
             {% endif %}
+        </div>
+        <div>
         </div>
         {% if user.description %}
         <div>
