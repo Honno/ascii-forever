@@ -174,22 +174,20 @@ avatar_validators = [validate_avatar_cols, validate_avatar_rows]
 
 default_avatar = r"""
 
-       .adAMMMAbn.
-      dMMMMMMMMMMA.
-     'HMMMMMMMMMMMl.
-    db\MMM^"     "^j
-    MMY   .        :
-    ,M|`,----. ,---.
-    :,' \    ;^:   ;
-     q|  `--'  )`--
-     ,:            ;
-    /: \    `---  :
-   /    "-.__  _.'
-  (    \       ;
-.' '.   `      :-.
-     '.   `   '/  "-.
-       "-.__"_/      "-.
-"""
+
+           ______
+         .´      `.
+   /.   /          \
+   `.`.:            :
+   _.:'|   ,--------|
+   `-·´|  | v     v :
+       :  \_.---`-._|
+    __  \           ;
+ ·-´\_\  :         /
+     \_\ :  ` . _.´
+      \_(        :
+ __.---´          `--._
+´                      '"""
 
 
 def pad(string, maxlen):
