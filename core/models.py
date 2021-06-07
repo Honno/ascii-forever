@@ -102,7 +102,7 @@ class TimeStamped(Model):
         self.save()
 
     def hard_delete(self):
-        super(SoftDeletionModel, self).delete()
+        super().delete()
 
 
 def update_timestamp(sender, instance, created, **kwargs):
