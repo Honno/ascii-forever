@@ -37,6 +37,10 @@
     &.-resize {
         resize: both;
     }
+
+    &.monospaced {
+        white-space: pre;
+    }
 }
 
 .prose-input {
