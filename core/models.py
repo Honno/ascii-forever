@@ -1,6 +1,7 @@
 import re
 from functools import lru_cache
 from io import BytesIO
+from itertools import chain
 from itertools import takewhile
 from pathlib import Path
 
@@ -151,10 +152,17 @@ def split_lines(text):
     return text.replace("\r", "").split("\n")
 
 
-def validate_avatar_cols(text):
-    lines = split_lines(text)
+@lru_cache
+def find_width(lines):
     col_lengths = [len(line) for line in lines]
     maxlen = max(col_lengths)
+
+    return maxlen
+
+
+def validate_avatar_cols(text):
+    lines = split_lines(text)
+    maxlen = find_width(tuple(lines))
     if maxlen > AVATAR_W:
         raise ValidationError(
             f"Must not exceed {AVATAR_W} columns ({maxlen} cols submitted)"
@@ -241,10 +249,26 @@ class User(TimeStamped, AbstractUser):
 def pad_avatar(sender, instance: User, **kwargs):
     lines = split_lines(instance.avatar)
 
+    # 1. center horizontally
+    maxlen = find_width(tuple(lines))
+    ncols_gap = AVATAR_W - maxlen
+    if ncols_gap > 1:
+        nspaces = ncols_gap // 2
+        spaces = " " * nspaces
+        lines = [spaces + line for line in lines]
+
+    # 2. center vertically
     nrows_gap = AVATAR_H - len(lines)
     if nrows_gap > 0:
-        lines.extend(["" for _ in range(nrows_gap)])
+        bottom_nrows = nrows_gap // 2
+        top_nrows = nrows_gap - bottom_nrows
+        lines = chain(
+            ["" for _ in range(top_nrows)],
+            lines,
+            ["" for _ in range(bottom_nrows)],
+        )
 
+    # 3. pad to border
     padded_lines = [pad(line, AVATAR_W) for line in lines]
     padded_avatar = "\n".join(padded_lines)
 
