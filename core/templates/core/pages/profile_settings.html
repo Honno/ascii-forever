@@ -22,14 +22,25 @@
         <label>Avatar</label>
         <div class="form-input">
             {% include "core/includes/error_box.html" with errors=form.avatar.errors %}
-            <textarea
-                class="multiline-input monospaced dot-prepend"
-                name="avatar"
-                spellcheck="false"
-                cols="24"
-                rows="16"
-                required>{{ form.avatar.value }}</textarea>
+            <div class="avatar-input-group">
+                <div clas="top">
+                    <textarea
+                        class="multiline-input monospaced dot-prepend"
+                        name="avatar"
+                        spellcheck="false"
+                        cols="24"
+                        rows="16"
+                        required>{{ form.avatar.value }}</textarea>
+                </div>
+                <div class="right">
+                    <span class="char-count -y"><- 16 rows -></span>
+                </div>
+                <div class="bottom">
+                    <span class="char-count -x"><- 24 columns -></span>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <div class="form-group">
