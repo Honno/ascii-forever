@@ -8,7 +8,7 @@
         @extend .monospaced;
 
         content: "---";
-        color: $tertiary;
+        color: $white;
     }
 }
 
@@ -74,7 +74,7 @@
     }
 
     > .like-button.-like {
-        color: $secondary;
+        color: $white;
     }
 
     > .like-button.-unlike {

@@ -392,11 +392,11 @@ class Art(TimeStamped, Model):
         return thumb
 
     def render_thumb(self):
-        image = Image.new("RGB", (1200, 628), (255, 255, 255))
+        image = Image.new("RGB", (1200, 628), (0, 0, 0))
         font = ImageFont.truetype(thumb_font_path.as_posix(), size=24)
         dwg = ImageDraw.Draw(image)
         dwg.multiline_text(
-            (25, 8), self.renderable_thumb, font=font, spacing=8, fill=(33, 33, 33)
+            (25, 8), self.renderable_thumb, font=font, spacing=8, fill=(253, 253, 253)
         )
 
         buf = BytesIO()

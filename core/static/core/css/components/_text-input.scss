@@ -4,10 +4,10 @@
     padding: 2px;
     box-sizing: border-box;
 
-    border-bottom: 1px solid $secondary;
+    border-bottom: 1px solid $white;
 
     &:focus {
-        border-bottom-color: $highlight;
+        border-bottom-color: $yellow;
     }
 
     &.-fullwidth {
@@ -21,13 +21,13 @@
 
     outline: none;
 
-    border: 1px solid $secondary;
+    border: 1px solid $white;
     border-radius: 6px;
 
     resize: none;
 
     &:focus {
-        border-color: $highlight;
+        border-color: $yellow;
     }
 
     &.-fullwidth {
@@ -49,7 +49,7 @@
     cursor: text;
 
     &.-focus {
-        border-color: $highlight;
+        border-color: $yellow;
     }
 
     > textarea {

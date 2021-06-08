@@ -9,3 +9,11 @@ h1 {
     font: inherit;
     display: inline;
 }
+
+
+// color resets
+
+input, textarea {
+    background-color: transparent;
+    color: $fg;
+}

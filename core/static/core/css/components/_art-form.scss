@@ -74,13 +74,13 @@
     grid-row: 2;
 
     padding: 0.75em;
-    border: 1px dashed $primary;
+    border: 1px dashed $fg;
 
     font-size: 0.75em;
 }
 
 .char-count {
-    color: $tertiary;
+    color: $white;
 
     @extend .monospaced;
     font-size: 9px;

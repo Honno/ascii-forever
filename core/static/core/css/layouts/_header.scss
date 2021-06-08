@@ -14,7 +14,7 @@ ul.nav-bar {
 
     > li::after {
         content: " / ";
-        color: $tertiary;
+        color: $white;
     }
 
     &.-final > li:last-child::after, &.-input > li:last-child::after {
@@ -32,13 +32,13 @@ ul.nav-bar {
 
     > button {
         @extend .monospaced;
-        color: $secondary;
+        color: $white;
         font-style: italic;
     }
 
     &:hover > button {
-        color: $highlight;
-        border-color: $highlight;
+        color: $yellow;
+        border-color: $yellow;
     }
 
     > .pages {
@@ -71,7 +71,7 @@ ul.user-actions {
 
         > li:not(:last-child)::after {
             content: " • ";
-            color: $tertiary;
+            color: $white;
         }
     }
 }

@@ -6,31 +6,28 @@
 
     text-align: center;
 
-    background-color: $secondary;
-    color: $white;
+    background-color: $fg;
+    color: $bg;
 
     cursor: default;
 
     &:hover {
-        background-color: $highlight;
+        background-color: $yellow;
+        color: $bg;
     }
 
-    &.-selected {
-        background-color: $white;
-        color: $secondary;
-    }
-
-    &.-selected:hover {
-        background-color: $white;
+    &.-selected, &.-selected:hover {
+        background-color: $black;
+        color: $fg;
     }
 
     &.-inverse {
-        background-color: $white;
-        color: $secondary;
+        background-color: transparent;
+        color: $fg;
     }
 
     &.-inverse:hover {
-        color: $highlight;
+        color: $yellow;
     }
 }
 
@@ -43,28 +40,22 @@
     font-size: $art-font-size-small;
     text-align: center;
 
-    color: $secondary;
-    border: 1px solid $secondary;
+    color: $fg;
+    border: 1px solid $fg;
 
     cursor: default;
 
     &:hover {
-        color: $highlight;
-        border-color: $highlight;
-    }
-
-    &.-negative {
-        color: $secondary;
-        background-color: transparent;
+        color: $yellow;
+        border-color: $yellow;
     }
 
     &.-negative:hover {
         color: $red;
         border-color: $red;
-        background-color: transparent;
     }
 }
 
 a.button-input, a.inline-button {
-    text-decoration: none;
+    text-decoration: transparent;
 }
