@@ -21,10 +21,10 @@ def create_object(model: str, django_user_model):
     if model == "User":
         return artist
 
-    art = Art(artist=artist, title="foo", text="bar", nsfw=False)
+    art = PlaintextArt(artist=artist, title="foo", text="bar", nsfw=False)
     art.save()
 
-    if model == "Art":
+    if model == "PlaintextArt":
         return art
 
     author = django_user_model.objects.create(username="alice", password="pass")
@@ -35,7 +35,7 @@ def create_object(model: str, django_user_model):
         return comment
 
 
-@mark.parametrize("model", ["User", "Art", "Comment"])
+@mark.parametrize("model", ["User", "PlaintextArt", "Comment"])
 @mark.django_db
 def test_timestamped_model(model, django_user_model):
     instance = create_object(model, django_user_model)

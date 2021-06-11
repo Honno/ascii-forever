@@ -69,7 +69,7 @@
 
         <div class="art {% if art.nsfw %}hide{% endif %}">
             <a class="-nostyle" href="{% url 'core:art' art.pk %}">
-                <pre class="monospaced">{{ art.native_thumb }}</pre>
+                <pre class="monospaced">{{ art.native_thumb|safe }}</pre>
             </a>
         </div>
 

@@ -255,17 +255,7 @@ class ArtView(TemplateView):
 
 class PostArtView(LoginRequiredMixin, CreateView):
     template_name = "core/pages/post_art.html"
-    form_class = ArtForm
-
-    def form_valid(self, form):
-        form.instance.artist = self.request.user
-
-        return super().form_valid(form)
-
-
-class PostArtView(LoginRequiredMixin, CreateView):
-    template_name = "core/pages/post_art.html"
-    form_class = ArtForm
+    form_class = PlaintextArtForm
 
     def form_valid(self, form):
         form.instance.artist = self.request.user
@@ -275,7 +265,8 @@ class PostArtView(LoginRequiredMixin, CreateView):
 
 class EditArtView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "core/pages/edit.html"
-    form_class = ArtForm
+    form_class = PlaintextArtForm
+    context_object_name = "art"
 
     def test_func(self):
         return self.request.user == self.get_object().artist
@@ -287,6 +278,7 @@ class EditArtView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class DeleteArtView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = "core/pages/art_confirm_delete.html"
     model = Art
+    context_object_name = "art"
 
     def test_func(self):
         return self.request.user == self.get_object().artist
@@ -300,7 +292,7 @@ class DeleteArtView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def art_thumb(request, pk):
     art = get_object_or_404(Art, pk=pk)
-    image = art.render_thumb()
+    image = art.rasterize_thumb()
 
     # https://help.pythonanywhere.com/pages/FlaskSendFileBytesIO/
     wrapped_image = FileWrapper(image)

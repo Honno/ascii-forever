@@ -1,5 +1,6 @@
 import re
 
+from django.utils.safestring import SafeString
 from pytest import fixture
 from pytest import mark
 
@@ -8,7 +9,7 @@ from core.models import *
 from .multiline import *
 
 # ------------------------------------------------------------------------------
-# Art
+# PlaintextArt
 
 
 # fmt:off
@@ -85,6 +86,9 @@ mrlc_test_native = multiline(r"""
 |_____/|_|___/   \___/ \_/ \___|_|      \___/ \___/   \_____\___/|_|___/  (_)   
 """)
 
+button = r"<button>Not a button</button>"
+button_safe = r"&lt;button&gt;Not a button&lt;/button&gt;"
+
 
 # fmt:on
 
@@ -95,7 +99,7 @@ mrlc_test_native = multiline(r"""
 @mark.django_db
 def test_render_thumb(django_user_model):
     user = django_user_model.objects.create(username="bob", password="pass")
-    art = Art(artist=user, title="python logo", text=py_logo)
+    art = PlaintextArt(artist=user, title="python logo", text=py_logo)
 
     multiline_assert(art.renderable_thumb, py_logo_render)
 
@@ -103,16 +107,16 @@ def test_render_thumb(django_user_model):
 @mark.django_db
 def test_native_thumb(django_user_model):
     user = django_user_model.objects.create(username="bob", password="pass")
-    art = Art(artist=user, title="mrlc's test", text=mrlc_test)
+    art = PlaintextArt(artist=user, title="mrlc's test", text=mrlc_test)
 
-    multiline_assert(art.natively_thumb, mrlc_test_native)
+    multiline_assert(art._native_thumb, mrlc_test_native)
 
 
 @mark.django_db
 def test_self_like(django_user_model):
     user = django_user_model.objects.create(username="bob", password="pass")
 
-    art = Art(artist=user, title="mrlc's test", text=mrlc_test, nsfw=False)
+    art = PlaintextArt(artist=user, title="mrlc's test", text=mrlc_test, nsfw=False)
     art.save()
 
     assert user in art.likes.get_queryset().all()
@@ -121,7 +125,7 @@ def test_self_like(django_user_model):
 @mark.django_db
 def test_art_delete(django_user_model):
     artist = django_user_model.objects.create(username="bob", password="pass")
-    art = Art(artist=artist, title="python logo", text=py_logo, nsfw=False)
+    art = PlaintextArt(artist=artist, title="python logo", text=py_logo, nsfw=False)
     art.save()
 
     author = django_user_model.objects.create(username="alice", password="pass")
@@ -130,6 +134,16 @@ def test_art_delete(django_user_model):
 
     art.delete()
 
-    assert Art.objects.count() == 0
-    assert Art._objects.count() == 1
+    assert PlaintextArt.objects.count() == 0
+    assert PlaintextArt._objects.count() == 1
     assert Comment.objects.count() == 1
+
+
+@mark.django_db
+def test_safe(django_user_model):
+    artist = django_user_model.objects.create(username="bob", password="pass")
+    art = PlaintextArt(artist=artist, title="Not a button", text=button, nsfw=False)
+    art.save()
+
+    assert art.native_thumb == button_safe
+    assert art.markup == button_safe

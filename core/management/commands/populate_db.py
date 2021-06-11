@@ -116,7 +116,7 @@ class Command(BaseCommand):
         if not settings.DEBUG:
             raise CommandError("Not in debug mode (don't use this in prod!)")
 
-        if User.objects.exists() or Art.objects.exists():
+        if User.objects.exists() or PlaintextArt.objects.exists():
             raise CommandError("Objects already exist")
 
         password = make_password("pass")
@@ -161,7 +161,7 @@ class Command(BaseCommand):
         for user, sample in user_art_samples:
             for fname, text in sample:
                 dt = gen_dt()
-                art = Art(
+                art = PlaintextArt(
                     id=art_id,
                     artist=user,
                     title=fname,
@@ -186,9 +186,7 @@ class Command(BaseCommand):
 
                     comments.append(comment)
 
-        Art.objects.bulk_create(arts)
-        Comment.objects.bulk_create(comments)
-
-        # force native thumbnail generation
+        # can't bulk create multi-table models
         for art in arts:
             art.save()
+        Comment.objects.bulk_create(comments)

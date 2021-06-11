@@ -3,7 +3,13 @@ from django.forms import *
 
 from .models import *
 
-__all__ = ["JoinForm", "PreferencesForm", "ProfileForm", "ArtForm", "CommentForm"]
+__all__ = [
+    "JoinForm",
+    "PreferencesForm",
+    "ProfileForm",
+    "PlaintextArtForm",
+    "CommentForm",
+]
 
 
 class JoinForm(UserCreationForm):
@@ -48,11 +54,9 @@ class ProfileForm(PreserveWhitespaceModelForm):
         preserve_name = "avatar"
 
 
-class ArtForm(PreserveWhitespaceModelForm):
-    preserve_name = "text"
-
+class PlaintextArtForm(PreserveWhitespaceModelForm):
     class Meta:
-        model = Art
+        model = PlaintextArt
         fields = [
             "title",
             "text",
@@ -63,6 +67,21 @@ class ArtForm(PreserveWhitespaceModelForm):
         ]
 
         preserve_name = "text"
+
+
+# class UploadArtForm(ModelForm):
+#     class Meta:
+#         model = Art
+#         fields = [
+#             "title",
+#             "markup",
+#             "thumb_x_offset",
+#             "thumb_y_offset",
+#             "nsfw",
+#             "description",
+#         ]
+
+#         preserve_name = "markup"
 
 
 class CommentForm(ModelForm):

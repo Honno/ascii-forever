@@ -1,7 +1,7 @@
 from django.urls import reverse
 from pytest import mark
 
-from core.models import Art
+from core.models import *
 
 urls = [reverse(name) for name in ["core:index", "core:arts"]]
 
@@ -14,10 +14,11 @@ def test_nsfw_filter(url, django_user_model, client):
 
     follower.following.add(target)
 
-    sfw = Art(id=1, artist=target, title="sfw", text="sfw", nsfw=False)
-    nsfw = Art(id=2, artist=target, title="nsfw", text="nsfw", nsfw=True)
+    sfw = PlaintextArt(id=1, artist=target, title="sfw", text="sfw", nsfw=False)
+    nsfw = PlaintextArt(id=2, artist=target, title="nsfw", text="nsfw", nsfw=True)
 
-    Art.objects.bulk_create([sfw, nsfw])
+    sfw.save()
+    nsfw.save()
 
     client.force_login(follower)
 

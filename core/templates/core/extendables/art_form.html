@@ -25,13 +25,13 @@
     <div class="form-group">
         <label>Text art</label>
         <div class="form-input">
-            {% include "core/includes/error_box.html" with errors=form.text.errors %}
+            {% include "core/includes/error_box.html" with errors=form.markup.errors %}
             <textarea
                 class="multiline-input -fullwidth -resize monospaced dot-prepend"
                 name="text"
                 spellcheck="false"
                 rows="24"
-                required>{% if form.text.value %}{{ form.text.value }}{% endif %}</textarea>
+                required>{% if form.text.value %}{{ form.text.value|safe }}{% endif %}</textarea>
         </div>
     </div>
 

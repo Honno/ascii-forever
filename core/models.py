@@ -4,6 +4,7 @@ from io import BytesIO
 from itertools import chain
 from itertools import takewhile
 from pathlib import Path
+from typing import Protocol
 
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
@@ -15,16 +16,29 @@ from django.db.models.signals import post_save
 from django.db.models.signals import pre_save
 from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.html import SafeString
+from django.utils.html import escape
 from django.utils.timezone import now
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from polymorphic.managers import PolymorphicManager
+from polymorphic.models import PolymorphicModel
+from polymorphic.query import PolymorphicQuerySet
 
-__all__ = ["User", "Art", "Comment"]
+__all__ = ["User", "Art", "PlaintextArt", "Comment"]
 
 
 # ------------------------------------------------------------------------------
 # Helpers
+
+# Cached methods
+
+
+@lru_cache
+def split_lines(text):
+    return text.replace("\r", "").split("\n")
+
 
 # Validation
 
@@ -60,19 +74,21 @@ text_validators = [
 
 class SoftDeletableQuerySet(QuerySet):
     def delete(self):
-        return super(self).update(deleted_at=now())
+        return super().update(deleted_at=now())
 
     def hard_delete(self):
-        return super(self).delete()
+        return super().delete()
 
 
 class SoftDeletableManager(Manager):
+    _queryset_class = SoftDeletableQuerySet
+
     def __init__(self, *args, show_deleted=False, **kwargs):
         self.show_deleted = show_deleted
         super().__init__(*args, **kwargs)
 
     def get_queryset(self):
-        queryset = SoftDeletableQuerySet(self.model)
+        queryset = self._queryset_class(self.model)
 
         if not self.show_deleted:
             return queryset.filter(deleted_at=None)
@@ -80,7 +96,7 @@ class SoftDeletableManager(Manager):
             return queryset
 
 
-class TimeStamped(Model):
+class TimeStampedModelMixin(Model):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(blank=True, null=True)
     deleted_at = DateTimeField(blank=True, null=True)
@@ -107,17 +123,35 @@ class TimeStamped(Model):
         super().delete()
 
 
-def update_timestamp(sender, instance, created, **kwargs):
-    if isinstance(instance, TimeStamped) and not created and not instance.deleted:
-        post_save.disconnect(update_timestamp)
+class SoftDeletablePolymorphicQuerySet(SoftDeletableQuerySet, PolymorphicQuerySet):
+    pass
 
+
+class SoftDeletablePolymorphicManager(SoftDeletableManager, PolymorphicManager):
+    _queryset_class = SoftDeletablePolymorphicQuerySet
+
+
+class TimeStampedPolymorphicModelMixin(TimeStampedModelMixin, PolymorphicModel):
+    objects = SoftDeletablePolymorphicManager()
+    _objects = SoftDeletablePolymorphicManager(show_deleted=True)
+
+    class Meta:
+        abstract = True
+
+
+def update_timestamp(sender, instance, **kwargs):
+    if (
+        (
+            isinstance(instance, TimeStampedModelMixin)
+            or isinstance(instance, TimeStampedPolymorphicModelMixin)
+        )
+        and instance.pk
+        and not instance.deleted  # i.e. has been created
+    ):
         instance.updated_at = now()
-        instance.save()
-
-        post_save.connect(update_timestamp)
 
 
-post_save.connect(update_timestamp)
+pre_save.connect(update_timestamp)
 
 
 # ------------------------------------------------------------------------------
@@ -145,11 +179,6 @@ def validate_username(username):
 
 AVATAR_W = 24
 AVATAR_H = 16
-
-
-@lru_cache
-def split_lines(text):
-    return text.replace("\r", "").split("\n")
 
 
 @lru_cache
@@ -212,7 +241,7 @@ class NSFWChoices(TextChoices):
     HIDE_ALL = "HA"
 
 
-class User(TimeStamped, AbstractUser):
+class User(TimeStampedModelMixin, AbstractUser):
     objects = CIUserManager()
     _objects = CIUserManager(show_deleted=True)
 
@@ -297,9 +326,8 @@ THUMB_W = 80
 THUMB_H = 19
 
 
-class Art(TimeStamped, Model):
+class Art(TimeStampedPolymorphicModelMixin, PolymorphicModel):
     artist = ForeignKey(User, on_delete=PROTECT)
-    text = TextField(validators=text_validators)
 
     title = CharField(max_length=80, validators=text_validators)
     description = TextField(blank=True, null=True, validators=text_validators)
@@ -308,13 +336,45 @@ class Art(TimeStamped, Model):
 
     thumb_x_offset = IntegerField(default=0)
     thumb_y_offset = IntegerField(default=0)
-    native_thumb = TextField(validators=text_validators)
 
     likes = ManyToManyField(User, related_name="likes")
 
+    # w
+    # h
+    # native_thumb
+    # rasterize_thumb()
+    # markup
+
+    @cached_property
+    def description_preview(self):
+        if not self.description:
+            return None
+        else:
+            return "".join(takewhile(lambda c: c != "\n", self.description))
+
+    def clean(self):
+        if (
+            not -THUMB_W < self.thumb_x_offset < self.w
+            or not -THUMB_H < self.thumb_y_offset < self.h
+        ):
+            raise ValidationError("thumbnail is out-of-bounds")
+
+        if r_nothing.match(self.renderable_thumb):
+            raise ValidationError("thumbnail contains only whitespace")
+
+    def get_absolute_url(self):
+        return reverse("core:art", args=[str(self.pk)])
+
+    def __str__(self):
+        return self.title
+
+
+class PlaintextArt(Art):
+    text = TextField(validators=text_validators)
+
     @cached_property
     def w(self):
-        text_lines = self.text.splitlines()
+        text_lines = split_lines(self.text)
 
         widths = [len(line) for line in text_lines]
         width = max(widths, default=0)
@@ -323,7 +383,7 @@ class Art(TimeStamped, Model):
 
     @cached_property
     def h(self):
-        text_lines = self.text.splitlines()
+        text_lines = split_lines(self.text)
 
         height = len(text_lines)
 
@@ -337,9 +397,9 @@ class Art(TimeStamped, Model):
     def tall(self):
         return self.h > THUMB_H
 
-    @property
-    def natively_thumb(self):
-        text_lines = self.text.splitlines()
+    @cached_property
+    def _native_thumb(self) -> str:
+        text_lines = split_lines(self.text)
         thumb_lines = []
 
         if not self.tall:
@@ -370,8 +430,12 @@ class Art(TimeStamped, Model):
         return thumb
 
     @cached_property
-    def renderable_thumb(self):
-        text_lines = self.text.splitlines()
+    def native_thumb(self) -> SafeString:
+        return escape(self._native_thumb)
+
+    @cached_property
+    def renderable_thumb(self) -> str:
+        text_lines = split_lines(self.text)
         thumb_lines = []
 
         for y in range(self.thumb_y_offset, self.thumb_y_offset + THUMB_H):
@@ -391,7 +455,11 @@ class Art(TimeStamped, Model):
 
         return thumb
 
-    def render_thumb(self):
+    @cached_property
+    def markup(self) -> SafeString:
+        return escape(self.text)
+
+    def rasterize_thumb(self):
         image = Image.new("RGB", (1200, 628), (0, 0, 0))
         font = ImageFont.truetype(thumb_font_path.as_posix(), size=24)
         dwg = ImageDraw.Draw(image)
@@ -405,36 +473,9 @@ class Art(TimeStamped, Model):
 
         return buf
 
-    @cached_property
-    def description_preview(self):
-        if not self.description:
-            return None
-        else:
-            return "".join(takewhile(lambda c: c != "\n", self.description))
 
-    def clean(self):
-        if (
-            not -THUMB_W < self.thumb_x_offset < self.w
-            or not -THUMB_H < self.thumb_y_offset < self.h
-        ):
-            raise ValidationError("thumbnail is out-of-bounds")
-
-        if r_nothing.match(self.renderable_thumb):
-            raise ValidationError("thumbnail contains only whitespace")
-
-    def save(self, *args, **kwargs):
-        if not self.wide or not self.tall:
-            self.native_thumb = self.natively_thumb
-        else:
-            self.native_thumb = self.renderable_thumb
-
-        super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("core:art", args=[str(self.pk)])
-
-    def __str__(self):
-        return self.title
+# class EncodedArt(Art):
+#     text = TextField(validators=text_validators)
 
 
 def artist_self_like(sender, instance: Art, created, **kwargs):
@@ -442,14 +483,15 @@ def artist_self_like(sender, instance: Art, created, **kwargs):
         instance.likes.add(instance.artist)
 
 
-post_save.connect(artist_self_like, sender=Art)
+post_save.connect(artist_self_like, sender=PlaintextArt)
+# post_save.connect(artist_self_like, sender=EncodedArt)
 
 
 # ------------------------------------------------------------------------------
 # Comment
 
 
-class Comment(TimeStamped, Model):
+class Comment(TimeStampedModelMixin, Model):
     art = ForeignKey(Art, on_delete=PROTECT)
     author = ForeignKey(User, on_delete=PROTECT)
     text = TextField(validators=text_validators)

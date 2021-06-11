@@ -61,7 +61,7 @@ Deleted
     {% endif %}
 
     <div class="art {% if art.nsfw %}hide{% endif %}">
-        <pre class="monospaced">{{ art.text }}</pre>
+        <pre class="monospaced">{{ art.markup|safe}}</pre>
     </div>
 </div>
 
