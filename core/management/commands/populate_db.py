@@ -116,12 +116,12 @@ class Command(BaseCommand):
         if not settings.DEBUG:
             raise CommandError("Not in debug mode (don't use this in prod!)")
 
-        if User.objects.exists() or PlaintextArt.objects.exists():
+        if User.objects.exists() or Art.objects.exists():
             raise CommandError("Objects already exist")
 
         password = make_password("pass")
 
-        admin = User(id=1, username="admin", password=password)
+        admin = User(id=1, username="admin", password=password, nsfw_pref="SA")
         admin.is_superuser = True
         admin.is_staff = True
         admin.save()
@@ -161,7 +161,7 @@ class Command(BaseCommand):
         for user, sample in user_art_samples:
             for fname, text in sample:
                 dt = gen_dt()
-                art = PlaintextArt(
+                art = Art(
                     id=art_id,
                     artist=user,
                     title=fname,
@@ -186,7 +186,5 @@ class Command(BaseCommand):
 
                     comments.append(comment)
 
-        # can't bulk create multi-table models
-        for art in arts:
-            art.save()
+        Art.objects.bulk_create(arts)
         Comment.objects.bulk_create(comments)

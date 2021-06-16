@@ -22,11 +22,8 @@ from django.utils.timezone import now
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from polymorphic.managers import PolymorphicManager
-from polymorphic.models import PolymorphicModel
-from polymorphic.query import PolymorphicQuerySet
 
-__all__ = ["User", "Art", "PlaintextArt", "Comment"]
+__all__ = ["User", "Art", "Comment"]
 
 
 # ------------------------------------------------------------------------------
@@ -123,30 +120,12 @@ class TimeStampedModelMixin(Model):
         super().delete()
 
 
-class SoftDeletablePolymorphicQuerySet(SoftDeletableQuerySet, PolymorphicQuerySet):
-    pass
-
-
-class SoftDeletablePolymorphicManager(SoftDeletableManager, PolymorphicManager):
-    _queryset_class = SoftDeletablePolymorphicQuerySet
-
-
-class TimeStampedPolymorphicModelMixin(TimeStampedModelMixin, PolymorphicModel):
-    objects = SoftDeletablePolymorphicManager()
-    _objects = SoftDeletablePolymorphicManager(show_deleted=True)
-
-    class Meta:
-        abstract = True
-
-
 def update_timestamp(sender, instance, **kwargs):
+    # instance.pk i.e. has been created
     if (
-        (
-            isinstance(instance, TimeStampedModelMixin)
-            or isinstance(instance, TimeStampedPolymorphicModelMixin)
-        )
+        isinstance(instance, TimeStampedModelMixin)
         and instance.pk
-        and not instance.deleted  # i.e. has been created
+        and not instance.deleted
     ):
         instance.updated_at = now()
 
@@ -326,8 +305,10 @@ THUMB_W = 80
 THUMB_H = 19
 
 
-class Art(TimeStampedPolymorphicModelMixin, PolymorphicModel):
+class Art(TimeStampedModelMixin, Model):
     artist = ForeignKey(User, on_delete=PROTECT)
+
+    text = TextField(validators=text_validators)
 
     title = CharField(max_length=80, validators=text_validators)
     description = TextField(blank=True, null=True, validators=text_validators)
@@ -338,39 +319,6 @@ class Art(TimeStampedPolymorphicModelMixin, PolymorphicModel):
     thumb_y_offset = IntegerField(default=0)
 
     likes = ManyToManyField(User, related_name="likes")
-
-    # w
-    # h
-    # native_thumb
-    # rasterize_thumb()
-    # markup
-
-    @cached_property
-    def description_preview(self):
-        if not self.description:
-            return None
-        else:
-            return "".join(takewhile(lambda c: c != "\n", self.description))
-
-    def clean(self):
-        if (
-            not -THUMB_W < self.thumb_x_offset < self.w
-            or not -THUMB_H < self.thumb_y_offset < self.h
-        ):
-            raise ValidationError("thumbnail is out-of-bounds")
-
-        if r_nothing.match(self.renderable_thumb):
-            raise ValidationError("thumbnail contains only whitespace")
-
-    def get_absolute_url(self):
-        return reverse("core:art", args=[str(self.pk)])
-
-    def __str__(self):
-        return self.title
-
-
-class PlaintextArt(Art):
-    text = TextField(validators=text_validators)
 
     @cached_property
     def w(self):
@@ -398,7 +346,7 @@ class PlaintextArt(Art):
         return self.h > THUMB_H
 
     @cached_property
-    def _native_thumb(self) -> str:
+    def native_thumb(self) -> SafeString:
         text_lines = split_lines(self.text)
         thumb_lines = []
 
@@ -427,11 +375,7 @@ class PlaintextArt(Art):
 
         thumb = "\n".join(thumb_lines)
 
-        return thumb
-
-    @cached_property
-    def native_thumb(self) -> SafeString:
-        return escape(self._native_thumb)
+        return escape(thumb)
 
     @cached_property
     def renderable_thumb(self) -> str:
@@ -473,9 +417,28 @@ class PlaintextArt(Art):
 
         return buf
 
+    @cached_property
+    def description_preview(self):
+        if not self.description:
+            return None
+        else:
+            return "".join(takewhile(lambda c: c != "\n", self.description))
 
-# class EncodedArt(Art):
-#     text = TextField(validators=text_validators)
+    def clean(self):
+        if (
+            not -THUMB_W < self.thumb_x_offset < self.w
+            or not -THUMB_H < self.thumb_y_offset < self.h
+        ):
+            raise ValidationError("thumbnail is out-of-bounds")
+
+        if r_nothing.match(self.renderable_thumb):
+            raise ValidationError("thumbnail contains only whitespace")
+
+    def get_absolute_url(self):
+        return reverse("core:art", args=[str(self.pk)])
+
+    def __str__(self):
+        return self.title
 
 
 def artist_self_like(sender, instance: Art, created, **kwargs):
@@ -483,8 +446,7 @@ def artist_self_like(sender, instance: Art, created, **kwargs):
         instance.likes.add(instance.artist)
 
 
-post_save.connect(artist_self_like, sender=PlaintextArt)
-# post_save.connect(artist_self_like, sender=EncodedArt)
+post_save.connect(artist_self_like, sender=Art)
 
 
 # ------------------------------------------------------------------------------

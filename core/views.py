@@ -255,7 +255,7 @@ class ArtView(TemplateView):
 
 class PostArtView(LoginRequiredMixin, CreateView):
     template_name = "core/pages/post_art.html"
-    form_class = PlaintextArtForm
+    form_class = ArtForm
 
     def form_valid(self, form):
         form.instance.artist = self.request.user
@@ -264,8 +264,8 @@ class PostArtView(LoginRequiredMixin, CreateView):
 
 
 class EditArtView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    template_name = "core/pages/edit.html"
-    form_class = PlaintextArtForm
+    template_name = "core/pages/edit_art.html"
+    form_class = ArtForm
     context_object_name = "art"
 
     def test_func(self):
