@@ -14,8 +14,8 @@ def test_nsfw_filter(url, django_user_model, client):
 
     follower.following.add(target)
 
-    sfw = PlaintextArt(id=1, artist=target, title="sfw", text="sfw", nsfw=False)
-    nsfw = PlaintextArt(id=2, artist=target, title="nsfw", text="nsfw", nsfw=True)
+    sfw = Art(id=1, artist=target, title="sfw", text="sfw", nsfw=False)
+    nsfw = Art(id=2, artist=target, title="nsfw", text="nsfw", nsfw=True)
 
     sfw.save()
     nsfw.save()

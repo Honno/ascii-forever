@@ -23,6 +23,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+from core.ansi import ansi2html
+
 __all__ = ["User", "Art", "Comment"]
 
 
@@ -298,6 +300,9 @@ post_save.connect(user_self_follow, sender=User)
 # Art
 
 
+r_ansi = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+
+
 thumb_font_path = Path(__file__).parent / "SourceCodePro-Regular.ttf"
 
 
@@ -307,8 +312,6 @@ THUMB_H = 19
 
 class Art(TimeStampedModelMixin, Model):
     artist = ForeignKey(User, on_delete=PROTECT)
-
-    text = TextField(validators=text_validators)
 
     title = CharField(max_length=80, validators=text_validators)
     description = TextField(blank=True, null=True, validators=text_validators)
@@ -320,9 +323,22 @@ class Art(TimeStampedModelMixin, Model):
 
     likes = ManyToManyField(User, related_name="likes")
 
+    text = TextField(validators=text_validators)
+
+    markup = TextField()
+    native_thumb = TextField()
+
+    @cached_property
+    def plaintext(self):
+        return r_ansi.sub("", self.text)
+
+    @cached_property
+    def _markup(self):
+        return ansi2html(self.text)
+
     @cached_property
     def w(self):
-        text_lines = split_lines(self.text)
+        text_lines = split_lines(self.plaintext)
 
         widths = [len(line) for line in text_lines]
         width = max(widths, default=0)
@@ -331,7 +347,7 @@ class Art(TimeStampedModelMixin, Model):
 
     @cached_property
     def h(self):
-        text_lines = split_lines(self.text)
+        text_lines = split_lines(self.plaintext)
 
         height = len(text_lines)
 
@@ -346,8 +362,8 @@ class Art(TimeStampedModelMixin, Model):
         return self.h > THUMB_H
 
     @cached_property
-    def native_thumb(self) -> SafeString:
-        text_lines = split_lines(self.text)
+    def _native_thumb(self) -> SafeString:
+        text_lines = split_lines(self.plaintext)
         thumb_lines = []
 
         if not self.tall:
@@ -379,7 +395,7 @@ class Art(TimeStampedModelMixin, Model):
 
     @cached_property
     def renderable_thumb(self) -> str:
-        text_lines = split_lines(self.text)
+        text_lines = split_lines(self.plaintext)
         thumb_lines = []
 
         for y in range(self.thumb_y_offset, self.thumb_y_offset + THUMB_H):
@@ -398,10 +414,6 @@ class Art(TimeStampedModelMixin, Model):
         thumb = "\n".join(thumb_lines)
 
         return thumb
-
-    @cached_property
-    def markup(self) -> SafeString:
-        return escape(self.text)
 
     def rasterize_thumb(self):
         image = Image.new("RGB", (1200, 628), (0, 0, 0))
@@ -439,6 +451,14 @@ class Art(TimeStampedModelMixin, Model):
 
     def __str__(self):
         return self.title
+
+
+def set_text(sender, instance: Art, **kwargs):
+    instance.markup = instance._markup
+    instance.native_thumb = instance._native_thumb
+
+
+pre_save.connect(set_text, sender=Art)
 
 
 def artist_self_like(sender, instance: Art, created, **kwargs):

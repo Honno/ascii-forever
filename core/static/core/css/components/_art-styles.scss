@@ -1,0 +1,48 @@
+@mixin art-style($color) {
+    color: $color;
+    text-decoration-color: $color;
+    border-color: $color;
+
+    &.-bold {
+        // font-weight: bold can break column spacing
+        text-shadow: -0.25px 0 $color, 0.25px 0 $color;
+    }
+}
+
+.fgcolor { @include art-style($fg) }
+.bgcolor { @include art-style($bg) }
+.black { @include art-style($black) }
+.black { @include art-style($black) }
+.bright-black { @include art-style($bright-black) }
+.red { @include art-style($red) }
+.bright-red { @include art-style($bright-red) }
+.green { @include art-style($green) }
+.bright-green { @include art-style($bright-green) }
+.yellow { @include art-style($yellow) }
+.bright-yellow { @include art-style($bright-yellow) }
+.blue { @include art-style($blue) }
+.bright-blue { @include art-style($bright-blue) }
+.magenta { @include art-style($magenta) }
+.bright-magenta { @include art-style($bright-magenta) }
+.cyan { @include art-style($cyan) }
+.bright-cyan { @include art-style($bright-cyan) }
+.white { @include art-style($white) }
+.bright-white { @include art-style($bright-white) }
+
+.bg-fgcolor { background-color: $fg }
+.bg-black { background-color: $black }
+.bg-bright-black { background-color: $bright-black }
+.bg-red { background-color: $red }
+.bg-bright-red { background-color: $bright-red }
+.bg-green { background-color: $green }
+.bg-bright-green { background-color: $bright-green }
+.bg-yellow { background-color: $yellow }
+.bg-bright-yellow { background-color: $bright-yellow }
+.bg-blue { background-color: $blue }
+.bg-bright-blue { background-color: $bright-blue }
+.bg-magenta { background-color: $magenta }
+.bg-bright-magenta { background-color: $bright-magenta }
+.bg-cyan { background-color: $cyan }
+.bg-bright-cyan { background-color: $bright-cyan }
+.bg-white { background-color: $white }
+.bg-bright-white { background-color: $bright-white }
