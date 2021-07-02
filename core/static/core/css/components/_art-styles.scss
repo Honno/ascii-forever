@@ -1,4 +1,4 @@
-@mixin art-style($color) {
+@mixin fg-style($color) {
     color: $color;
     text-decoration-color: $color;
     border-color: $color;
@@ -7,42 +7,55 @@
         // font-weight: bold can break column spacing
         text-shadow: -0.25px 0 $color, 0.25px 0 $color;
     }
+
+    &::selection {
+        background-color: $color;
+    }
 }
 
-.fgcolor { @include art-style($fg) }
-.bgcolor { @include art-style($bg) }
-.black { @include art-style($black) }
-.black { @include art-style($black) }
-.bright-black { @include art-style($bright-black) }
-.red { @include art-style($red) }
-.bright-red { @include art-style($bright-red) }
-.green { @include art-style($green) }
-.bright-green { @include art-style($bright-green) }
-.yellow { @include art-style($yellow) }
-.bright-yellow { @include art-style($bright-yellow) }
-.blue { @include art-style($blue) }
-.bright-blue { @include art-style($bright-blue) }
-.magenta { @include art-style($magenta) }
-.bright-magenta { @include art-style($bright-magenta) }
-.cyan { @include art-style($cyan) }
-.bright-cyan { @include art-style($bright-cyan) }
-.white { @include art-style($white) }
-.bright-white { @include art-style($bright-white) }
+.fgcolor { @include fg-style($fg) }
+.bgcolor { @include fg-style($bg) }
+.black { @include fg-style($black) }
+.black { @include fg-style($black) }
+.bright-black { @include fg-style($bright-black) }
+.red { @include fg-style($red) }
+.bright-red { @include fg-style($bright-red) }
+.green { @include fg-style($green) }
+.bright-green { @include fg-style($bright-green) }
+.yellow { @include fg-style($yellow) }
+.bright-yellow { @include fg-style($bright-yellow) }
+.blue { @include fg-style($blue) }
+.bright-blue { @include fg-style($bright-blue) }
+.magenta { @include fg-style($magenta) }
+.bright-magenta { @include fg-style($bright-magenta) }
+.cyan { @include fg-style($cyan) }
+.bright-cyan { @include fg-style($bright-cyan) }
+.white { @include fg-style($white) }
+.bright-white { @include fg-style($bright-white) }
 
-.bg-fgcolor { background-color: $fg }
-.bg-black { background-color: $black }
-.bg-bright-black { background-color: $bright-black }
-.bg-red { background-color: $red }
-.bg-bright-red { background-color: $bright-red }
-.bg-green { background-color: $green }
-.bg-bright-green { background-color: $bright-green }
-.bg-yellow { background-color: $yellow }
-.bg-bright-yellow { background-color: $bright-yellow }
-.bg-blue { background-color: $blue }
-.bg-bright-blue { background-color: $bright-blue }
-.bg-magenta { background-color: $magenta }
-.bg-bright-magenta { background-color: $bright-magenta }
-.bg-cyan { background-color: $cyan }
-.bg-bright-cyan { background-color: $bright-cyan }
-.bg-white { background-color: $white }
-.bg-bright-white { background-color: $bright-white }
+
+@mixin bg-style($color) {
+    background-color: $color;
+
+    &::selection {
+        color: $color;
+    }
+}
+
+.bg-fgcolor { @inclide bg-style($fg) }
+.bg-black { @inclide bg-style($black) }
+.bg-bright-black { @inclide bg-style($bright-black) }
+.bg-red { @inclide bg-style($red) }
+.bg-bright-red { @inclide bg-style($bright-red) }
+.bg-green { @inclide bg-style($green) }
+.bg-bright-green { @inclide bg-style($bright-green) }
+.bg-yellow { @inclide bg-style($yellow) }
+.bg-bright-yellow { @inclide bg-style($bright-yellow) }
+.bg-blue { @inclide bg-style($blue) }
+.bg-bright-blue { @inclide bg-style($bright-blue) }
+.bg-magenta { @inclide bg-style($magenta) }
+.bg-bright-magenta { @inclide bg-style($bright-magenta) }
+.bg-cyan { @inclide bg-style($cyan) }
+.bg-bright-cyan { @inclide bg-style($bright-cyan) }
+.bg-white { @inclide bg-style($white) }
+.bg-bright-white { @inclide bg-style($bright-white) }
