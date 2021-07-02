@@ -4,7 +4,10 @@ from io import BytesIO
 from itertools import chain
 from itertools import takewhile
 from pathlib import Path
+from typing import List
 from typing import Protocol
+from typing import Tuple
+from typing import Union
 
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
@@ -18,12 +21,18 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.html import SafeString
 from django.utils.html import escape
+from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from rich.ansi import AnsiDecoder
+from rich.console import Console
+from rich.segment import Segment
+from rich.theme import Theme
 
-from core.ansi import ansi2html
+from core.render import Span
+from core.render import SpanRow
 
 __all__ = ["User", "Art", "Comment"]
 
@@ -310,6 +319,18 @@ THUMB_W = 80
 THUMB_H = 19
 
 
+ansi_decoder = AnsiDecoder()
+
+default_theme = Theme()  # TODO mirror the css as closely as possible
+mock_console = Console(
+    color_system="truecolor",
+    theme=default_theme,
+    force_terminal=True,
+    width=float("inf"),
+    tab_size=8,
+)
+
+
 class Art(TimeStampedModelMixin, Model):
     artist = ForeignKey(User, on_delete=PROTECT)
 
@@ -329,12 +350,8 @@ class Art(TimeStampedModelMixin, Model):
     native_thumb = TextField()
 
     @cached_property
-    def plaintext(self):
+    def plaintext(self) -> str:
         return r_ansi.sub("", self.text)
-
-    @cached_property
-    def _markup(self):
-        return ansi2html(self.text)
 
     @cached_property
     def w(self):
@@ -362,36 +379,43 @@ class Art(TimeStampedModelMixin, Model):
         return self.h > THUMB_H
 
     @cached_property
-    def _native_thumb(self) -> SafeString:
-        text_lines = split_lines(self.plaintext)
-        thumb_lines = []
+    def _segment_lines(self) -> List[Tuple[Segment]]:
+        return [
+            tuple(text.render(mock_console)) for text in ansi_decoder.decode(self.text)
+        ]
 
+    @cached_property
+    def _spanrows(self) -> List[SpanRow]:
+        return [SpanRow.from_segments(segments) for segments in self._segment_lines]
+
+    @cached_property
+    def _markup(self) -> SafeString:
+        return mark_safe("\n".join(row.markup for row in self._spanrows))
+
+    @cached_property
+    def _native_thumb(self) -> SafeString:
         if not self.tall:
-            y_range = range(self.h)
+            y_range = range(0, self.h)
         else:
-            y_range = range(self.thumb_y_offset, self.thumb_y_offset + THUMB_H)
+            y_offset = max(self.thumb_y_offset, 0)
+            y_range = range(y_offset, y_offset + THUMB_H)
 
         if not self.wide:
-            x_range = range(self.w)
+            x_range = range(0, self.w)
         else:
-            x_range = range(self.thumb_x_offset, self.thumb_x_offset + THUMB_W)
+            x_offset = max(self.thumb_x_offset, 0)
+            x_range = range(x_offset, x_offset + THUMB_W)
+
+        lines = []
 
         for y in y_range:
-            line = ""
-            for x in x_range:
-                if y >= 0 and x >= 0:
-                    try:
-                        line += text_lines[y][x]
-                    except IndexError:
-                        line += " "
-                else:
-                    line += " "
+            spanrow = self._spanrows[y]
+            if x_range.start > 0 or x_range.stop < len(spanrow):
+                spanrow = spanrow[x_range.start : x_range.stop]
 
-            thumb_lines.append(line)
+            lines.append(spanrow.markup)
 
-        thumb = "\n".join(thumb_lines)
-
-        return escape(thumb)
+        return mark_safe("\n".join(lines))
 
     @cached_property
     def renderable_thumb(self) -> str:
