@@ -409,11 +409,14 @@ class Art(TimeStampedModelMixin, Model):
         lines = []
 
         for y in y_range:
-            spanrow = self._spanrows[y]
-            if x_range.start > 0 or x_range.stop < len(spanrow):
-                spanrow = spanrow[x_range.start : x_range.stop]
+            try:
+                spanrow = self._spanrows[y]
+                if x_range.start > 0 or x_range.stop < len(spanrow):
+                    spanrow = spanrow[x_range.start : x_range.stop]
 
-            lines.append(spanrow.markup)
+                lines.append(spanrow.markup)
+            except IndexError:
+                lines.append("")
 
         return mark_safe("\n".join(lines))
 

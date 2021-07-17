@@ -14,7 +14,7 @@
 
         <div class="art {% if art.nsfw %}hide{% endif %}">
             <a class="-nostyle" href="{% url 'core:art' art.pk %}">
-                <pre class="monospaced">{{ art.native_thumb|safe }}</pre>
+                <pre class="monospaced">{% autoescape off %}{{ art.native_thumb }}{% endautoescape %}</pre>
             </a>
         </div>
 

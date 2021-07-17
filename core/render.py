@@ -187,7 +187,7 @@ class SpanRow:
                 local_stop = (
                     None if span_end <= range_.stop else len(range_) - local_start
                 )
-                if local_start is None and local_stop is None:
+                if local_start == 0 and local_stop is None:
                     spans.append(span)
                 else:
                     spans.append(span[local_start:local_stop])
